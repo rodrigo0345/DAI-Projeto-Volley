@@ -15,7 +15,12 @@ export default function LandPageView() {
           Bem-vindo ao nosso site de gestão de boleias e <br />
           estatísticas da secção de voleibol
         </p>
-        <button>Login</button>
+        <a
+          href=''
+          className='cursor-pointer text-gray-50 bg-yellow-600/60 hover:bg-yellow-600/80 dark:text-gray-100 font-bold py-2 px-4 rounded-md hover:no-underline text-l'
+        >
+          Login
+        </a>
       </div>
     </div>
   );
