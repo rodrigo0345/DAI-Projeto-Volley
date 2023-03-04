@@ -12,6 +12,8 @@ import {
 import { Suspense } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import css from './MainLayout.module.css';
+import MainHeader from 'Frontend/components/headers/MainHeader';
+import MainFooter from 'Frontend/components/footers/MainFooter';
 
 type MenuRoute = ViewRouteObject &
   Readonly<{
@@ -31,9 +33,11 @@ export default function MenuOnLeftLayout() {
 
   return (
     <AppLayout className='block h-full' primarySection='drawer'>
+      <MainHeader></MainHeader>
       <Suspense fallback={<Placeholder />}>
         <Outlet />
       </Suspense>
+      <MainFooter></MainFooter>
     </AppLayout>
   );
 }

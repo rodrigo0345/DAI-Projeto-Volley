@@ -1,8 +1,13 @@
 import MainLayout from 'Frontend/views/MainLayout.js';
 import { lazy } from 'react';
-import { createBrowserRouter, IndexRouteObject, NonIndexRouteObject, useMatches } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  IndexRouteObject,
+  NonIndexRouteObject,
+  useMatches,
+} from 'react-router-dom';
 
-const TodoView = lazy(async () => import('Frontend/views/todo/TodoView.js'));
+const LandPageView = lazy(async () => import('Frontend/views/LandPageView.js'));
 export type MenuProps = Readonly<{
   icon?: string;
   title?: string;
@@ -31,7 +36,13 @@ export const routes: readonly ViewRouteObject[] = [
   {
     element: <MainLayout />,
     handle: { icon: 'null', title: 'Main' },
-    children: [{ path: '/', element: <TodoView />, handle: { icon: 'la la-list-alt', title: 'Todo' } }],
+    children: [
+      {
+        path: '/',
+        element: <LandPageView />,
+        handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
+      },
+    ],
   },
 ];
 
