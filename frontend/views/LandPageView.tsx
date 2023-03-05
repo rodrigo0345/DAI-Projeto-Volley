@@ -67,8 +67,8 @@ export default function LandPageView() {
               </a>
             </div>
           </div>
-          <div className='w-full h-[35rem] relative flex flex-wrap'>
-            <div className='h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl flex flex-col items-end justify-center'>
+          <div className='w-full h-[35rem] relative flex flex-wrap shadow-lg shadow-yellow-600/50'>
+            <div className='h-full w-1/2 outline outline-1 outline-zinc-800 flex flex-col items-end justify-center '>
               <div className=' flex flex-col justify-center items-center gap-8 px-10'>
                 <AnimatedTitleGroup className='flex flex-col gap-0 cursor-default'>
                   <h2
@@ -113,9 +113,9 @@ export default function LandPageView() {
               <div className='w-1/2 flex items-center justify-start px-4'>
                 <IoMdArrowBack size={50} className='animate-bounce' />
                 <div>
-                  <h3 className='m-0 italic font-bold text-4xl'>Simple</h3>
-                  <h3 className='m-0 italic font-bold text-4xl'>and easy</h3>
-                  <h3 className='m-0 italic font-bold text-4xl'>to use</h3>
+                  <h3 className='m-0 italic font-bold text-4xl'>Simples</h3>
+                  <h3 className='m-0 italic font-bold text-4xl'>e fácil</h3>
+                  <h3 className='m-0 italic font-bold text-4xl'>de usar!</h3>
                 </div>
               </div>
             </div>

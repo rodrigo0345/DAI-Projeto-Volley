@@ -20,7 +20,7 @@ export default function mainHeader() {
   }
 
   return (
-    <div className='flex  items-center justify-around bg-transparent w-full h-24 fixed px-6'>
+    <div className='z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6'>
       <div className='flex items-center bg-transparent w-full px-4 gap-4'>
         <div className='h-10 flex'>
           <a href='https://vitoriasc.pt/' target='_blank'>

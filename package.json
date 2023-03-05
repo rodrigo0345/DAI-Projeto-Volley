@@ -103,7 +103,8 @@
     "@emotion/react": "$@emotion/react",
     "@mantine/core": "$@mantine/core",
     "@mantine/hooks": "$@mantine/hooks",
-    "react-icons": "$react-icons"
+    "react-icons": "$react-icons",
+    "styled-components": "$styled-components"
   },
   "vaadin": {
     "dependencies": {
@@ -151,6 +152,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "8dea8b68831847a7a8bf3ad16e9f2d6e5eb525f25d5a5b25f1ee72a76241efdc"
+    "hash": "fa24657a6c51cab1dd980f6030f4a02dc6dfe8451c014c888953ebcfb8bb9239"
   }
 }
