@@ -8,6 +8,9 @@ import {
 } from 'react-router-dom';
 
 const LandPageView = lazy(async () => import('Frontend/views/LandPageView.js'));
+const LoginPageView = lazy(
+  async () => import('Frontend/views/LoginPageView.js')
+);
 export type MenuProps = Readonly<{
   icon?: string;
   title?: string;
@@ -40,6 +43,11 @@ export const routes: readonly ViewRouteObject[] = [
       {
         path: '/',
         element: <LandPageView />,
+        handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
+      },
+      {
+        path: '/login',
+        element: <LoginPageView />,
         handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
       },
     ],

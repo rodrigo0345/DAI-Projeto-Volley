@@ -14,6 +14,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import css from './MainLayout.module.css';
 import MainHeader from 'Frontend/components/headers/MainHeader';
 import MainFooter from 'Frontend/components/footers/MainFooter';
+import ThemeProvider from 'Frontend/contexts/themeContext';
 
 type MenuRoute = ViewRouteObject &
   Readonly<{
@@ -32,12 +33,14 @@ export default function MenuOnLeftLayout() {
   ) as readonly MenuRoute[];
 
   return (
-    <AppLayout className='block h-full' primarySection='drawer'>
-      <MainHeader></MainHeader>
-      <Suspense fallback={<Placeholder />}>
-        <Outlet />
-      </Suspense>
-      <MainFooter></MainFooter>
-    </AppLayout>
+    <ThemeProvider>
+      <AppLayout className='block h-full' primarySection='drawer'>
+        <MainHeader></MainHeader>
+        <Suspense fallback={<Placeholder />}>
+          <Outlet />
+        </Suspense>
+        <MainFooter></MainFooter>
+      </AppLayout>
+    </ThemeProvider>
   );
 }

@@ -5,7 +5,8 @@ export default function mainBackground() {
   useEffect(() => {});
 
   return (
-    <div className='-z-10 absolute top-0 w-full h-full dark:bg-zinc-800 bg-zinc-200'>
+    <div className='-z-10 absolute top-0 w-full h-full dark:bg-zinc-800 bg-gray-600'>
+      {/*
       <svg
         id='visual'
         viewBox='0 0 900 600'
@@ -29,8 +30,9 @@ export default function mainBackground() {
           ></motion.path>
         </g>
       </svg>
+      */}
 
-      <div className='h-full w-full absolute bg-black/30 top-0 left-0 backdrop-blur-xl'></div>
+      <div className='h-full w-full absolute bg-gradient-to-r from-white/30 to-white/90 dark:from-black/30 dark:to-gray-200/10 top-0 left-0 backdrop-blur-xl'></div>
     </div>
   );
 }

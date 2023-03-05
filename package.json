@@ -97,7 +97,11 @@
     "@vaadin/vaadin-material-styles": "$@vaadin/vaadin-material-styles",
     "@hilla/generator-typescript-cli": "$@hilla/generator-typescript-cli",
     "framer-motion": "$framer-motion",
-    "kute.js": "$kute.js"
+    "kute.js": "$kute.js",
+    "@emotion/react": "$@emotion/react",
+    "@mantine/core": "$@mantine/core",
+    "@mantine/hooks": "$@mantine/hooks",
+    "react-icons": "$react-icons"
   },
   "vaadin": {
     "dependencies": {
@@ -145,6 +149,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "41e9fc52cca8dd9482e08f32e489760df0fd350a0b6c688c6df0dfede55a0246"
+    "hash": "8dea8b68831847a7a8bf3ad16e9f2d6e5eb525f25d5a5b25f1ee72a76241efdc"
   }
 }
