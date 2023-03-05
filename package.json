@@ -39,13 +39,15 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
-    "react-router-dom": "^6.4.2"
+    "react-router-dom": "^6.4.2",
+    "styled-components": "^5.3.8"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "3.1.0",
     "@rollup/pluginutils": "4.1.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react": "^2.2.0",
     "async": "3.2.2",
     "autoprefixer": "^10.4.13",
