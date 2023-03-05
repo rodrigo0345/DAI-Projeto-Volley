@@ -20,7 +20,7 @@ export default function mainHeader() {
   }
 
   return (
-    <div className='z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6'>
+    <div className='z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6 backdrop-blur-sm'>
       <div className='flex items-center bg-transparent w-full px-4 gap-4'>
         <div className='h-10 flex'>
           <a href='https://vitoriasc.pt/' target='_blank'>
@@ -50,7 +50,7 @@ export default function mainHeader() {
       </div>
       <aside className='relative px-4 flex flex-row-reverse items-center gap-4 h-12'>
         <a
-          href=''
+          href='/login'
           className='cursor-pointer text-gray-800 bg-transparent outline outline-2 outline-gray-700/60 dark:outline-gray-100/60 hover:outline-yellow-600 w-fit whitespace-nowrap py-2 px-4 dark:text-gray-100 font-semibold  rounded-full hover:no-underline text-md'
         >
           Começa já
