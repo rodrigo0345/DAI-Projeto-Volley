@@ -1,6 +1,7 @@
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BsArrowDownShort } from 'react-icons/bs';
+import { IoMdArrowBack } from 'react-icons/io';
 import styled from 'styled-components';
 
 const AnimatedTitleGroup = styled.div`
@@ -67,42 +68,55 @@ export default function LandPageView() {
             </div>
           </div>
           <div className='w-full h-[35rem] relative flex flex-wrap'>
-            <div className='h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl flex flex-col justify-center items-center gap-8'>
-              <AnimatedTitleGroup className='flex flex-col gap-0 cursor-default'>
-                <h2
-                  id='t-01'
-                  className='text-center font-extralight text-5xl my-0'
+            <div className='h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl flex flex-col items-end justify-center'>
+              <div className=' flex flex-col justify-center items-center gap-8 px-10'>
+                <AnimatedTitleGroup className='flex flex-col gap-0 cursor-default'>
+                  <h2
+                    id='t-01'
+                    className='text-center font-extralight text-5xl my-0'
+                  >
+                    Encontre boleias.
+                  </h2>
+                  <h2
+                    id='t-02'
+                    className='text-center font-normal text-5xl my-1'
+                  >
+                    Encontre estatísticas.
+                  </h2>
+                  <h2
+                    id='t-03'
+                    className='text-center font-semibold text-5xl my-0'
+                  >
+                    Faça uma gestão dos treinos.
+                  </h2>
+                </AnimatedTitleGroup>
+                <p className='w-1/2 text-center text-lg'>
+                  Com nossa app, encontre facilmente boleias para eventos,
+                  trabalho, viagens e muito mais
+                </p>
+                <a
+                  href='#'
+                  className='cursor-pointer text-gray-800 bg-transparent outline outline-2 outline-gray-700/60 dark:outline-gray-100/60 hover:outline-yellow-600 w-fit whitespace-nowrap py-2 px-4 dark:text-gray-100 font-semibold  rounded-full hover:no-underline text-md self-center'
                 >
-                  Encontre boleias.
-                </h2>
-                <h2 id='t-02' className='text-center font-normal text-5xl my-1'>
-                  Encontre estatísticas.
-                </h2>
-                <h2
-                  id='t-03'
-                  className='text-center font-semibold text-5xl my-0'
-                >
-                  Faça uma gestão dos treinos.
-                </h2>
-              </AnimatedTitleGroup>
-              <p className='w-1/2 text-center text-lg'>
-                Com nossa app, encontre facilmente boleias para eventos,
-                trabalho, viagens e muito mais
-              </p>
-              <a
-                href='#'
-                className='cursor-pointer text-gray-800 bg-transparent outline outline-2 outline-gray-700/60 dark:outline-gray-100/60 hover:outline-yellow-600 w-fit whitespace-nowrap py-2 px-4 dark:text-gray-100 font-semibold  rounded-full hover:no-underline text-md self-center'
-              >
-                Começa já
-              </a>
+                  Começa já
+                </a>
+              </div>
             </div>
             <div className='relative h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl flex items-center'>
-              <div className='w-1/2 h-[125%] rounded-lg shadow-lg shadow-gray-800/10 p-3 backdrop-blur-lg outline outline-2 outline-gray-800/40'>
+              <div className='w-fit h-[125%] rounded-lg shadow-lg shadow-gray-800/10 p-3 backdrop-blur-lg outline outline-2 outline-gray-800/40'>
                 <img
-                  className='rounded-lg'
+                  className='rounded-lg object-cover h-full'
                   src='../assets/images/Screenshot_20230111_094919.png'
                   alt=''
                 />
+              </div>
+              <div className='w-1/2 flex items-center justify-start px-4'>
+                <IoMdArrowBack size={50} className='animate-bounce' />
+                <div>
+                  <h3 className='m-0 italic font-bold text-4xl'>Simple</h3>
+                  <h3 className='m-0 italic font-bold text-4xl'>and easy</h3>
+                  <h3 className='m-0 italic font-bold text-4xl'>to use</h3>
+                </div>
               </div>
             </div>
           </div>
