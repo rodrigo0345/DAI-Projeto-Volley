@@ -34,7 +34,7 @@ export default function MenuOnLeftLayout() {
 
   return (
     <ThemeProvider>
-      <AppLayout className='block h-full' primarySection='drawer'>
+      <AppLayout className='' primarySection='drawer'>
         <MainHeader></MainHeader>
         <Suspense fallback={<Placeholder />}>
           <Outlet />
