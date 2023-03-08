@@ -7,7 +7,7 @@ export default function LoginPageView() {
           <div className='flex flex-col items-center justify-center h-screen'>
             <div className='flex flex-col items-start justify-center gap-8'>
               <div className='flex flex-col items-start justify-start gap-2'>
-                <h1 className='text-4xl font-bold m-0'>Login</h1>
+                <h1 className='text-4xl font-bold m-0'>Login 01</h1>
               </div>
               <div className='flex flex-col items-center justify-center gap-4'>
                 <div className='flex flex-col items-start justify-center gap-4'>
