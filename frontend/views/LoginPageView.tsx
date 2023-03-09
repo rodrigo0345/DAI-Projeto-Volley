@@ -1,5 +1,5 @@
-import { login } from '@hilla/frontend';
 import { useRef } from 'react';
+import { login } from 'Frontend/generated/Post';
 
 export default function LoginPageView() {
   const username = useRef<HTMLInputElement>(null);
@@ -10,10 +10,10 @@ export default function LoginPageView() {
 
     if (!password.current?.value || !username.current?.value) return;
 
-    const result = await login(
-      username.current?.value,
-      password.current?.value
-    );
+    const result = await Post.login({
+      username: username.current.value,
+      password: password.current.value,
+    });
 
     if (result.error) {
       console.log('Error');
