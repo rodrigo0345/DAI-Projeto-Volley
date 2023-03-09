@@ -7,6 +7,7 @@ import { WiDaySunny } from 'react-icons/wi';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
+import MainButton from '../buttons/MainButton';
 
 export default function mainHeader() {
   const [enabledDarkMode, setEnabledDarkMode] = useState<boolean>(false);
@@ -57,12 +58,7 @@ export default function mainHeader() {
         </div>
       </div>
       <aside className='relative px-4 flex-row-reverse items-center gap-4 h-12 flex'>
-        <a
-          href='/login'
-          className='cursor-pointer text-gray-800 bg-transparent outline outline-2 outline-gray-700/60 dark:outline-gray-100/60 hover:outline-yellow-600 w-fit whitespace-nowrap py-2 px-4 dark:text-gray-100 font-semibold  rounded-full hover:no-underline text-md hidden sm:!flex'
-        >
-          Começa já
-        </a>
+        <MainButton href='/login'>Começa já</MainButton>
 
         <div className='relative items-center hidden sm:!flex'>
           <button

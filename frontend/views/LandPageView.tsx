@@ -1,4 +1,5 @@
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
+import MainButton from 'Frontend/components/buttons/MainButton';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BsArrowDownShort } from 'react-icons/bs';
 import { IoMdArrowBack } from 'react-icons/io';
@@ -50,14 +51,9 @@ export default function LandPageView() {
                 <br /> foi tão <span>fácil</span>
               </h1>
               <div className='flex gap-4 items-center flex-col sm:!flex-row'>
+                <MainButton href='/login'>Começa já</MainButton>
                 <a
-                  href='#'
-                  className='cursor-pointer text-gray-800 bg-transparent outline outline-2 outline-gray-700/60 dark:outline-gray-100/60 hover:outline-yellow-600 w-fit whitespace-nowrap md:!py-2 sm:py-1 px-4 dark:text-gray-100 font-semibold  rounded-full hover:no-underline text-md'
-                >
-                  Começa já
-                </a>
-                <a
-                  href='#'
+                  href='/login'
                   className='w-fit text-zinc-800 flex items-center gap-1 font-semibold hover:no-underline'
                 >
                   Ver funcionalidades
@@ -94,12 +90,7 @@ export default function LandPageView() {
                     Com nossa app, encontre facilmente boleias para eventos,
                     trabalho, viagens e muito mais
                   </p>
-                  <a
-                    href='#'
-                    className='cursor-pointer text-gray-800 bg-transparent outline outline-2 outline-gray-700/60 dark:outline-gray-100/60 hover:outline-yellow-600 w-fit whitespace-nowrap py-2 px-4 dark:text-gray-100 font-semibold  rounded-full hover:no-underline text-md self-center'
-                  >
-                    Começa já
-                  </a>
+                  <MainButton href='/login'>Começa já</MainButton>
                 </div>
               </div>
               <div className='lg:!flex hidden relative h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl items-center'>
