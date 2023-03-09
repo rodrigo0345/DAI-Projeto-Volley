@@ -32,6 +32,7 @@ public class Application implements AppShellConfigurator {
         return args -> {
             posts.save(new Post("First Post", "first-post", "This is the first post", "David"));
             users.save(new User("David", "David", "Admin"));
+            users.save(new User("Rodrigo", "Rodrigo", "Admin"));
         };
     }
 

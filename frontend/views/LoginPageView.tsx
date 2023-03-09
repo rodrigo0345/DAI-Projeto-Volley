@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { login } from 'Frontend/generated/Post';
+import { login } from 'Frontend/generated/AuthController';
 
 export default function LoginPageView() {
   const username = useRef<HTMLInputElement>(null);
@@ -10,12 +10,9 @@ export default function LoginPageView() {
 
     if (!password.current?.value || !username.current?.value) return;
 
-    const result = await Post.login({
-      username: username.current.value,
-      password: password.current.value,
-    });
+    const result = await login(username.current.value, password.current.value);
 
-    if (result.error) {
+    if (!result) {
       console.log('Error');
     }
 
