@@ -59,7 +59,7 @@ public class AuthenticationService {
                             (Object) request.getEmail(),
                             (Object) request.getPassword()));
         } catch (Exception e) {
-            throw new Exception("Invalid username or password");
+            throw new Exception("Invalid request, the token might be expired or revoked");
         }
 
         var user = repository.findByEmail(request.getEmail())
