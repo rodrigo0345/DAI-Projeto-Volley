@@ -1,5 +1,27 @@
+import { login } from '@hilla/frontend';
+import { useRef } from 'react';
+
 export default function LoginPageView() {
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {}
+  const username = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!password.current?.value || !username.current?.value) return;
+
+    const result = await login(
+      username.current?.value,
+      password.current?.value
+    );
+
+    if (result.error) {
+      console.log('Error');
+    }
+
+    console.log(result);
+    //window.location.href = '/';
+  }
   return (
     <div className='relative w-full flex'>
       <div className='w-1/2'>
@@ -11,18 +33,20 @@ export default function LoginPageView() {
               </div>
               <div className='flex flex-col items-center justify-center gap-4'>
                 <div className='flex flex-col items-start justify-center gap-4'>
-                  <label htmlFor='email'>Email</label>
+                  <label htmlFor='username'>Email</label>
                   <input
-                    type='email'
-                    name='email'
-                    id='email'
-                    placeholder='Email'
+                    ref={username}
+                    type='text'
+                    name='Username'
+                    id='username'
+                    placeholder='Username'
                     className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500'
                   />
                 </div>
                 <div className='flex flex-col items-start justify-center gap-4'>
                   <label htmlFor='password'>Password</label>
                   <input
+                    ref={password}
                     type='password'
                     name='password'
                     id='password'
