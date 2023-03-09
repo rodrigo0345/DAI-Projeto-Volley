@@ -1,7 +1,9 @@
 package com.example.application;
 
 import com.example.application.model.Post;
+import com.example.application.model.User;
 import com.example.application.repository.PostRepository;
+import com.example.application.repository.UserRepository;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.CommandLineRunner;
@@ -28,11 +30,8 @@ public class Application implements AppShellConfigurator {
     @Bean
     CommandLineRunner init(PostRepository posts, UserRepository users) {
         return args -> {
-            repository.save(new Post("Learn Spring Boot"));
-            repository.save(new Post("Learn Vaadin"));
-            repository.save(new Post("Learn Spring Data"));
-            repository.save(new Post("Learn Spring Security"));
-            repository.save(new Post("Learn Spring Cloud"));
+            posts.save(new Post("First Post", "first-post", "This is the first post", "David"));
+            users.save(new User("David", "David", "Admin"));
         };
     }
 
