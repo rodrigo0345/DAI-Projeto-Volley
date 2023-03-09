@@ -1,7 +1,8 @@
 package com.example.application;
 
 import com.example.application.model.Post;
-import com.example.application.model.User;
+import com.example.application.model.User.Roles;
+import com.example.application.model.User.User;
 import com.example.application.repository.PostRepository;
 import com.example.application.repository.UserRepository;
 import com.vaadin.flow.component.page.AppShellConfigurator;
@@ -31,8 +32,8 @@ public class Application implements AppShellConfigurator {
     CommandLineRunner init(PostRepository posts, UserRepository users) {
         return args -> {
             posts.save(new Post("First Post", "first-post", "This is the first post", "David"));
-            users.save(new User("David", "David", "Admin"));
-            users.save(new User("Rodrigo", "Rodrigo", "Admin"));
+            User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", "rrr", Roles.USER);
+            users.save(aux);
         };
     }
 

@@ -1,27 +1,59 @@
-import { useRef } from 'react';
-import { login } from 'Frontend/generated/AuthController';
+import { useEffect, useRef, useState } from 'react';
+import {
+  authenticate,
+  register,
+} from 'Frontend/generated/AuthenticationController';
+import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
+import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
+import User from 'Frontend/generated/com/example/application/model/User/User';
+import { findAll } from 'Frontend/generated/UserController';
 
 export default function LoginPageView() {
   const username = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
+
+  const [users, setUsers] = useState<(User | undefined)[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!password.current?.value || !username.current?.value) return;
 
-    const result = await login(username.current.value, password.current.value);
+    const aux: AuthenticationRequest = {
+      email: username.current?.value,
+      password: password.current?.value,
+    };
+
+    const aux2: RegisterRequest = {
+      email: username.current?.value,
+      password: password.current?.value,
+    };
+
+    let result;
+    result = await authenticate(aux);
+
+    console.log('Register ', result);
 
     if (!result) {
       console.log('Error');
     }
-
-    console.log(result);
     //window.location.href = '/';
   }
+
+  useEffect(() => {
+    (async () => {
+      const result = await findAll();
+      setUsers(result);
+    })();
+  });
   return (
     <div className='relative w-full flex'>
       <div className='w-1/2'>
+        {users.map((user) => (
+          <div className='pt-44' key={user?.id}>
+            <p>{user?.email}</p>
+          </div>
+        ))}
         <form action='#' onSubmit={handleSubmit}>
           <div className='flex flex-col items-center justify-center h-screen'>
             <div className='flex flex-col items-start justify-center gap-8'>
