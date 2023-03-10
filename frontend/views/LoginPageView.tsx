@@ -8,6 +8,7 @@ import RegisterRequest from 'Frontend/generated/com/example/application/controll
 import User from 'Frontend/generated/com/example/application/model/User/User';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
+import { login } from 'Frontend/generated/AuthenticationController';
 
 export default function LoginPageView() {
   const email = useRef<HTMLInputElement>(null);
@@ -26,8 +27,27 @@ export default function LoginPageView() {
     setPasswordError(null);
     setEmailError(null);
 
-    if (!password.current?.value) setPasswordError('Password is required');
-    if (!email.current?.value) setEmailError('Email is required');
+    if (!password.current?.value) {
+      password.current?.focus();
+      setPasswordError('Password is required');
+    }
+    if (!email.current?.value) {
+      email.current?.focus();
+      setEmailError('Email is required');
+    }
+    if (password.current?.value || email.current?.value) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await login(
+        email.current?.value,
+        password.current?.value
+      );
+    } catch (e) {
+      console.log(e);
+    }
 
     // todo: add acctual login
     setLoading(false);

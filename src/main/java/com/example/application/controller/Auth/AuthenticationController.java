@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.application.service.AuthenticationService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.example.application.model.LoginUser;
 import com.example.application.repository.UserRepository;
 import dev.hilla.Endpoint;
 
@@ -34,6 +35,18 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request) throws Exception {
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    public LoginUser login(String email, String password) {
+
+        LoginUser user = null;
+        try {
+            user = users.findLoginUserByEmail(email).get();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+        return user;
     }
 
 }

@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,7 +37,9 @@ public class User implements UserDetails {
 
     private String lastname;
 
+    @Email
     private String email;
+    
     private String password;
 
     @Enumerated(EnumType.STRING)
