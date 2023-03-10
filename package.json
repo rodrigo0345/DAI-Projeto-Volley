@@ -107,7 +107,10 @@
     "@mantine/core": "$@mantine/core",
     "@mantine/hooks": "$@mantine/hooks",
     "react-icons": "$react-icons",
-    "styled-components": "$styled-components"
+    "styled-components": "$styled-components",
+    "localforage": "$localforage",
+    "match-sorter": "$match-sorter",
+    "sort-by": "$sort-by"
   },
   "vaadin": {
     "dependencies": {
@@ -155,6 +158,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "fa24657a6c51cab1dd980f6030f4a02dc6dfe8451c014c888953ebcfb8bb9239"
+    "hash": "ea5715924a0470ca463302f767e668686039a54c5ba146b08cdb82806c809332"
   }
 }
