@@ -1,4 +1,4 @@
-import { Route, Navigate } from 'react-router-dom';
+import { Route, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { ReactNode, useContext } from 'react';
 
@@ -11,10 +11,10 @@ export function PrivateAdminRoute({
 }) {
   const user = useContext(UserContext);
 
-  return (
-    <Route {...rest}>
-      {user && user?.role?.includes('ADMIN') ? children : <Navigate to='/' />}
-    </Route>
+  return user && user?.role?.includes('ADMIN') ? (
+    <Outlet />
+  ) : (
+    <Navigate to='/' />
   );
 }
 
@@ -27,14 +27,10 @@ export function PrivateManagerRoute({
 }) {
   const user = useContext(UserContext);
 
-  return (
-    <Route {...rest}>
-      {user && user?.role?.includes('ADMIN' || 'MANAGER') ? (
-        children
-      ) : (
-        <Navigate to='/' />
-      )}
-    </Route>
+  return user && user?.role?.includes('MANAGER' || 'ADMIN') ? (
+    <Outlet />
+  ) : (
+    <Navigate to='/' />
   );
 }
 
@@ -47,5 +43,11 @@ export function PrivateRouteNoGuests({
 }) {
   const user = useContext(UserContext);
 
-  return <Route {...rest}>{user ? children : <Navigate to='/' />}</Route>;
+  return user ? <Outlet /> : <Navigate to='/' />;
+}
+
+export function GuestsRoute() {
+  const user = useContext(UserContext);
+
+  return !user ? <Outlet /> : <Navigate to='/dashboard' />;
 }
