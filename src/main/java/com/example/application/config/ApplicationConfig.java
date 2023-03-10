@@ -28,6 +28,12 @@ public class ApplicationConfig {
     }
 
     @Bean
+    public UserDetailsService loginUserDetailsService() {
+        return username -> repository.findLoginUserByEmail(username).map(UserDetails.class::cast)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
