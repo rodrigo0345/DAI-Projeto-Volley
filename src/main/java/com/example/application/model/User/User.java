@@ -10,13 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.application.model.Token;
+import com.example.application.model.Token.Token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

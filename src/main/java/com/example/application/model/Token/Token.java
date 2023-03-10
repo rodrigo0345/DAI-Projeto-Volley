@@ -1,4 +1,4 @@
-package com.example.application.model;
+package com.example.application.model.Token;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
