@@ -6,45 +6,59 @@ import {
   NonIndexRouteObject,
   useMatches,
 } from 'react-router-dom';
-import LandPageView from './views/LandPageView';
-import LoginPageView from './views/LoginPageView';
-import { UserContext } from './contexts/userContext';
-import AuthenticationRequest from './generated/com/example/application/controller/Auth/AuthenticationRequest';
 import { AuthenticationController } from './generated/endpoints';
-import AuthenticationRequestModel from './generated/com/example/application/controller/Auth/AuthenticationRequestModel';
+import { UserContext } from './contexts/UserContext';
 import User from './generated/com/example/application/model/User/User';
 
-const user = useContext(UserContext);
+const LandPageView = lazy(async () => import('Frontend/views/LandPageView.js'));
+const LoginPageView = lazy(
+  async () => import('Frontend/views/LoginPageView.js')
+);
+export type MenuProps = Readonly<{
+  icon?: string;
+  title?: string;
+}>;
 
-async function checkIfUserIsLogged(user: User) {
-  const result = await AuthenticationController.authenticate({
-    email: user?.email,
-    password: user?.password,
-  });
+export type ViewMeta = Readonly<{ handle?: MenuProps }>;
 
-  return result?.body?.token && user;
-}
+type Override<T, E> = Omit<T, keyof E> & E;
 
-export const routes = [
+export type IndexViewRouteObject = Override<IndexRouteObject, ViewMeta>;
+export type NonIndexViewRouteObject = Override<
+  Override<NonIndexRouteObject, ViewMeta>,
   {
-    path: '/',
-    element: <LandPageView />,
-    loader: async () => {
-      if (!user) return <LoginPageView />;
-      if (await checkIfUserIsLogged(user)) {
-        return <MainLayout />; // todo mudar isto
-      }
-      return <LoginPageView />;
-    },
-  },
+    children?: ViewRouteObject[];
+  }
+>;
+export type ViewRouteObject = IndexViewRouteObject | NonIndexViewRouteObject;
+
+type RouteMatch = ReturnType<typeof useMatches> extends (infer T)[] ? T : never;
+
+export type ViewRouteMatch = Readonly<Override<RouteMatch, ViewMeta>>;
+
+export const useViewMatches = useMatches as () => readonly ViewRouteMatch[];
+
+export const routes: readonly ViewRouteObject[] = [
   {
-    path: '/login',
-    element: <LoginPageView />,
-    handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
-  },
-  {
-    path: '/dashboard',
     element: <MainLayout />,
+    children: [
+      {
+        path: '/',
+        element: <LandPageView />,
+        loader: async () => {
+          return <LoginPageView />;
+        },
+      },
+      {
+        path: '/login',
+        element: <LoginPageView />,
+        handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
+      },
+      {
+        path: '/dashboard',
+        element: <MainLayout />,
+      },
+    ],
   },
 ];
 
