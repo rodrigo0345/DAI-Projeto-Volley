@@ -1,56 +1,50 @@
 import MainLayout from 'Frontend/views/MainLayout.js';
-import { lazy } from 'react';
+import { lazy, useContext } from 'react';
 import {
   createBrowserRouter,
   IndexRouteObject,
   NonIndexRouteObject,
   useMatches,
 } from 'react-router-dom';
+import LandPageView from './views/LandPageView';
+import LoginPageView from './views/LoginPageView';
+import { UserContext } from './contexts/userContext';
+import AuthenticationRequest from './generated/com/example/application/controller/Auth/AuthenticationRequest';
+import { AuthenticationController } from './generated/endpoints';
+import AuthenticationRequestModel from './generated/com/example/application/controller/Auth/AuthenticationRequestModel';
+import User from './generated/com/example/application/model/User/User';
 
-const LandPageView = lazy(async () => import('Frontend/views/LandPageView.js'));
-const LoginPageView = lazy(
-  async () => import('Frontend/views/LoginPageView.js')
-);
-export type MenuProps = Readonly<{
-  icon?: string;
-  title?: string;
-}>;
+const user = useContext(UserContext);
 
-export type ViewMeta = Readonly<{ handle?: MenuProps }>;
+async function checkIfUserIsLogged(user: User) {
+  const result = await AuthenticationController.authenticate({
+    email: user?.email,
+    password: user?.password,
+  });
 
-type Override<T, E> = Omit<T, keyof E> & E;
+  return result?.body?.token && user;
+}
 
-export type IndexViewRouteObject = Override<IndexRouteObject, ViewMeta>;
-export type NonIndexViewRouteObject = Override<
-  Override<NonIndexRouteObject, ViewMeta>,
+export const routes = [
   {
-    children?: ViewRouteObject[];
-  }
->;
-export type ViewRouteObject = IndexViewRouteObject | NonIndexViewRouteObject;
-
-type RouteMatch = ReturnType<typeof useMatches> extends (infer T)[] ? T : never;
-
-export type ViewRouteMatch = Readonly<Override<RouteMatch, ViewMeta>>;
-
-export const useViewMatches = useMatches as () => readonly ViewRouteMatch[];
-
-export const routes: readonly ViewRouteObject[] = [
+    path: '/',
+    element: <LandPageView />,
+    loader: async () => {
+      if (!user) return <LoginPageView />;
+      if (await checkIfUserIsLogged(user)) {
+        return <MainLayout />; // todo mudar isto
+      }
+      return <LoginPageView />;
+    },
+  },
   {
+    path: '/login',
+    element: <LoginPageView />,
+    handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
+  },
+  {
+    path: '/dashboard',
     element: <MainLayout />,
-    handle: { icon: 'null', title: 'Main' },
-    children: [
-      {
-        path: '/',
-        element: <LandPageView />,
-        handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
-      },
-      {
-        path: '/login',
-        element: <LoginPageView />,
-        handle: { icon: 'la la-list-alt', title: 'Welcome 😁' },
-      },
-    ],
   },
 ];
 
