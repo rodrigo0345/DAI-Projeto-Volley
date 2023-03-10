@@ -7,87 +7,103 @@ import AuthenticationRequest from 'Frontend/generated/com/example/application/co
 import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
 import User from 'Frontend/generated/com/example/application/model/User/User';
 import { findAll } from 'Frontend/generated/UserController';
+import background from 'Frontend/assets/images/vitoria_ground.png';
 
 export default function LoginPageView() {
-  const username = useRef<HTMLInputElement>(null);
+  const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
+
+  const [emailError, setEmailError] = useState<String | null>(null);
+  const [passwordError, setPasswordError] = useState<String | null>(null);
+
+  const [loading, setLoading] = useState(false);
 
   const [users, setUsers] = useState<(User | undefined)[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
+    setPasswordError(null);
+    setEmailError(null);
 
-    if (!password.current?.value || !username.current?.value) return;
+    if (!password.current?.value) setPasswordError('Password is required');
+    if (!email.current?.value) setEmailError('Email is required');
 
-    const aux: AuthenticationRequest = {
-      email: username.current?.value,
-      password: password.current?.value,
-    };
-
-    const aux2: RegisterRequest = {
-      email: username.current?.value,
-      password: password.current?.value,
-    };
-
-    let result;
-    result = await authenticate(aux);
-
-    console.log('Register ', result);
-
-    if (!result) {
-      console.log('Error');
-    }
-    //window.location.href = '/';
+    // todo: add acctual login
+    setLoading(false);
   }
 
   useEffect(() => {
-    (async () => {
-      const result = await findAll();
-      setUsers(result);
-    })();
-  });
+    const timeout = setTimeout(() => {
+      setEmailError(null);
+      setPasswordError(null);
+    }, 300000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [emailError, passwordError]);
+
   return (
     <div className='relative w-full flex'>
-      <div className='w-1/2'>
-        {users.map((user) => (
-          <div className='pt-44' key={user?.id}>
-            <p>{user?.email}</p>
-          </div>
-        ))}
-        <form action='#' onSubmit={handleSubmit}>
+      <div className='md:!w-1/2 w-full'>
+        <form
+          action='#'
+          onSubmit={(e) => {
+            setLoading(true);
+            handleSubmit(e);
+          }}
+        >
           <div className='flex flex-col items-center justify-center h-screen'>
             <div className='flex flex-col items-start justify-center gap-8'>
               <div className='flex flex-col items-start justify-start gap-2'>
-                <h1 className='text-4xl font-bold m-0'>Login 01</h1>
+                <h1 className='text-4xl font-bold m-0'>Login</h1>
               </div>
               <div className='flex flex-col items-center justify-center gap-4'>
                 <div className='flex flex-col items-start justify-center gap-4'>
-                  <label htmlFor='username'>Email</label>
+                  <label htmlFor='email'>
+                    Email{' '}
+                    {emailError && (
+                      <span className='text-red-500 text-xs before:content-["*"]'>
+                        {emailError}
+                      </span>
+                    )}
+                  </label>
                   <input
-                    ref={username}
+                    max={60}
+                    ref={email}
                     type='text'
-                    name='Username'
-                    id='username'
-                    placeholder='Username'
-                    className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500'
+                    name='Email'
+                    id='email'
+                    placeholder='Email'
+                    className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500'
                   />
                 </div>
                 <div className='flex flex-col items-start justify-center gap-4'>
-                  <label htmlFor='password'>Password</label>
+                  <label htmlFor='password'>
+                    Password{' '}
+                    {passwordError && (
+                      <span className='text-red-500 text-xs before:content-["*"]'>
+                        {passwordError}
+                      </span>
+                    )}
+                  </label>
                   <input
+                    max={100}
                     ref={password}
                     type='password'
                     name='password'
                     id='password'
                     placeholder='Password'
-                    className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500'
+                    className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500'
                   />
                 </div>
               </div>
               <div className='flex flex-col items-center justify-center gap-4'>
                 <button
                   type='submit'
-                  className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-blue-500'
+                  className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500 hover:bg-gray-300 disabled:bg-gray-200/30'
+                  disabled={loading}
                 >
                   Login
                 </button>
@@ -96,7 +112,13 @@ export default function LoginPageView() {
           </div>
         </form>
       </div>
-      <div className='w-1/2 bg-black min-h-screen'>{/*Put image*/}</div>
+      <div className='hidden md:!block w-1/2 bg-black min-h-screen'>
+        <img
+          className='h-full -z-10 w-screen object-cover'
+          src={background}
+          alt=''
+        />
+      </div>
     </div>
   );
 }
