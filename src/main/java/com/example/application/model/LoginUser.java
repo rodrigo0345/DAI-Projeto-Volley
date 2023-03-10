@@ -10,18 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
-public
-class LoginUser {
+public class LoginUser {
 
-    @Id
     private String firstname;
     private String lastname;
     private String email;
     private String role;
-    @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
     public LoginUser() {

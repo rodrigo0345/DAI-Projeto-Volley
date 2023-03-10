@@ -9,8 +9,12 @@ import User from 'Frontend/generated/com/example/application/model/User/User';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
 import { login } from 'Frontend/generated/AuthenticationController';
+import LoginUser from 'Frontend/generated/com/example/application/model/LoginUser';
 
 export default function LoginPageView() {
+
+  
+
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
@@ -35,21 +39,22 @@ export default function LoginPageView() {
       email.current?.focus();
       setEmailError('Email is required');
     }
-    if (password.current?.value || email.current?.value) {
+    if (!password.current?.value || !email.current?.value) {
       setLoading(false);
       return;
     }
 
+    let response: LoginUser | undefined;
     try {
-      const response = await login(
-        email.current?.value,
-        password.current?.value
-      );
+      response = await login(email.current?.value, password.current?.value);
     } catch (e) {
       console.log(e);
     }
 
-    // todo: add acctual login
+    console.log(response);
+
+
+
     setLoading(false);
   }
 

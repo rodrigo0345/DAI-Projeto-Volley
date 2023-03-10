@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.application.service.AuthenticationService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.model.LoginUser;
+import com.example.application.model.User.User;
 import com.example.application.repository.UserRepository;
 import dev.hilla.Endpoint;
 
@@ -39,14 +40,25 @@ public class AuthenticationController {
 
     public LoginUser login(String email, String password) {
 
-        LoginUser user = null;
+        User user = null;
         try {
-            user = users.findLoginUserByEmail(email).get();
+            user = users.findByEmail(email).get();
         } catch (Exception e) {
             System.err.println(e);
         }
 
-        return user;
+        if (user == null) {
+            return null;
+        }
+
+        LoginUser loginUser = new LoginUser(
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getRole().toString(),
+                user.getTokens());
+
+        return loginUser;
     }
 
 }
