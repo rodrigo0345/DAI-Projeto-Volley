@@ -10,9 +10,11 @@ import { IoClose } from 'react-icons/io5';
 import MainButton from '../buttons/MainButton';
 
 export default function mainHeader() {
-  const [enabledDarkMode, setEnabledDarkMode] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const theme = useContext(ThemeContext);
+  const [enabledDarkMode, setEnabledDarkMode] = useState<boolean>(
+    theme?.theme === 'dark'
+  );
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   function switchTheme(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     if (!enabledDarkMode) {

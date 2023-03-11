@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   authenticate,
   register,
@@ -8,12 +8,12 @@ import RegisterRequest from 'Frontend/generated/com/example/application/controll
 import User from 'Frontend/generated/com/example/application/model/User/User';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
-import { login } from 'Frontend/generated/AuthenticationController';
+import { login as loginServer } from 'Frontend/generated/AuthenticationController';
 import LoginUser from 'Frontend/generated/com/example/application/model/LoginUser';
+import { UserContext } from 'Frontend/contexts/UserContext';
 
 export default function LoginPageView() {
-
-  
+  const { user, login } = useContext(UserContext);
 
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
@@ -46,14 +46,24 @@ export default function LoginPageView() {
 
     let response: LoginUser | undefined;
     try {
-      response = await login(email.current?.value, password.current?.value);
+      response = await loginServer(
+        email.current?.value,
+        password.current?.value
+      );
     } catch (e) {
       console.log(e);
     }
 
     console.log(response);
+    if (!response) {
+      // TODO add error message
+      email.current.value = '';
+      password.current.value = '';
+      setLoading(false);
+      return;
+    }
 
-
+    login(response);
 
     setLoading(false);
   }
