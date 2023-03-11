@@ -1,5 +1,6 @@
 package com.example.application.model.Token;
 
+import com.example.application.model.User.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,9 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.example.application.model.User.User;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,21 +21,15 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Token {
 
-    @Id
-    @GeneratedValue
-    public Integer id;
+  @Id @GeneratedValue public Integer id;
 
-    @Column(unique = true)
-    public String token;
+  @Column(unique = true) public String token;
 
-    @Enumerated(EnumType.STRING)
-    public TokenType tokenType = TokenType.BEARER;
+  @Enumerated(EnumType.STRING) public TokenType tokenType = TokenType.BEARER;
 
-    public boolean revoked;
+  public boolean revoked;
 
-    public boolean expired;
+  public boolean expired;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    public User user;
+  @ManyToOne @JoinColumn(name = "user_id") public User user;
 }
