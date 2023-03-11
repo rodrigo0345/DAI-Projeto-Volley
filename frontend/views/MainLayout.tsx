@@ -25,6 +25,8 @@ import {
 } from 'Frontend/routes/PrivateRoutes';
 import LoginPageView from './LoginPageView';
 import LandPageView from './LandPageView';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function MainLayout() {
   const { user } = useContext(UserContext);
@@ -44,6 +46,7 @@ export default function MainLayout() {
           <MainFooter></MainFooter>
         </AppLayout>
       </ThemeProvider>
+      <ToastContainer />
     </Context>
   );
 }

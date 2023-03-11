@@ -5,14 +5,16 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.Entity;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.application.service.AuthenticationService;
+import com.example.application.service.JwtService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import com.example.application.model.LoginUser;
+import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 import com.example.application.repository.UserRepository;
 import dev.hilla.Endpoint;
@@ -38,7 +40,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    public LoginUser login(String email, String password) {
+    public ResponseEntity<LoginUser> login(String email, String password) throws Exception {
 
         User user = null;
         try {
@@ -51,14 +53,30 @@ public class AuthenticationController {
             return null;
         }
 
+        RegisterRequest request = new RegisterRequest(user.getFirstname(), user.getLastname(), user.getUsername(),
+                user.getEmail(),
+                user.getPassword(), user.getRole().toString());
+
+        // regista uma nova token
+        AuthenticationResponse token = null;
+        try {
+            token = service.register(request);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
         LoginUser loginUser = new LoginUser(
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
                 user.getRole().toString(),
-                user.getTokens());
+                token.getToken());
 
-        return loginUser;
+        return ResponseEntity.ok(loginUser);
+    }
+
+    public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
+        return ResponseEntity.ok(service.isTokenValid(token, user.getFirstname()));
     }
 
 }

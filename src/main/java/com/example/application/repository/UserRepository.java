@@ -1,11 +1,11 @@
 package com.example.application.repository;
 
-import com.example.application.model.LoginUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 
 import java.util.Optional;

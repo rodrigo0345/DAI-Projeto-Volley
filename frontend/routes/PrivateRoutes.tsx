@@ -1,9 +1,10 @@
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import LoginUser from 'Frontend/generated/com/example/application/model/LoginUser';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/';
 
-export function PrivateAdminRoute({ user }: { user: LoginUser | null }) {
+export function PrivateAdminRoute() {
+  const { user } = useContext(UserContext);
   return user && user?.role?.includes('ADMIN') ? (
     <Outlet />
   ) : (
@@ -11,7 +12,8 @@ export function PrivateAdminRoute({ user }: { user: LoginUser | null }) {
   );
 }
 
-export function PrivateManagerRoute({ user }: { user: LoginUser | null }) {
+export function PrivateManagerRoute() {
+  const { user } = useContext(UserContext);
   return user && user?.role?.includes('MANAGER' || 'ADMIN') ? (
     <Outlet />
   ) : (

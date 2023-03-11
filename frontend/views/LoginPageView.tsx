@@ -11,9 +11,10 @@ import background from 'Frontend/assets/images/vitoria_ground.png';
 import { login as loginServer } from 'Frontend/generated/AuthenticationController';
 import LoginUser from 'Frontend/generated/com/example/application/model/LoginUser';
 import { UserContext } from 'Frontend/contexts/UserContext';
+import { toast } from 'react-toastify';
 
 export default function LoginPageView() {
-  const { user, login } = useContext(UserContext);
+  const { login } = useContext(UserContext);
 
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
@@ -24,6 +25,14 @@ export default function LoginPageView() {
   const [loading, setLoading] = useState(false);
 
   const [users, setUsers] = useState<(User | undefined)[]>([]);
+
+  const notify = (msg: string) => {
+    toast.error(msg, {
+      position: 'bottom-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+    });
+  };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,13 +66,14 @@ export default function LoginPageView() {
     console.log(response);
     if (!response) {
       // TODO add error message
+      notify('Email ou Palavra-passe incorretos!');
       email.current.value = '';
       password.current.value = '';
       setLoading(false);
       return;
     }
 
-    login(response);
+    login(response.body);
 
     setLoading(false);
   }
