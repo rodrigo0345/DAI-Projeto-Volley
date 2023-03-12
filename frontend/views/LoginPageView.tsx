@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   authenticate,
   register,
@@ -8,8 +8,14 @@ import RegisterRequest from 'Frontend/generated/com/example/application/controll
 import User from 'Frontend/generated/com/example/application/model/User/User';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
+import { login as loginServer } from 'Frontend/generated/AuthenticationController';
+import LoginUser from 'Frontend/generated/com/example/application/model/LoginUser';
+import { UserContext } from 'Frontend/contexts/UserContext';
+import { toast } from 'react-toastify';
 
 export default function LoginPageView() {
+  const { login } = useContext(UserContext);
+
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
@@ -20,16 +26,55 @@ export default function LoginPageView() {
 
   const [users, setUsers] = useState<(User | undefined)[]>([]);
 
+  const notify = (msg: string) => {
+    toast.error(msg, {
+      position: 'bottom-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+    });
+  };
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setPasswordError(null);
     setEmailError(null);
 
-    if (!password.current?.value) setPasswordError('Password is required');
-    if (!email.current?.value) setEmailError('Email is required');
+    if (!password.current?.value) {
+      password.current?.focus();
+      setPasswordError('Password is required');
+    }
+    if (!email.current?.value) {
+      email.current?.focus();
+      setEmailError('Email is required');
+    }
+    if (!password.current?.value || !email.current?.value) {
+      setLoading(false);
+      return;
+    }
 
-    // todo: add acctual login
+    let response: LoginUser | undefined;
+    try {
+      response = await loginServer(
+        email.current?.value,
+        password.current?.value
+      );
+    } catch (e) {
+      console.log(e);
+    }
+
+    console.log(response);
+    if (!response) {
+      // TODO add error message
+      notify('Email ou Palavra-passe incorretos!');
+      email.current.value = '';
+      password.current.value = '';
+      setLoading(false);
+      return;
+    }
+
+    login(response.body);
+
     setLoading(false);
   }
 

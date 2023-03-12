@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +12,8 @@ import com.example.application.config.RequiredArgsConstructor;
 import com.example.application.controller.Auth.AuthenticationRequest;
 import com.example.application.controller.Auth.AuthenticationResponse;
 import com.example.application.controller.Auth.RegisterRequest;
-import com.example.application.model.Token;
-import com.example.application.model.TokenType;
+import com.example.application.model.Token.Token;
+import com.example.application.model.Token.TokenType;
 import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
 import com.example.application.repository.TokenRepository;
@@ -40,6 +41,18 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
+    public String encodePassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
+    public String extractUsername(String token) {
+        return jwtService.extractUsername(token);
+    }
+
+    public boolean isTokenValid(String token, String username) {
+        return jwtService.isTokenValid(token, username);
+    }
+
     public AuthenticationResponse register(RegisterRequest request) {
         User user = new User(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(),
                 Roles.USER);
@@ -63,7 +76,7 @@ public class AuthenticationService {
         }
 
         var user = repository.findByEmail(request.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new Exception("User not found"));
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);

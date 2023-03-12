@@ -8,6 +8,7 @@ import java.util.List;
 import dev.hilla.Nonnull;
 
 import dev.hilla.Endpoint;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Endpoint
 @AnonymousAllowed

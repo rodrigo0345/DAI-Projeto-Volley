@@ -16,7 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.application.model.Token;
+import com.example.application.model.Token.Token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,12 +33,13 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-
     private String firstname;
 
     private String lastname;
 
+    @Email
     private String email;
+    
     private String password;
 
     @Enumerated(EnumType.STRING)

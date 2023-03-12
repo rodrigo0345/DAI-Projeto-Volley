@@ -8,11 +8,16 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import MainButton from '../buttons/MainButton';
+import { UserContext } from 'Frontend/contexts/UserContext';
+import { Navigate, redirect } from 'react-router-dom';
 
 export default function mainHeader() {
-  const [enabledDarkMode, setEnabledDarkMode] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const theme = useContext(ThemeContext);
+  const { user, logout } = useContext(UserContext);
+  const [enabledDarkMode, setEnabledDarkMode] = useState<boolean>(
+    theme?.theme === 'dark'
+  );
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   function switchTheme(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     if (!enabledDarkMode) {
@@ -58,7 +63,21 @@ export default function mainHeader() {
         </div>
       </div>
       <aside className='relative px-4 flex-row-reverse items-center gap-4 h-12 flex'>
-        <MainButton href='/login'>Começa já</MainButton>
+        {user ? (
+          <div className='cursor-pointer'>
+            {user.firstname}
+            <button
+              onClick={() => {
+                logout();
+                redirect('/login');
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <MainButton href='/login'>Começa já</MainButton>
+        )}
 
         <div className='relative items-center hidden sm:!flex'>
           <button

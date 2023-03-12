@@ -1,16 +1,10 @@
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { ReactNode, useContext } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/';
 
-export function PrivateAdminRoute({
-  children,
-  ...rest
-}: {
-  children: React.ReactNode;
-  rest: any;
-}) {
-  const user = useContext(UserContext);
-
+export function PrivateAdminRoute() {
+  const { user } = useContext(UserContext);
   return user && user?.role?.includes('ADMIN') ? (
     <Outlet />
   ) : (
@@ -18,15 +12,8 @@ export function PrivateAdminRoute({
   );
 }
 
-export function PrivateManagerRoute({
-  children,
-  ...rest
-}: {
-  children: React.ReactNode;
-  rest: any;
-}) {
-  const user = useContext(UserContext);
-
+export function PrivateManagerRoute() {
+  const { user } = useContext(UserContext);
   return user && user?.role?.includes('MANAGER' || 'ADMIN') ? (
     <Outlet />
   ) : (
@@ -34,20 +21,12 @@ export function PrivateManagerRoute({
   );
 }
 
-export function PrivateRouteNoGuests({
-  children,
-  ...rest
-}: {
-  children: React.ReactNode;
-  rest: any;
-}) {
-  const user = useContext(UserContext);
-
+export function PrivateRouteNoGuests() {
+  const { user } = useContext(UserContext);
   return user ? <Outlet /> : <Navigate to='/' />;
 }
 
 export function GuestsRoute() {
-  const user = useContext(UserContext);
-
+  const { user } = useContext(UserContext);
   return !user ? <Outlet /> : <Navigate to='/dashboard' />;
 }
