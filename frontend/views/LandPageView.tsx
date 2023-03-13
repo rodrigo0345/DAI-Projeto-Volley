@@ -51,7 +51,9 @@ export default function LandPageView() {
                 <br /> foi tão <span>fácil</span>
               </h1>
               <div className='flex gap-4 items-center flex-col sm:!flex-row'>
-                <MainButton href='/login'>Começa já</MainButton>
+                <MainButton href='/login' className='dark:!outline-yellow-500'>
+                  Começa já
+                </MainButton>
                 <a
                   href='/login'
                   className='w-fit text-zinc-800 flex items-center gap-1 font-semibold hover:no-underline dark:text-gray-300'
@@ -90,7 +92,7 @@ export default function LandPageView() {
                     Com nossa app, encontre facilmente boleias para eventos,
                     trabalho, viagens e muito mais
                   </p>
-                  <MainButton href='/login'>Começa já</MainButton>
+                  <MainButton href='/login' className='dark:!outline-yellow-500'>Começa já</MainButton>
                 </div>
               </div>
               <div className='lg:!flex hidden relative h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl items-center dark:outline-gray-100'>

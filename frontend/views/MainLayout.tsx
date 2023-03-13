@@ -11,6 +11,7 @@ import {
   Route,
   BrowserRouter as Router,
   Routes,
+  redirect,
 } from 'react-router-dom';
 import css from './MainLayout.module.css';
 import MainHeader from 'Frontend/components/headers/MainHeader';
@@ -27,9 +28,16 @@ import LoginPageView from './LoginPageView';
 import LandPageView from './LandPageView';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdminPanelView from './AdminPanelView';
+import DashboardView from './DashboardView';
 
 export default function MainLayout() {
   const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (!user) {
+    }
+  }, [user]);
   return (
     <Context>
       <ThemeProvider>
@@ -40,6 +48,12 @@ export default function MainLayout() {
               <Route element={<GuestsRoute />}>
                 <Route element={<LoginPageView />} path='/login'></Route>
                 <Route element={<LandPageView />} path='/'></Route>
+              </Route>
+              <Route element={<PrivateRouteNoGuests />}>
+                <Route element={<DashboardView />} path='/dashboard'></Route>
+              </Route>
+              <Route element={<PrivateAdminRoute />}>
+                <Route element={<AdminPanelView />} path='/admin'></Route>
               </Route>
             </Routes>
           </Suspense>

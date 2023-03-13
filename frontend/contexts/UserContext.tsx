@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { redirect } from 'react-router-dom';
 
 export const UserContext = createContext<{
   user: LoginUser | null;
@@ -31,6 +32,7 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
   }
 
   function logout() {
+    window.location.href = '/login';
     setUser(null);
     saveUserToStorage(null);
   }

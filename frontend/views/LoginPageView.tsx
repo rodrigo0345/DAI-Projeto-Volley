@@ -64,7 +64,6 @@ export default function LoginPageView() {
       console.log(e);
     }
 
-    console.log(response);
     if (!response) {
       // TODO add error message
       notify('Email ou Palavra-passe incorretos!');

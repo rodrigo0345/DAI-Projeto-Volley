@@ -9,10 +9,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import MainButton from '../buttons/MainButton';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { Navigate, redirect } from 'react-router-dom';
+import { Link, Navigate, redirect, useLocation } from 'react-router-dom';
 
 export default function mainHeader() {
   const theme = useContext(ThemeContext);
+  const location = useLocation();
   const { user, logout } = useContext(UserContext);
   const [enabledDarkMode, setEnabledDarkMode] = useState<boolean>(
     theme?.theme === 'dark'
@@ -43,22 +44,26 @@ export default function mainHeader() {
         </div>
         <div className='hidden sm:!block'>
           <ul className='flex gap-4'>
-            <li className='font-semibold  text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 focus:before:translate-y-2 cursor-pointer'>
-              <a
-                href=''
-                className='dark:text-gray-100 text-gray-800 hover:no-underline'
-              >
-                Funcionalidades
-              </a>
-            </li>
-            <li className='font-semibold text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 cursor-pointer'>
-              <a
-                href=''
-                className='dark:text-gray-100 text-gray-800 hover:no-underline'
-              >
-                Sobre nós
-              </a>
-            </li>
+            {location.pathname === '/' && (
+              <>
+                <li className='font-semibold  text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 focus:before:translate-y-2 cursor-pointer'>
+                  <a
+                    href=''
+                    className='dark:text-gray-100 text-gray-800 hover:no-underline'
+                  >
+                    Funcionalidades
+                  </a>
+                </li>
+                <li className='font-semibold text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 cursor-pointer'>
+                  <a
+                    href=''
+                    className='dark:text-gray-100 text-gray-800 hover:no-underline'
+                  >
+                    Sobre nós
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
@@ -69,7 +74,6 @@ export default function mainHeader() {
             <button
               onClick={() => {
                 logout();
-                redirect('/login');
               }}
             >
               Logout
@@ -110,7 +114,7 @@ export default function mainHeader() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.3 }}
             id='modal'
             className=' sm:hidden fixed top-0 left-0 h-screen w-screen z-10 flex justify-end'
           >
@@ -156,6 +160,14 @@ export default function mainHeader() {
                     onChange={switchTheme}
                     color='yellow'
                   />
+                </li>
+                <li
+                  className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3 dark:bg-zinc-800/20'
+                  onClick={() => {
+                    window.location.href = '/login';
+                  }}
+                >
+                  <label className='text-zinc-800 dark:text-white'>Login</label>
                 </li>
               </ul>
             </motion.div>

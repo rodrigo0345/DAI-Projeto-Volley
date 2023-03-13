@@ -57,13 +57,17 @@ public class AuthenticationController {
                 user.getEmail(),
                 user.getPassword(), user.getRole().toString());
 
+        AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
+
         // regista uma nova token
         AuthenticationResponse token = null;
         try {
-            token = service.register(request);
+            token = service.authenticate(authRequest);
         } catch (Exception e) {
-            System.err.println(e);
+            token = service.register(request);
         }
+
+        System.err.println(token.getToken());
 
         LoginUser loginUser = new LoginUser(
                 user.getFirstname(),

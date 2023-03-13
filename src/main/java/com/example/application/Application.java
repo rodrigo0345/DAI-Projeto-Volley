@@ -32,7 +32,7 @@ public class Application implements AppShellConfigurator {
     CommandLineRunner init(PostRepository posts, UserRepository users) {
         return args -> {
             posts.save(new Post("First Post", "first-post", "This is the first post", "David"));
-            User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", "rrr", Roles.USER);
+            User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", "rrr", Roles.ADMIN);
             users.save(aux);
         };
     }
