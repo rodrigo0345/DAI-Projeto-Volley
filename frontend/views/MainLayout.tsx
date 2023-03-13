@@ -10,7 +10,9 @@ import {
   Outlet,
   Route,
   BrowserRouter as Router,
+  RouterProvider,
   Routes,
+  createBrowserRouter,
   redirect,
 } from 'react-router-dom';
 import css from './MainLayout.module.css';
@@ -32,30 +34,13 @@ import AdminPanelView from './AdminPanelView';
 import DashboardView from './DashboardView';
 
 export default function MainLayout() {
-  const { user } = useContext(UserContext);
-
-  useEffect(() => {
-    if (!user) {
-    }
-  }, [user]);
   return (
     <Context>
       <ThemeProvider>
         <AppLayout className='' primarySection='drawer'>
           <MainHeader></MainHeader>
           <Suspense fallback={<Placeholder />}>
-            <Routes>
-              <Route element={<GuestsRoute />}>
-                <Route element={<LoginPageView />} path='/login'></Route>
-                <Route element={<LandPageView />} path='/'></Route>
-              </Route>
-              <Route element={<PrivateRouteNoGuests />}>
-                <Route element={<DashboardView />} path='/dashboard'></Route>
-              </Route>
-              <Route element={<PrivateAdminRoute />}>
-                <Route element={<AdminPanelView />} path='/admin'></Route>
-              </Route>
-            </Routes>
+            <Outlet />
           </Suspense>
           <MainFooter></MainFooter>
         </AppLayout>

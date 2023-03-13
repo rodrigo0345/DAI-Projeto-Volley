@@ -1,11 +1,54 @@
-import { RouterProvider } from 'react-router-dom';
-import MainLayout from './views/MainLayout';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
+import {
+  GuestsRoute,
+  PrivateAdminRoute,
+  PrivateRouteNoGuests,
+} from './routes/PrivateRoutes';
+import { Suspense, lazy } from 'react';
+
+const MainLayout = lazy(() => import('./views/MainLayout'));
+const LandPageView = lazy(() => import('./views/LandPageView'));
+const LoginPageView = lazy(() => import('./views/LoginPageView'));
+const DashboardView = lazy(() => import('./views/DashboardView'));
+const AdminPanelView = lazy(() => import('./views/AdminPanelView'));
+const MainLoadingScreen = lazy(
+  () => import('./components/loaders/MainLoadingScreen')
+);
+
+const router = createBrowserRouter([
+  {
+    element: (
+      <Suspense fallback={<MainLoadingScreen />}>
+        <MainLayout />
+      </Suspense>
+    ),
+    children: [
+      {
+        element: <GuestsRoute />,
+        children: [
+          { path: '/', element: <LandPageView /> },
+          { path: '/login', element: <LoginPageView /> },
+        ],
+      },
+      {
+        element: <PrivateRouteNoGuests />,
+        children: [{ path: '/dashboard', element: <DashboardView /> }],
+      },
+      {
+        element: <PrivateAdminRoute />,
+        children: [
+          {
+            path: '/admin',
+            element: <AdminPanelView />,
+            handle: { title: 'Admin page' },
+          },
+        ],
+      },
+    ],
+  },
+]);
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <MainLayout />
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }
