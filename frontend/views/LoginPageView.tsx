@@ -9,7 +9,7 @@ import User from 'Frontend/generated/com/example/application/model/User/User';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
 import { login as loginServer } from 'Frontend/generated/AuthenticationController';
-import LoginUser from 'Frontend/generated/com/example/application/model/LoginUser';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 
@@ -73,7 +73,7 @@ export default function LoginPageView() {
       return;
     }
 
-    login(response.body);
+    login(response);
 
     setLoading(false);
   }

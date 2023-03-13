@@ -40,7 +40,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    public ResponseEntity<LoginUser> login(String email, String password) throws Exception {
+    public LoginUser login(String email, String password) throws Exception {
 
         User user = null;
         try {
@@ -72,7 +72,7 @@ public class AuthenticationController {
                 user.getRole().toString(),
                 token.getToken());
 
-        return ResponseEntity.ok(loginUser);
+        return loginUser;
     }
 
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {

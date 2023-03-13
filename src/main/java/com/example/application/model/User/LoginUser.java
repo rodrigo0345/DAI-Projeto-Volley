@@ -1,6 +1,9 @@
 package com.example.application.model.User;
 
 import lombok.Data;
+
+import javax.persistence.Entity;
+
 import lombok.AllArgsConstructor;
 
 @Data

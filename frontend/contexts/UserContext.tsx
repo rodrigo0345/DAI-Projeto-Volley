@@ -1,4 +1,4 @@
-import LoginUser from 'Frontend/generated/com/example/application/model/LoginUser';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import User from 'Frontend/generated/com/example/application/model/User/User';
 import {
   Dispatch,

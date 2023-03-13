@@ -1,7 +1,7 @@
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import LoginUser from 'Frontend/generated/com/example/application/model/User/';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 
 export function PrivateAdminRoute() {
   const { user } = useContext(UserContext);
