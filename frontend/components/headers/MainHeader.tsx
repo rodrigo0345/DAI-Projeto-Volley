@@ -34,7 +34,7 @@ export default function mainHeader() {
   }
 
   return (
-    <div className='z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6 backdrop-blur-sm'>
+    <div className='z-50 flex  items-center justify-around bg-zinc-800/20 w-full h-24 fixed px-6 backdrop-blur-sm'>
       <div className='flex items-center bg-transparent w-full px-4 gap-4'>
         <div className='h-10 flex'>
           <a href='/'>
@@ -64,7 +64,7 @@ export default function mainHeader() {
       </div>
       <aside className='relative px-4 flex-row-reverse items-center gap-4 h-12 flex'>
         {user ? (
-          <div className='cursor-pointer'>
+          <div className='cursor-pointer hidden md:!block'>
             {user.firstname}
             <button
               onClick={() => {
@@ -76,7 +76,9 @@ export default function mainHeader() {
             </button>
           </div>
         ) : (
-          <MainButton href='/login'>Começa já</MainButton>
+          <MainButton href='/login' className='hidden'>
+            Começa já
+          </MainButton>
         )}
 
         <div className='relative items-center hidden sm:!flex'>
@@ -95,7 +97,7 @@ export default function mainHeader() {
 
         <div
           onClick={toggleModal}
-          className='h-full flex items-center sm:hidden'
+          className='h-full flex items-center sm:hidden dark:text-white'
         >
           <RxHamburgerMenu size={25}></RxHamburgerMenu>
         </div>
@@ -122,14 +124,16 @@ export default function mainHeader() {
               onClick={(e) => {
                 e.stopPropagation;
               }}
-              className='flex flex-col absolute right-0 top-0 h-full bg-zinc-400 dark:bg-zinc-700 w-3/4 opacity-100 z-20 p-3 translate-x-96'
+              className='flex flex-col absolute right-0 top-0 h-full bg-zinc-100 dark:bg-zinc-700 w-3/4 opacity-100 z-20 p-3 translate-x-96'
               initial={{ x: 500 }}
               animate={{ x: 0 }}
               exit={{ x: 500 }}
               transition={{ duration: 0.2 }}
             >
               <div className='px-4 py-2 flex items-center justify-between'>
-                <h3 className='font-semibold text-xl'>What a day...</h3>
+                <h3 className='font-semibold text-xl dark:text-white'>
+                  Mobile Menu
+                </h3>
                 <IoClose
                   color={theme?.theme === 'light' ? '' : 'white'}
                   size={30}
@@ -139,12 +143,18 @@ export default function mainHeader() {
                 ></IoClose>
               </div>
               <ul className='mt-5 flex flex-col gap-4'>
-                <li className='flex justify-between items-center gap-3 outline outline-1 outline-blue-400 rounded-md p-3'>
-                  <label htmlFor='theme-switch'>Dark mode</label>
+                <li className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3'>
+                  <label
+                    htmlFor='theme-switch'
+                    className='text-zinc-800 dark:text-white'
+                  >
+                    Dark mode
+                  </label>
                   <Switch
                     checked={enabledDarkMode}
                     id='theme-switch'
                     onChange={switchTheme}
+                    color='yellow'
                   />
                 </li>
               </ul>
