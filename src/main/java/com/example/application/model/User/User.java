@@ -3,6 +3,7 @@ package com.example.application.model.User;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.security.DeclareRoles;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
+import org.springframework.context.annotation.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,9 +41,10 @@ public class User implements UserDetails {
 
     @Email
     private String email;
-    
+
     private String password;
 
+    
     @Enumerated(EnumType.STRING)
     private Roles role;
 

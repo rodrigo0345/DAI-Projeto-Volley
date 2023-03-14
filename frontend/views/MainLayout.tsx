@@ -3,7 +3,7 @@ import { DrawerToggle } from '@hilla/react-components/DrawerToggle.js';
 import { Item } from '@hilla/react-components/Item.js';
 import { Scroller } from '@hilla/react-components/Scroller.js';
 import Placeholder from 'Frontend/components/placeholder/Placeholder.js';
-import { Suspense, useContext, useEffect } from 'react';
+import { StrictMode, Suspense, useContext, useEffect } from 'react';
 import {
   NavLink,
   Navigate,
@@ -40,7 +40,7 @@ export default function MainLayout() {
         <AppLayout className='' primarySection='drawer'>
           <MainHeader></MainHeader>
           <Suspense fallback={<Placeholder />}>
-            <Outlet />
+              <Outlet />
           </Suspense>
           <MainFooter></MainFooter>
         </AppLayout>

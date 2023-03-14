@@ -92,7 +92,12 @@ export default function LandPageView() {
                     Com nossa app, encontre facilmente boleias para eventos,
                     trabalho, viagens e muito mais
                   </p>
-                  <MainButton href='/login' className='dark:!outline-yellow-500'>Começa já</MainButton>
+                  <MainButton
+                    href='/login'
+                    className='dark:!outline-yellow-500'
+                  >
+                    Começa já
+                  </MainButton>
                 </div>
               </div>
               <div className='lg:!flex hidden relative h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl items-center dark:outline-gray-100'>

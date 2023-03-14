@@ -39,7 +39,7 @@ export default function mainHeader() {
       <div className='flex items-center bg-transparent w-full px-4 gap-4'>
         <div className='h-10 flex'>
           <a href='/'>
-            <img src={logo} alt='' className='h-full' />
+            <img src={logo} alt='' className='h-11 w-11' />
           </a>
         </div>
         <div className='hidden sm:!block'>

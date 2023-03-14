@@ -44,7 +44,8 @@
     "react-router-dom": "^6.8.2",
     "react-toastify": "^9.1.1",
     "sort-by": "^1.2.0",
-    "styled-components": "^5.3.8"
+    "styled-components": "^5.3.8",
+    "vite-plugin-compression": "^0.5.1"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "3.1.0",
@@ -112,7 +113,8 @@
     "localforage": "$localforage",
     "match-sorter": "$match-sorter",
     "sort-by": "$sort-by",
-    "react-toastify": "$react-toastify"
+    "react-toastify": "$react-toastify",
+    "vite-plugin-compression": "$vite-plugin-compression"
   },
   "vaadin": {
     "dependencies": {
@@ -160,6 +162,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "148cb823afd8f93f3bfe83b69fe93b4cad4de3ab8d65816470e9ce7e14cd5447"
+    "hash": "f14afa5d22bb09788613f3a27182a32aa7c4f1df90ee8e9fed90fc4a0c25cc0a"
   }
 }
