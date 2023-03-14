@@ -5,12 +5,12 @@ export default function DashboardView() {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
-  function onSubmit() {
+  async function onSubmit() {
     const emailValue = email.current?.value;
     const passwordValue = password.current?.value;
 
     try {
-      let resultSignup = signup({ email: emailValue, password: passwordValue });
+      let resultSignup = await signup({ email: emailValue, password: passwordValue });
       console.log({ resultSignup });
     } catch (error) {
       console.log(error);
