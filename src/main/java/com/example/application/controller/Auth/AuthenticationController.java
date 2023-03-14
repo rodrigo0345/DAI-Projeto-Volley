@@ -41,7 +41,20 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    public LoginUser signup(RegisterRequest request) throws Exception {
+
+
+    public LoginUser signup(
+            @RequestBody LoginUser currentUser,
+            @RequestBody RegisterRequest request) throws Exception {
+        // verificar se currentUser é admin
+        var isValidToken = this.validateToken(currentUser, currentUser.getStringToken()).getBody();
+        if (!isValidToken) {
+            return null;
+        }
+
+        if (!users.findByEmail(currentUser.getEmail()).get().getRole().toString().equals("ADMIN")) {
+            return null;
+        }
 
 
         // verificar se o mail é uma variavel valida
