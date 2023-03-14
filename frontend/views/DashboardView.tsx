@@ -10,7 +10,8 @@ export default function DashboardView() {
     const passwordValue = password.current?.value;
 
     try {
-      signup({ email: emailValue, password: passwordValue });
+      let resultSignup = signup({ email: emailValue, password: passwordValue });
+      console.log({ resultSignup });
     } catch (error) {
       console.log(error);
     }
