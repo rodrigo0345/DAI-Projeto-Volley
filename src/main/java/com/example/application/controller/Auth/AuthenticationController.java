@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 
+import org.junit.runner.Request;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +42,10 @@ public class AuthenticationController {
     }
 
     public LoginUser signup(RegisterRequest request) throws Exception {
+
+
         // verificar se o mail é uma variavel valida
+        System.out.println(request);
         User user = new User();
         try {
             user.setEmail(request.getEmail());
