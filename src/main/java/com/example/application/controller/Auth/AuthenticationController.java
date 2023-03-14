@@ -39,30 +39,27 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request) throws Exception {
         return ResponseEntity.ok(service.authenticate(request));
     }
-    public LoginUser signup(RegisterRequest request) throws Exception{
-        //verificar se o mail é uma variavel valida
+
+    public LoginUser signup(RegisterRequest request) throws Exception {
+        // verificar se o mail é uma variavel valida
         User user = new User();
         try {
             user.setEmail(request.getEmail());
-        }catch(Exception e){
-            return null;//provisorio
+        } catch (Exception e) {
+            return null;// provisorio
         }
-        //verificar se o email existe
+        // verificar se o email existe
         try {
             users.findByEmail(request.getEmail());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
-        //verificar que os dados são validos
+        // verificar que os dados são validos
 
-        //registar na base de dados
+        // registar na base de dados
 
-        //criar token e returnar o utilizador check
-
-
-
-
-        return this.login(email ,password);
+        // criar token e returnar o utilizador check
+        return null;
     }
 
     public LoginUser login(String email, String password) throws Exception {

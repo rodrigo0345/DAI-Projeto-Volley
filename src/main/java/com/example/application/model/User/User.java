@@ -35,18 +35,14 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    @Min(3)
-    @Max(36)
 
     private String firstname;
-    @Min(3)
-    @Max(36)
+
     private String lastname;
 
     @Email
     private String email;
-    @Min(8)
-    @Max(64)
+
     private String password;
 
     @Enumerated(EnumType.STRING)
