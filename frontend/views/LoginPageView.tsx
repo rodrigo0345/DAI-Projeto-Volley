@@ -12,9 +12,9 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
-import { User } from 'Frontend/generated/com/example/application/model/User/User';
+import { User } from 'Frontend/generated/com/example/application/model/User';
 
-export default function LoginPageView() {
+export default function LoginPageView(): JSX.Element {
   const { login } = useContext(UserContext);
 
   const email = useRef<HTMLInputElement>(null);

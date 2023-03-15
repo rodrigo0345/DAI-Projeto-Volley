@@ -27,6 +27,7 @@ export default function AdminPanelView() {
   const [addUser, setAddUser] = useState(false);
   const [isEncarregadoSelected, setEncarregadoSelected] = useState(false);
   const [plan, setPlan] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
@@ -37,25 +38,37 @@ export default function AdminPanelView() {
   const educandos = useRef<HTMLSelectElement>(null);
 
   async function onSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
+    setIsLoading(true);
     e.preventDefault();
     const emailValue = email.current?.value;
     const passwordValue = password.current?.value;
     let passwordConfirmValue = passwordConfirm.current?.value;
     const firstnameValue = firstname.current?.value;
     const lastnameValue = lastname.current?.value;
-    const roleValue = role.current?.value;
+    const roleValue = role?.current?.value;
     const educandosValue = educandos.current?.value;
 
     if (!emailValue || !passwordValue || !firstnameValue || !lastnameValue) {
       toast.error('Preencha todos os campos');
       firstname.current?.focus();
+      setIsLoading(false);
       return;
     }
 
     if (passwordValue !== passwordConfirmValue) {
       toast.error('As passwords inseridas não coincidem');
       password.current?.focus();
+      setIsLoading(false);
       return;
+    }
+
+    let roleString: string | undefined;
+    if (roleValue === 'Administrador') {
+      roleString = 'ADMIN';
+    } else if (roleValue === 'Encarregado') {
+      roleString = 'MANAGER';
+    } else if (roleValue === 'Educando') {
+      roleString = 'USER';
     }
 
     const register: RegisterRequest = {
@@ -63,18 +76,26 @@ export default function AdminPanelView() {
       password: passwordValue,
       firstName: firstnameValue,
       lastName: lastnameValue,
+      roles: roleString,
     };
 
-    if (!user) {
+    if (!user || !user.role?.includes('ADMIN')) {
+      toast.error('Não está autenticado');
+      setIsLoading(false);
       return;
     }
 
+    let resultSignup;
     try {
-      let resultSignup = await signup(user, register);
+      resultSignup = await signup(user, register);
       console.log({ resultSignup });
     } catch (error) {
       console.log(error);
     }
+
+    if (resultSignup) toast.success('Utilizador criado com sucesso');
+    setUsers([...users, resultSignup]);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -307,14 +328,16 @@ export default function AdminPanelView() {
                   onClick={() => {
                     setAddUser(false);
                   }}
+                  disabled={isLoading}
                   type='reset'
-                  className='bg-gray-600/70 w-20 py-2 text-sm font-semibold rounded-md hover:bg-gray-500/70 text-white'
+                  className='bg-gray-600/70 disabled:bg-gray-500/20 disabled:cursor-not-allowed w-20 py-2 text-sm font-semibold rounded-md hover:bg-gray-500/70 text-white'
                 >
                   Cancelar
                 </button>
                 <button
                   type='submit'
-                  className='bg-yellow-500/70 w-20 py-2 text-sm font-semibold rounded-md hover:bg-yellow-600/70 text-white'
+                  className='bg-yellow-500/70 disabled:bg-yellow-500/20 disabled:cursor-not-allowed w-20 py-2 text-sm font-semibold rounded-md hover:bg-yellow-600/70 text-white'
+                  disabled={isLoading}
                 >
                   Adicionar
                 </button>

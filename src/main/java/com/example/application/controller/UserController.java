@@ -28,10 +28,10 @@ public class UserController {
         for (User user : usersAux) {
             System.out.println(user);
             System.out.println(user.getTokens());
-            LoginUser l = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
+            LoginUser aux = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
                     user.getRole().toString(),
                     null);
-            loginUserList.add(l);
+            loginUserList.add(aux);
         }
         return loginUserList;
     }

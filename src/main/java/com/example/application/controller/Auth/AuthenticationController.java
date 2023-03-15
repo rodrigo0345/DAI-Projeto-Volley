@@ -1,7 +1,7 @@
 package com.example.application.controller.Auth;
 
 import com.example.application.model.User.Roles;
-import com.example.application.security.CryptWithMD5;
+//import com.example.application.security.CryptWithMD5;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
@@ -22,7 +22,7 @@ import com.example.application.model.User.User;
 import com.example.application.repository.UserRepository;
 import dev.hilla.Endpoint;
 
-import static com.example.application.security.CryptWithMD5.cryptWithMD5;
+//import static com.example.application.security.CryptWithMD5.cryptWithMD5;
 
 @Endpoint
 @AnonymousAllowed
@@ -44,8 +44,6 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request) throws Exception {
         return ResponseEntity.ok(service.authenticate(request));
     }
-
-
 
     public LoginUser signup(
             @RequestBody LoginUser currentUser,
@@ -76,16 +74,16 @@ public class AuthenticationController {
         }
 
         // verificar que os dados são validos
-        if(request.getFirstName().matches(".\\d.") || request.getLastName().matches(".\\d.") ){
+        if (request.getFirstName().matches(".\\d.") || request.getLastName().matches(".\\d.")) {
             return null;
         }
 
-        if(!request.getPassword().matches(".\\d.")) {
+        if (!request.getPassword().matches(".\\d.")) {
 
         }
 
-        //encriptar palavra pass
-        user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
+        // encriptar palavra pass
+        // user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
         // registar na base de dados
 
         user.setFirstname(request.getFirstName());
@@ -140,7 +138,5 @@ public class AuthenticationController {
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
         return ResponseEntity.ok(service.isTokenValid(token, user.getFirstname()));
     }
-
-
 
 }
