@@ -136,7 +136,7 @@ public class AuthenticationController {
     }
 
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
-        return ResponseEntity.ok(service.isTokenValid(token, user.getFirstname()));
+        return ResponseEntity.ok(service.isTokenValid(token, user.getEmail()));
     }
 
 }

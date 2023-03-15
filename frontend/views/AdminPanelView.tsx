@@ -93,7 +93,8 @@ export default function AdminPanelView() {
       console.log(error);
     }
 
-    if (resultSignup) toast.success('Utilizador criado com sucesso');
+    if (resultSignup && resultSignup)
+      toast.success('Utilizador criado com sucesso');
     setUsers([...users, resultSignup]);
     setIsLoading(false);
   }
