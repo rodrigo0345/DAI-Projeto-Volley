@@ -1,9 +1,12 @@
 package com.example.application.controller.Auth;
 
+import com.example.application.model.User.Roles;
+import com.example.application.security.CryptWithMD5;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.Entity;
 
+import org.junit.runner.Request;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,8 @@ import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 import com.example.application.repository.UserRepository;
 import dev.hilla.Endpoint;
+
+import static com.example.application.security.CryptWithMD5.cryptWithMD5;
 
 @Endpoint
 @AnonymousAllowed
@@ -40,6 +45,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
+
+
     public LoginUser signup(
             @RequestBody LoginUser currentUser,
             @RequestBody RegisterRequest request) throws Exception {
@@ -49,11 +56,12 @@ public class AuthenticationController {
             return null;
         }
 
-        if (!users.findByEmail(currentUser.getEmail()).get().getRole().toString().equals("ADMIN")) {
+        User aux = users.findByEmail(currentUser.getEmail()).get();
+
+        if (!aux.getRole().toString().equals("ADMIN")) {
             return null;
         }
 
-        // verificar se o mail é uma variavel valida
         User user = new User();
         try {
             user.setEmail(request.getEmail());
@@ -66,12 +74,27 @@ public class AuthenticationController {
         } catch (Exception e) {
             return null;
         }
-        // verificar que os dados são validos
 
+        // verificar que os dados são validos
+        if(request.getFirstName().matches(".\\d.") || request.getLastName().matches(".\\d.") ){
+            return null;
+        }
+
+        if(!request.getPassword().matches(".\\d.")) {
+
+        }
+
+        //encriptar palavra pass
+        user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
         // registar na base de dados
 
+        user.setFirstname(request.getFirstName());
+        user.setLastname(request.getLastName());
+        user.setRole(Roles.USER);
+        users.save(user);
+
         // criar token e returnar o utilizador check
-        return null;
+        return this.login(user.getEmail(), user.getPassword());
     }
 
     public LoginUser login(String email, String password) throws Exception {
@@ -117,5 +140,7 @@ public class AuthenticationController {
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
         return ResponseEntity.ok(service.isTokenValid(token, user.getFirstname()));
     }
+
+
 
 }
