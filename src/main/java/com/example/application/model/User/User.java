@@ -33,19 +33,19 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    @Size(min = 3 , max= 36, message="O firstname tem de ter pelo menos 6 caracteres a 64")
-    @NotNull
+
+
     private String firstname;
 
-    @Size(min = 3 , max= 36, message="O lastname tem de ter pelo menos 6 caracteres a 64")
-    @NotNull
+
+
     private String lastname;
 
     @Email
     private String email;
 
-    @Size(min = 6 , max= 64, message="A password tem de ter pelo menos 6 caracteres a 64" )
-    @NotNull
+
+    
     private String password;
 
     @Enumerated(EnumType.STRING)
