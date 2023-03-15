@@ -5,7 +5,8 @@ import {
   PrivateAdminRoute,
   PrivateRouteNoGuests,
 } from './routes/PrivateRoutes';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useContext } from 'react';
+import { UserContext } from './contexts/UserContext';
 
 const MainLayout = lazy(() => import('./views/MainLayout'));
 const LandPageView = lazy(() => import('./views/LandPageView'));
@@ -27,7 +28,10 @@ const router = createBrowserRouter([
       {
         element: <GuestsRoute />,
         children: [
-          { path: '/', element: <LandPageView /> },
+          {
+            path: '/',
+            element: <LandPageView />,
+          },
           { path: '/login', element: <LoginPageView /> },
         ],
       },
@@ -41,7 +45,6 @@ const router = createBrowserRouter([
           {
             path: '/admin',
             element: <AdminPanelView />,
-            handle: { title: 'Admin page' },
           },
         ],
       },

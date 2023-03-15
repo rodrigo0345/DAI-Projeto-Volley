@@ -1,5 +1,4 @@
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
-import User from 'Frontend/generated/com/example/application/model/User/User';
 import {
   Dispatch,
   SetStateAction,
@@ -11,13 +10,13 @@ import {
 import { redirect } from 'react-router-dom';
 
 export const UserContext = createContext<{
-  user: LoginUser | null;
+  user: LoginUser | undefined;
   login: (user: LoginUser) => void;
   logout: () => void;
-}>({ user: null, login: () => {}, logout: () => {} });
+}>({ user: undefined, login: () => {}, logout: () => {} });
 
 export default function Context({ children }: React.PropsWithChildren<{}>) {
-  const [user, setUser] = useState<LoginUser | null>(null);
+  const [user, setUser] = useState<LoginUser | undefined>();
 
   function getUserFromStorage() {
     const userFromStorage = localStorage.user;
@@ -33,7 +32,7 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
 
   function logout() {
     window.location.href = '/login';
-    setUser(null);
+    setUser(undefined);
     saveUserToStorage(null);
   }
 
