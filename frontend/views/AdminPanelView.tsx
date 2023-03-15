@@ -5,6 +5,7 @@ import { useContext, useRef, useState } from 'react';
 import { IoIosLogOut, IoMdSettings } from 'react-icons/io';
 import { RiUserSettingsFill } from 'react-icons/ri';
 import { FaSearch } from 'react-icons/fa';
+import UserCard from 'Frontend/components/cards/UserCard';
 
 enum Menu {
   USERS = 'USERS',
@@ -111,24 +112,31 @@ export default function AdminPanelView() {
           </div>
         </div>
       </aside>
-      <div id='content' className='flex-1 pr-28 relative'>
+      <div id='content' className='flex flex-1 pr-28 relative'>
         {menu === Menu.USERS && (
-          <header className='sticky pt-40 flex items-start justify-between'>
-            <div className='flex flex-col justify-start'>
-              <h1 className='text-3xl font-bold mb-4 mt-0'>Utilizadores</h1>
-              <h3 className='m-0 text-gray-400 font-normal'>
-                Informação dos utilizadores
-              </h3>
+          <div className='flex-1'>
+            {' '}
+            <header className='sticky pt-40 flex items-start justify-between'>
+              <div className='flex flex-col justify-start'>
+                <h1 className='text-3xl font-bold mb-4 mt-0'>Utilizadores</h1>
+                <h3 className='m-0 text-gray-400 font-normal'>
+                  Informação dos utilizadores
+                </h3>
+              </div>
+              <div className='flex  justify-center gap-4 h-full'>
+                <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
+                  <FaSearch />
+                </button>
+                <button className=' p-2 rounded-md outline-gray-300/70 outline outline-1 h-10 flex items-center justify-center hover:bg-yellow-600 px-4 bg-yellow-500'>
+                  <h4 className='m-0 text-white'>Adicionar</h4>
+                </button>
+              </div>
+            </header>
+            <div className='flex-1 pt-10 flex gap-10 flex-wrap'>
+              <UserCard user={user} />
+              <UserCard user={user} />
             </div>
-            <div className='flex  justify-center gap-4 h-full'>
-              <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
-                <FaSearch />
-              </button>
-              <button className=' p-2 rounded-md outline-gray-300/70 outline outline-1 h-10 flex items-center justify-center hover:bg-yellow-600 px-4 bg-yellow-500'>
-                <h4 className='m-0 text-white'>Adicionar</h4>
-              </button>
-            </div>
-          </header>
+          </div>
         )}
       </div>
     </main>
