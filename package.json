@@ -3,6 +3,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@emotion/react": "^11.10.6",
+    "@headlessui/react": "^1.7.13",
     "@hilla/form": "1.3.6",
     "@hilla/frontend": "1.3.6",
     "@hilla/generator-typescript-cli": "1.3.6",
@@ -112,7 +113,8 @@
     "localforage": "$localforage",
     "match-sorter": "$match-sorter",
     "sort-by": "$sort-by",
-    "react-toastify": "$react-toastify"
+    "react-toastify": "$react-toastify",
+    "@headlessui/react": "$@headlessui/react"
   },
   "vaadin": {
     "dependencies": {
@@ -160,6 +162,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "148cb823afd8f93f3bfe83b69fe93b4cad4de3ab8d65816470e9ce7e14cd5447"
+    "hash": "8991304a796e465aa232866122df8d2daf2a8a8a22aca98a749992c4922f64d0"
   }
 }

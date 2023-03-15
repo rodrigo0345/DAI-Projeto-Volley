@@ -1,11 +1,18 @@
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { signup } from 'Frontend/generated/AuthenticationController';
 import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { IoIosLogOut, IoMdSettings } from 'react-icons/io';
 import { RiUserSettingsFill } from 'react-icons/ri';
 import { FaSearch } from 'react-icons/fa';
 import UserCard from 'Frontend/components/cards/UserCard';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
+import { UserController } from 'Frontend/generated/endpoints';
+import { AnimatePresence, motion } from 'framer-motion';
+import { IoClose } from 'react-icons/io5';
+import { MultiSelect, NativeSelect, Switch } from '@mantine/core';
+import { RadioGroup } from '@headlessui/react';
+import { toast } from 'react-toastify';
 
 enum Menu {
   USERS = 'USERS',
@@ -13,21 +20,43 @@ enum Menu {
 }
 
 export default function AdminPanelView() {
+  const { user } = useContext(UserContext);
+
   const [menu, setMenu] = useState<Menu>(Menu.USERS);
+  const [users, setUsers] = useState<(LoginUser | undefined)[]>([]);
+  const [addUser, setAddUser] = useState(false);
+  const [isEncarregadoSelected, setEncarregadoSelected] = useState(false);
+  const [plan, setPlan] = useState('');
+
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
+  const passwordConfirm = useRef<HTMLInputElement>(null);
   const firstname = useRef<HTMLInputElement>(null);
   const lastname = useRef<HTMLInputElement>(null);
-  const role = useRef<HTMLInputElement>(null);
-  const { user } = useContext(UserContext);
+  const role = useRef<HTMLSelectElement>(null);
+  const educandos = useRef<HTMLSelectElement>(null);
 
   async function onSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
     const emailValue = email.current?.value;
     const passwordValue = password.current?.value;
+    let passwordConfirmValue = passwordConfirm.current?.value;
     const firstnameValue = firstname.current?.value;
     const lastnameValue = lastname.current?.value;
     const roleValue = role.current?.value;
+    const educandosValue = educandos.current?.value;
+
+    if (!emailValue || !passwordValue || !firstnameValue || !lastnameValue) {
+      toast.error('Preencha todos os campos');
+      firstname.current?.focus();
+      return;
+    }
+
+    if (passwordValue !== passwordConfirmValue) {
+      toast.error('As passwords inseridas não coincidem');
+      password.current?.focus();
+      return;
+    }
 
     const register: RegisterRequest = {
       email: emailValue,
@@ -48,9 +77,21 @@ export default function AdminPanelView() {
     }
   }
 
+  useEffect(() => {
+    async function getUsers() {
+      try {
+        let resultUsers = await UserController.findAll();
+        setUsers(resultUsers);
+      } catch (error) {
+        console.error({ error });
+      }
+    }
+    getUsers();
+  }, []);
+
   return (
     <main className='min-h-screen h-screen w-full relative flex'>
-      <aside className='sticky h-full w-1/5 flex flex-col pt-44 pb-20 px-16'>
+      <aside className='sticky h-full w-1/5 min-w-fit flex flex-col pt-44 pb-20 px-16'>
         <ul className='flex flex-col gap-6 flex-1'>
           <li
             onClick={() => setMenu(Menu.USERS)}
@@ -127,18 +168,161 @@ export default function AdminPanelView() {
                 <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
                   <FaSearch />
                 </button>
-                <button className=' p-2 rounded-md outline-gray-300/70 outline outline-1 h-10 flex items-center justify-center hover:bg-yellow-600 px-4 bg-yellow-500'>
+                <button
+                  className=' p-2 rounded-md outline-gray-300/70 outline outline-1 h-10 flex items-center justify-center hover:bg-yellow-600 px-4 bg-yellow-500'
+                  onClick={() => {
+                    setAddUser(true);
+                  }}
+                >
                   <h4 className='m-0 text-white'>Adicionar</h4>
                 </button>
               </div>
             </header>
             <div className='flex-1 pt-10 flex gap-10 flex-wrap'>
-              <UserCard user={user} />
-              <UserCard user={user} />
+              {users.map((user) => {
+                return <UserCard user={user} key={user?.id} />;
+              })}
             </div>
           </div>
         )}
       </div>
+      <AnimatePresence>
+        {addUser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            id='modal'
+            className=' fixed top-0 left-0 h-screen w-screen z-40 flex'
+          >
+            <div
+              className='bg-zinc-700/75 flex-1'
+              onClick={() => {
+                setAddUser(false);
+              }}
+            ></div>
+            <motion.form
+              onSubmit={onSubmit}
+              onClick={(e) => {
+                e.stopPropagation;
+              }}
+              className='!fixed flex flex-col bg-zinc-100 dark:bg-zinc-700 opacity-100 z-20 p-4 w-[30em] h-[30em] left-1/2 !-translate-x-1/2 top-1/2 -translate-y-1/2 rounded-md gap-4 justify-between px-8 pt-6'
+              initial={{ x: 500 }}
+              animate={{ x: 0 }}
+              exit={{ x: 500 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className='flex flex-col gap-4'>
+                <h1 className='m-0 text-xl'>Adicionar utilizador</h1>
+                <div className=''>
+                  <label className='m-0 text-sm text-gray-400'>Nome</label>
+                  <div className='flex gap-4'>
+                    <input
+                      className='bg-gray-200 rounded-md outline-0 px-2 py-1'
+                      type='text'
+                      placeholder='Primeiro nome'
+                      ref={firstname}
+                    />
+                    <input
+                      className='bg-gray-200 rounded-md outline-0 px-2 py-1'
+                      type='text'
+                      placeholder='Último nome'
+                      name=''
+                      id=''
+                      ref={lastname}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className='m-0 text-sm text-gray-400'>Email</label>
+                  <div className='flex gap-4 w-full'>
+                    <input
+                      className='bg-gray-200 rounded-md outline-0 px-2 py-1 w-fit focus:bg-gray-200'
+                      type='email'
+                      name=''
+                      placeholder='Email'
+                      id=''
+                      ref={email}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className='m-0 text-sm text-gray-400'>Password</label>
+                  <div className='flex gap-4 w-full'>
+                    <input
+                      className='bg-gray-200 rounded-md outline-0 px-2 py-1 w-fit focus:bg-gray-200'
+                      type='password'
+                      placeholder='Password'
+                      name=''
+                      id=''
+                      ref={password}
+                    />
+                    <input
+                      className='bg-gray-200 rounded-md outline-0 px-2 py-1 w-fit focus:bg-gray-200'
+                      type='password'
+                      placeholder='Confirmar password'
+                      name=''
+                      id=''
+                      ref={passwordConfirm}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className='m-0 text-sm text-gray-400'>Roles</label>
+                  <div className='flex gap-4'>
+                    <select
+                      onChange={(e) => {
+                        setEncarregadoSelected(false);
+                        if (e.target.value === 'Encarregado') {
+                          console.log('encarregado');
+                          setEncarregadoSelected(true);
+                        }
+                      }}
+                      ref={role}
+                      className='select select-bordered max-w-xs bg-gray-200 px-2 py-1 rounded-md outline-none w-[197px] h-[34px] cursor-pointer'
+                    >
+                      <option selected>Administrador</option>
+                      <option>Treinador</option>
+                      <option>Atleta</option>
+                      <option>Encarregado</option>
+                    </select>
+                    {isEncarregadoSelected && (
+                      <select
+                        placeholder='Encarregado de'
+                        className='select select-bordered max-w-xs bg-gray-200 px-2 py-1 rounded-md outline-none w-[197px] h-[34px] disabled:text-gray-500 cursor-pointer'
+                        name=''
+                        ref={educandos}
+                      >
+                        <option value='' disabled selected>
+                          Encarregado de
+                        </option>
+                      </select>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className='w-full flex gap-4 justify-end'>
+                <button
+                  onClick={() => {
+                    setAddUser(false);
+                  }}
+                  type='reset'
+                  className='bg-gray-600/70 w-20 py-2 text-sm font-semibold rounded-md hover:bg-gray-500/70 text-white'
+                >
+                  Cancelar
+                </button>
+                <button
+                  type='submit'
+                  className='bg-yellow-500/70 w-20 py-2 text-sm font-semibold rounded-md hover:bg-yellow-600/70 text-white'
+                >
+                  Adicionar
+                </button>
+              </div>
+            </motion.form>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

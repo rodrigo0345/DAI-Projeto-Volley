@@ -2,6 +2,7 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 import { GrUserManager } from 'react-icons/gr';
 import styled from 'styled-components';
+import { BsPersonFill } from 'react-icons/bs';
 
 const Card = styled.div`
   .symbol {
@@ -33,10 +34,10 @@ export default function UserCard({ user }: { user: LoginUser | undefined }) {
           ></MdOutlineAdminPanelSettings>
         )}
         {user?.role?.includes('MANAGER') && (
-          <GrUserManager
+          <BsPersonFill
             className='symbol absolute font-light text-gray-400/40 -right-20 -bottom-10'
             size={200}
-          ></GrUserManager>
+          ></BsPersonFill>
         )}
       </div>
     </Card>

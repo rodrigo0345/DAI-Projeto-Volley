@@ -5,7 +5,6 @@ import {
 } from 'Frontend/generated/AuthenticationController';
 import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
 import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
-import User from 'Frontend/generated/com/example/application/model/User/User';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
 import { login as loginServer } from 'Frontend/generated/AuthenticationController';
@@ -13,6 +12,7 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
+import { User } from 'Frontend/generated/com/example/application/model/User/User';
 
 export default function LoginPageView() {
   const { login } = useContext(UserContext);

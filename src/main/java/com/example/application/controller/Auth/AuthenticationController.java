@@ -104,6 +104,7 @@ public class AuthenticationController {
         System.err.println(token.getToken());
 
         LoginUser loginUser = new LoginUser(
+                user.getId(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
