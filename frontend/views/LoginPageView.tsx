@@ -12,7 +12,6 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
-import { User } from 'Frontend/generated/com/example/application/model/User';
 
 export default function LoginPageView(): JSX.Element {
   const { login } = useContext(UserContext);
@@ -25,7 +24,7 @@ export default function LoginPageView(): JSX.Element {
 
   const [loading, setLoading] = useState(false);
 
-  const [users, setUsers] = useState<(User | undefined)[]>([]);
+  const [users, setUsers] = useState<(LoginUser | undefined)[]>([]);
 
   const notify = (msg: string) => {
     toast.error(msg, {

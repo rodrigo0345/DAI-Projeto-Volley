@@ -71,13 +71,6 @@ export default function mainHeader() {
         {user ? (
           <div className='cursor-pointer hidden md:!block'>
             {user.firstname}
-            <button
-              onClick={() => {
-                logout();
-              }}
-            >
-              Logout
-            </button>
           </div>
         ) : (
           <MainButton href='/login' className='hidden'>

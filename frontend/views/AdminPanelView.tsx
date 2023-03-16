@@ -20,7 +20,7 @@ enum Menu {
 }
 
 export default function AdminPanelView() {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
 
   const [menu, setMenu] = useState<Menu>(Menu.USERS);
   const [users, setUsers] = useState<(LoginUser | undefined)[]>([]);
@@ -169,7 +169,12 @@ export default function AdminPanelView() {
             <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
               <IoMdSettings size={20} />
             </button>
-            <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
+            <button
+              className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'
+              onClick={() => {
+                logout();
+              }}
+            >
               <IoIosLogOut />
             </button>
           </div>
