@@ -36,6 +36,7 @@ export default function AdminPanelView() {
   const lastname = useRef<HTMLInputElement>(null);
   const role = useRef<HTMLSelectElement>(null);
   const educandos = useRef<HTMLSelectElement>(null);
+  const form = useRef<HTMLFormElement>(null);
 
   async function onSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     setIsLoading(true);
@@ -104,6 +105,8 @@ export default function AdminPanelView() {
 
     if (resultSignup) toast.success('Utilizador criado com sucesso');
     setUsers([...users, resultSignup]);
+    form.current?.reset();
+    setAddUser(false);
     setIsLoading(false);
   }
 
@@ -248,6 +251,7 @@ export default function AdminPanelView() {
               animate={{ x: 0 }}
               exit={{ x: 500 }}
               transition={{ duration: 0.2 }}
+              ref={form}
             >
               <div className='flex flex-col gap-4'>
                 <h1 className='m-0 text-xl'>Adicionar utilizador</h1>
