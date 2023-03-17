@@ -18,7 +18,11 @@ const Card = styled.div`
 export default function UserCard({ user }: { user: LoginUser | undefined }) {
   return (
     <Card>
-      <div className='overflow-hidden relative w-52 h-60 bg-gray-300 rounded-lg flex flex-col px-4 shadow-lg hover:bg-yellow-500/40 transition-all cursor-pointer'>
+      <a
+        href={'/profiles/' + user?.id}
+        className='overflow-hidden relative w-52 h-60 bg-gray-300 rounded-lg flex flex-col px-4 shadow-lg hover:bg-yellow-500/40 transition-all cursor-pointer underline-none hover:no-underline
+        '
+      >
         <div className='transition-all flex items-center pt-4 gap-1'>
           <h5 className='transition-all lowercase font-light m-0'>
             {user?.role}
@@ -39,7 +43,7 @@ export default function UserCard({ user }: { user: LoginUser | undefined }) {
             size={200}
           ></BsPersonFill>
         )}
-      </div>
+      </a>
     </Card>
   );
 }

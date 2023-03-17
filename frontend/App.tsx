@@ -7,6 +7,8 @@ import {
 } from './routes/PrivateRoutes';
 import { Suspense, lazy, useContext } from 'react';
 import { UserContext } from './contexts/UserContext';
+import { findById } from './generated/UserController';
+import LoginUser from './generated/com/example/application/model/User/LoginUser';
 
 const MainLayout = lazy(() => import('./views/MainLayout'));
 const LandPageView = lazy(() => import('./views/LandPageView'));
@@ -16,6 +18,7 @@ const AdminPanelView = lazy(() => import('./views/AdminPanelView'));
 const MainLoadingScreen = lazy(
   () => import('./components/loaders/MainLoadingScreen')
 );
+const ProfilesView = lazy(() => import('./views/ProfilesView'));
 
 const router = createBrowserRouter([
   {
@@ -37,7 +40,17 @@ const router = createBrowserRouter([
       },
       {
         element: <PrivateRouteNoGuests />,
-        children: [{ path: '/dashboard', element: <DashboardView /> }],
+        children: [
+          { path: '/dashboard', element: <DashboardView /> },
+          {
+            path: '/profiles/:id',
+            element: (
+              <Suspense fallback={<h1>Fallback</h1>}>
+                <ProfilesView />
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         element: <PrivateAdminRoute />,

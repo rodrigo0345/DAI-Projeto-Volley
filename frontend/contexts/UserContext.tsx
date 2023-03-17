@@ -16,7 +16,13 @@ export const UserContext = createContext<{
   user: LoginUser | undefined;
   login: (user: LoginUser) => void;
   logout: () => void;
-}>({ user: undefined, login: () => {}, logout: () => {} });
+  reAuthenticate: () => void;
+}>({
+  user: undefined,
+  login: () => {},
+  logout: () => {},
+  reAuthenticate: () => {},
+});
 
 export default function Context({ children }: React.PropsWithChildren<{}>) {
   const [user, setUser] = useState<LoginUser | undefined>();
@@ -57,6 +63,13 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
     saveUserToStorage(user);
   }
 
+  function reAuthenticate() {
+    const user = getUserFromStorage();
+    if (!user) {
+      logout();
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const user = await getUserFromStorage();
@@ -69,7 +82,7 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, reAuthenticate }}>
       {children}
     </UserContext.Provider>
   );

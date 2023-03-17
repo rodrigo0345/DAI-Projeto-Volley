@@ -23,7 +23,7 @@ export default function AdminPanelView() {
   const { user, logout } = useContext(UserContext);
 
   const [menu, setMenu] = useState<Menu>(Menu.USERS);
-  const [users, setUsers] = useState<(LoginUser | undefined)[]>([]);
+  const [users, setUsers] = useState<Set<LoginUser | undefined>>(new Set([]));
   const [addUser, setAddUser] = useState(false);
   const [isEncarregadoSelected, setEncarregadoSelected] = useState(false);
   const [plan, setPlan] = useState('');
@@ -86,7 +86,7 @@ export default function AdminPanelView() {
       return;
     }
 
-    let resultSignup;
+    let resultSignup: LoginUser | undefined;
     try {
       resultSignup = await signup(user, register);
       console.log({ resultSignup });
@@ -104,7 +104,7 @@ export default function AdminPanelView() {
     }
 
     if (resultSignup) toast.success('Utilizador criado com sucesso');
-    setUsers([...users, resultSignup]);
+    setUsers((prev) => prev.add(resultSignup));
     form.current?.reset();
     setAddUser(false);
     setIsLoading(false);
@@ -114,7 +114,7 @@ export default function AdminPanelView() {
     async function getUsers() {
       try {
         let resultUsers = await UserController.findAll();
-        setUsers(resultUsers);
+        setUsers(new Set(resultUsers));
       } catch (error) {
         console.error({ error });
       }
@@ -217,7 +217,7 @@ export default function AdminPanelView() {
               </div>
             </header>
             <div className='flex-1 pt-10 flex gap-10 flex-wrap'>
-              {users.map((mappedUser) => {
+              {[...users].map((mappedUser) => {
                 console.log({ mappedUser });
                 return <UserCard user={mappedUser} key={mappedUser?.id} />;
               })}

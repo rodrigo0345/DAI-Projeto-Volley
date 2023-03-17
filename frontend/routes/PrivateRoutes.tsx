@@ -12,18 +12,24 @@ export function PrivateManagerRoute() {
 }
 
 export function PrivateRouteNoGuests() {
-  const { user } = useContext(UserContext);
+  let { user } = useContext(UserContext);
+
+  if (!user) {
+    user = JSON.parse(localStorage.user);
+  }
+
   return user ? <Outlet /> : <Navigate to='/' />;
 }
 
 export function GuestsRoute() {
-  const { user } = useContext(UserContext);
+  let { user } = useContext(UserContext);
   console.log('Only guests route', Date.now(), { user });
+
   return !user ? <Outlet /> : <Navigate to='/dashboard' />;
 }
 
 export function PrivateAdminRoute() {
-  let { user } = useContext(UserContext);
+  let { user, reAuthenticate } = useContext(UserContext);
 
   if (!user) {
     user = JSON.parse(localStorage.user);
