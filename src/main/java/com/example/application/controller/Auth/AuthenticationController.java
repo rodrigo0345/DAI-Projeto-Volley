@@ -73,19 +73,22 @@ public class AuthenticationController {
         }
         // verificar se o email existe
         try {
-            users.findByEmail(request.getEmail());
+            var result = users.findByEmail(request.getEmail());
+            if (result.isPresent()) {
+                return null;
+            }
         } catch (Exception e) {
             return null;
         }
 
         // verificar que os dados são validos
-        if (request.getFirstName().matches(".\\d.") || request.getLastName().matches(".\\d.")) {
-            return null;
-        }
+        //if (request.getFirstName().matches(".\\d.") || request.getLastName().matches(".\\d.")) {
+        //    return null;
+        //}
 
-        if (!request.getPassword().matches(".\\d.")) {
+        //if (!request.getPassword().matches(".\\d.")) {
 
-        }
+        //}
 
         // encriptar palavra pass
         // user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
@@ -93,7 +96,16 @@ public class AuthenticationController {
 
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
-        user.setRole(Roles.USER);
+
+        if(!(request.getRoles() == null)) {
+            var role = Roles.valueOf(request.getRoles());
+            user.setRole(role);
+        } else {
+            user.setRole(Roles.USER);
+        }
+
+        // falta encriptar
+        user.setPassword(request.getPassword());
         users.save(user);
 
         // criar token e returnar o utilizador check
@@ -111,6 +123,10 @@ public class AuthenticationController {
 
         if (user == null) {
             return null;
+        }
+
+        if(!password.equals(user.getPassword())){
+            return null; // no password match
         }
 
         RegisterRequest request = new RegisterRequest(user.getFirstname(), user.getLastname(), user.getUsername(),
