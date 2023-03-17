@@ -1,9 +1,17 @@
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { ReactNode, useContext, useEffect, useState } from 'react';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 
 export function PrivateManagerRoute() {
-  const { user } = useContext(UserContext);
+  let { user, reAuthenticate } = useContext(UserContext);
+
+  (async () => {
+    if (!user) {
+      user = await reAuthenticate();
+    }
+  })();
+
   return user && user?.role?.includes('MANAGER' || 'ADMIN') ? (
     <Outlet />
   ) : (
@@ -12,18 +20,21 @@ export function PrivateManagerRoute() {
 }
 
 export function PrivateRouteNoGuests() {
-  let { user } = useContext(UserContext);
+  let { user, reAuthenticate } = useContext(UserContext);
 
-  if (!user) {
-    user = JSON.parse(localStorage.user);
-  }
+  (async () => {
+    if (!user) {
+      user = await reAuthenticate();
+    }
+  })();
 
   return user ? <Outlet /> : <Navigate to='/' />;
 }
 
 export function GuestsRoute() {
-  let { user } = useContext(UserContext);
-  console.log('Only guests route', Date.now(), { user });
+  let { user, reAuthenticate } = useContext(UserContext);
+
+  
 
   return !user ? <Outlet /> : <Navigate to='/dashboard' />;
 }
@@ -31,9 +42,11 @@ export function GuestsRoute() {
 export function PrivateAdminRoute() {
   let { user, reAuthenticate } = useContext(UserContext);
 
-  if (!user) {
-    user = JSON.parse(localStorage.user);
-  }
+  (async () => {
+    if (!user) {
+      user = await reAuthenticate();
+    }
+  })();
 
   return user && user.role?.includes('ADMIN') ? (
     <Outlet />

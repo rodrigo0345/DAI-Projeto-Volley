@@ -16,12 +16,12 @@ export const UserContext = createContext<{
   user: LoginUser | undefined;
   login: (user: LoginUser) => void;
   logout: () => void;
-  reAuthenticate: () => void;
+  reAuthenticate: () => Promise<LoginUser | undefined>;
 }>({
   user: undefined,
   login: () => {},
   logout: () => {},
-  reAuthenticate: () => {},
+  reAuthenticate: () => Promise.resolve(undefined),
 });
 
 export default function Context({ children }: React.PropsWithChildren<{}>) {
@@ -39,12 +39,17 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
       return null;
     }
 
-    const validToken = await validateToken(user, user.stringToken);
+    let validToken;
+    try {
+      validToken = await validateToken(user, user.stringToken);
+    } catch (e) {
+      window.location.href = '/dashboard';
+    }
+
     if (!validToken) {
       toast.error('Your session has expired, please login again');
       return null;
     }
-
     return user;
   }
 
@@ -63,11 +68,16 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
     saveUserToStorage(user);
   }
 
-  function reAuthenticate() {
-    const user = getUserFromStorage();
-    if (!user) {
+  async function reAuthenticate() {
+    let userAux;
+    userAux = await getUserFromStorage();
+
+    console.log({ reauth: user });
+    if (!userAux) {
       logout();
+      return undefined;
     }
+    return userAux;
   }
 
   useEffect(() => {

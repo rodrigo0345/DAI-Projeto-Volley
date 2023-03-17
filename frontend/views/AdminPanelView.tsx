@@ -123,8 +123,8 @@ export default function AdminPanelView() {
   }, []);
 
   return (
-    <main className='min-h-screen h-screen w-full relative flex'>
-      <aside className='sticky h-full w-1/5 min-w-fit flex flex-col pt-44 pb-20 px-16'>
+    <main className='min-h-screen w-full relative flex'>
+      <aside className='sticky top-0 h-screen w-1/5 min-w-fit flex flex-col pt-44 pb-20 px-16'>
         <ul className='flex flex-col gap-6 flex-1'>
           <li
             onClick={() => setMenu(Menu.USERS)}
@@ -193,7 +193,7 @@ export default function AdminPanelView() {
       </aside>
       <div id='content' className='flex flex-1 pr-28 relative'>
         {menu === Menu.USERS && (
-          <div className='flex-1'>
+          <div className='flex-1 relative'>
             {' '}
             <header className='sticky pt-40 flex items-start justify-between'>
               <div className='flex flex-col justify-start'>
@@ -216,11 +216,49 @@ export default function AdminPanelView() {
                 </button>
               </div>
             </header>
-            <div className='flex-1 pt-10 flex gap-10 flex-wrap'>
-              {[...users].map((mappedUser) => {
-                console.log({ mappedUser });
-                return <UserCard user={mappedUser} key={mappedUser?.id} />;
-              })}
+            <div className='flex-1 pt-10 gap-10 flex-wrap flex flex-col pb-8 relative w-full'>
+              <div>
+                <h3>Administradores</h3>
+                <div className='flex gap-4 max-w-98'>
+                  {[...users]
+                    .filter((mappedUser) => {
+                      return mappedUser?.role === 'ADMIN';
+                    })
+                    .map((mappedUser) => {
+                      return (
+                        <UserCard user={mappedUser} key={mappedUser?.id} />
+                      );
+                    })}
+                </div>
+              </div>
+              <div>
+                <h3>Treinadores</h3>
+                <div className='flex gap-4'>
+                  {[...users]
+                    .filter((mappedUser) => {
+                      return mappedUser?.role === 'MANAGER';
+                    })
+                    .map((mappedUser) => {
+                      return (
+                        <UserCard user={mappedUser} key={mappedUser?.id} />
+                      );
+                    })}
+                </div>
+              </div>
+              <div>
+                <h3>Atletas</h3>
+                <div className='flex gap-4'>
+                  {[...users]
+                    .filter((mappedUser) => {
+                      return mappedUser?.role === 'USER';
+                    })
+                    .map((mappedUser) => {
+                      return (
+                        <UserCard user={mappedUser} key={mappedUser?.id} />
+                      );
+                    })}
+                </div>
+              </div>
             </div>
           </div>
         )}
