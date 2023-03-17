@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /*
  * public class CryptWithMD5 {
  * private static MessageDigest md;
- * 
+ *
  * public static String cryptWithMD5(String pass){
  * try {
  * md = MessageDigest.getInstance("MD5");
@@ -24,8 +24,8 @@ import java.util.logging.Logger;
  * Logger.getLogger(CryptWithMD5.class.getName()).log(Level.SEVERE, null, ex);
  * }
  * return null;
- * 
- * 
+ *
+ *
  * }
  * }
  */

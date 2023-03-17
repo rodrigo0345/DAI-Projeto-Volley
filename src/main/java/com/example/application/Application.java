@@ -24,20 +24,22 @@ import org.springframework.context.annotation.Bean;
 @Theme(value = "hilla-todo")
 public class Application implements AppShellConfigurator {
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        SpringApplication.run(Application.class, args);
-    }
+    SpringApplication.run(Application.class, args);
+  }
 
-    @Bean
-    CommandLineRunner init(PostRepository posts, UserRepository users) {
-        return args -> {
-            posts.save(new Post("First Post", "first-post", "This is the first post", "David"));
-            User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", "rrr", Roles.ADMIN);
-            User aux2 = new User("Manuel", "Algo", "rr@gmail.com", "rrr", Roles.MANAGER);
-            users.save(aux);
-            users.save(aux2);
-        };
-    }
-
+  @Bean
+  CommandLineRunner init(PostRepository posts, UserRepository users) {
+    return args -> {
+      posts.save(new Post("First Post", "first-post", "This is the first post",
+                          "David"));
+      User aux =
+          new User("Rodrigo", "Ralha", "rodrigo@gmail.com", "rrr", Roles.ADMIN);
+      User aux2 =
+          new User("Manuel", "Algo", "rr@gmail.com", "rrr", Roles.MANAGER);
+      users.save(aux);
+      users.save(aux2);
+    };
+  }
 }
