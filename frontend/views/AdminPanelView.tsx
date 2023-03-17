@@ -90,11 +90,19 @@ export default function AdminPanelView() {
       resultSignup = await signup(user, register);
       console.log({ resultSignup });
     } catch (error) {
+      toast.error('Erro interno do servidor');
       console.log(error);
+      setIsLoading(false);
+      return;
     }
 
-    if (resultSignup && resultSignup)
-      toast.success('Utilizador criado com sucesso');
+    if (resultSignup === undefined) {
+      toast.error('Erro interno do servidor');
+      setIsLoading(false);
+      return;
+    }
+
+    if (resultSignup) toast.success('Utilizador criado com sucesso');
     setUsers([...users, resultSignup]);
     setIsLoading(false);
   }
@@ -206,8 +214,9 @@ export default function AdminPanelView() {
               </div>
             </header>
             <div className='flex-1 pt-10 flex gap-10 flex-wrap'>
-              {users.map((user) => {
-                return <UserCard user={user} key={user?.id} />;
+              {users.map((mappedUser) => {
+                console.log({ mappedUser });
+                return <UserCard user={mappedUser} key={mappedUser?.id} />;
               })}
             </div>
           </div>

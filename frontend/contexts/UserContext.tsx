@@ -8,6 +8,9 @@ import {
   useState,
 } from 'react';
 import { redirect } from 'react-router-dom';
+import { validateToken } from 'Frontend/generated/AuthenticationController';
+import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
+import { toast } from 'react-toastify';
 
 export const UserContext = createContext<{
   user: LoginUser | undefined;
@@ -18,12 +21,25 @@ export const UserContext = createContext<{
 export default function Context({ children }: React.PropsWithChildren<{}>) {
   const [user, setUser] = useState<LoginUser | undefined>();
 
-  function getUserFromStorage() {
+  async function getUserFromStorage() {
     const userFromStorage = localStorage.user;
+
+    let user: LoginUser | null = null;
     if (userFromStorage) {
-      return JSON.parse(userFromStorage);
+      user = JSON.parse(userFromStorage);
     }
-    return null;
+
+    if (!user) {
+      return null;
+    }
+
+    const validToken = await validateToken(user, user.stringToken);
+    if (!validToken) {
+      toast.error('Your session has expired, please login again');
+      return null;
+    }
+
+    return user;
   }
 
   function saveUserToStorage(user: LoginUser | null) {
@@ -42,8 +58,14 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
   }
 
   useEffect(() => {
-    setUser(getUserFromStorage());
-    console.log(getUserFromStorage());
+    (async () => {
+      const user = await getUserFromStorage();
+      if (!user) {
+        return;
+      }
+      setUser(user);
+      console.log({ stored: user });
+    })();
   }, []);
 
   return (

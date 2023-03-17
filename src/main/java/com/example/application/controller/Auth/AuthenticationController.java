@@ -53,11 +53,16 @@ public class AuthenticationController {
         if (!isValidToken) {
             return null;
         }
-
-        User aux = users.findByEmail(currentUser.getEmail()).get();
+        var userrrr = users.findAll();
+        User aux = null;
+        try {
+            aux = users.findByEmail(currentUser.getEmail()).get();
+        } catch (Exception e) {
+            return null; // o utilizador n existe
+        }
 
         if (!aux.getRole().toString().equals("ADMIN")) {
-            return null;
+            return null; // o utilizador n é admin
         }
 
         User user = new User();
