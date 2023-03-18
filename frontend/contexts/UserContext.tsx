@@ -30,9 +30,9 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
   async function getUserFromStorage() {
     const userFromStorage = localStorage.user;
 
-    let user: LoginUser | null = null;
+    let user: LoginUser | undefined = undefined;
     if (userFromStorage) {
-      user = JSON.parse(userFromStorage);
+      user = JSON.parse(userFromStorage) as LoginUser;
     }
 
     if (!user) {
@@ -43,11 +43,14 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
     try {
       validToken = await validateToken(user, user.stringToken);
     } catch (e) {
-      window.location.href = '/dashboard';
+      console.log(e);
     }
 
-    if (!validToken) {
+    console.log({ validToken });
+
+    if (!validToken?.body) {
       toast.error('Your session has expired, please login again');
+      logout();
       return null;
     }
     return user;

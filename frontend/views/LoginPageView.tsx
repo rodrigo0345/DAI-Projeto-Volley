@@ -12,6 +12,7 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 
 export default function LoginPageView(): JSX.Element {
   const { login } = useContext(UserContext);
@@ -53,7 +54,7 @@ export default function LoginPageView(): JSX.Element {
       return;
     }
 
-    let response: LoginUser | undefined;
+    let response: ResponseEntity | undefined;
     try {
       response = await loginServer(
         email.current?.value,
@@ -72,7 +73,7 @@ export default function LoginPageView(): JSX.Element {
       return;
     }
 
-    login(response);
+    login(response.body as LoginUser);
 
     setLoading(false);
   }

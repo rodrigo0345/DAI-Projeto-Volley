@@ -44,11 +44,7 @@ const router = createBrowserRouter([
           { path: '/dashboard', element: <DashboardView /> },
           {
             path: '/profiles/:id',
-            element: (
-              <Suspense fallback={<h1>Fallback</h1>}>
-                <ProfilesView />
-              </Suspense>
-            ),
+            element: <ProfilesView />,
           },
         ],
       },

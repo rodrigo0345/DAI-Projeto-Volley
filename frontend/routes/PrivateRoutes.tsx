@@ -1,16 +1,13 @@
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { ReactNode, useContext, useEffect, useState } from 'react';
-import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 
 export function PrivateManagerRoute() {
-  let { user, reAuthenticate } = useContext(UserContext);
+  let { user } = useContext(UserContext);
 
-  (async () => {
-    if (!user) {
-      user = await reAuthenticate();
-    }
-  })();
+  if (!user) {
+    user = JSON.parse(localStorage.user);
+  }
 
   return user && user?.role?.includes('MANAGER' || 'ADMIN') ? (
     <Outlet />
@@ -20,33 +17,31 @@ export function PrivateManagerRoute() {
 }
 
 export function PrivateRouteNoGuests() {
-  let { user, reAuthenticate } = useContext(UserContext);
+  let { user } = useContext(UserContext);
 
-  (async () => {
-    if (!user) {
-      user = await reAuthenticate();
-    }
-  })();
+  if (!user) {
+    user = JSON.parse(localStorage.user);
+  }
 
   return user ? <Outlet /> : <Navigate to='/' />;
 }
 
 export function GuestsRoute() {
-  let { user, reAuthenticate } = useContext(UserContext);
+  let { user } = useContext(UserContext);
 
-  
+  if (!user) {
+    user = JSON.parse(localStorage.user);
+  }
 
   return !user ? <Outlet /> : <Navigate to='/dashboard' />;
 }
 
 export function PrivateAdminRoute() {
-  let { user, reAuthenticate } = useContext(UserContext);
+  let { user } = useContext(UserContext);
 
-  (async () => {
-    if (!user) {
-      user = await reAuthenticate();
-    }
-  })();
+  if (!user) {
+    user = JSON.parse(localStorage.user);
+  }
 
   return user && user.role?.includes('ADMIN') ? (
     <Outlet />

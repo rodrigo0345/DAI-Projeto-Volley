@@ -13,6 +13,7 @@ import { IoClose } from 'react-icons/io5';
 import { MultiSelect, NativeSelect, Switch } from '@mantine/core';
 import { RadioGroup } from '@headlessui/react';
 import { toast } from 'react-toastify';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 
 enum Menu {
   USERS = 'USERS',
@@ -86,7 +87,7 @@ export default function AdminPanelView() {
       return;
     }
 
-    let resultSignup: LoginUser | undefined;
+    let resultSignup: ResponseEntity | undefined;
     try {
       resultSignup = await signup(user, register);
       console.log({ resultSignup });
@@ -104,7 +105,7 @@ export default function AdminPanelView() {
     }
 
     if (resultSignup) toast.success('Utilizador criado com sucesso');
-    setUsers((prev) => prev.add(resultSignup));
+    setUsers((prev) => prev.add(resultSignup?.body as LoginUser));
     form.current?.reset();
     setAddUser(false);
     setIsLoading(false);
