@@ -11,6 +11,7 @@ function getUserFromStorage() {
 
   return user;
 }
+
 export function PrivateManagerRoute() {
   let { user } = useContext(UserContext);
 
