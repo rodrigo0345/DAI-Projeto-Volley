@@ -64,16 +64,16 @@ export default function LoginPageView(): JSX.Element {
       console.log(e);
     }
 
-    if (!response) {
+    if (response?.body.error) {
       // TODO add error message
-      notify('Email ou Palavra-passe incorretos!');
+      notify(response.body.error);
       email.current.value = '';
       password.current.value = '';
       setLoading(false);
       return;
     }
 
-    login(response.body as LoginUser);
+    login(response?.body.success as LoginUser);
 
     setLoading(false);
   }

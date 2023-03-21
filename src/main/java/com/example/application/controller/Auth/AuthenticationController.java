@@ -48,7 +48,6 @@ public class AuthenticationController {
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
-        var userrrr = users.findAll();
         User aux = null;
         try {
             aux = users.findByEmail(currentUser.getEmail()).get();
