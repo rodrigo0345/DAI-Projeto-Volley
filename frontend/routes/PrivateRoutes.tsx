@@ -5,8 +5,12 @@ import { ReactNode, useContext, useEffect, useState } from 'react';
 function getUserFromStorage() {
   let user = undefined;
 
-  if(localStorage.user){
-    user = JSON.parse(localStorage.user);
+  if (localStorage.user) {
+    try {
+      user = JSON.parse(localStorage.user);
+    } catch (e) {
+      return undefined;
+    }
   }
 
   return user;
@@ -15,7 +19,7 @@ function getUserFromStorage() {
 export function PrivateManagerRoute() {
   let { user } = useContext(UserContext);
 
-  let userAux = user? user : getUserFromStorage();
+  let userAux = user ? user : getUserFromStorage();
 
   return userAux && userAux?.role?.includes('MANAGER' || 'ADMIN') ? (
     <Outlet />
@@ -27,21 +31,21 @@ export function PrivateManagerRoute() {
 export function PrivateRouteNoGuests() {
   let { user } = useContext(UserContext);
 
-  let userAux = user? user : getUserFromStorage();
+  let userAux = user ? user : getUserFromStorage();
   return userAux ? <Outlet /> : <Navigate to='/' />;
 }
 
 export function GuestsRoute() {
   let { user } = useContext(UserContext);
 
-  let userAux = user? user : getUserFromStorage();
+  let userAux = user ? user : getUserFromStorage();
   return !userAux ? <Outlet /> : <Navigate to='/dashboard' />;
 }
 
 export function PrivateAdminRoute() {
   let { user } = useContext(UserContext);
 
-  let userAux = user? user : getUserFromStorage();
+  let userAux = user ? user : getUserFromStorage();
   return userAux && userAux.role?.includes('ADMIN') ? (
     <Outlet />
   ) : (

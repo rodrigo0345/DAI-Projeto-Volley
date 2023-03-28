@@ -32,7 +32,12 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
 
     let user: LoginUser | undefined = undefined;
     if (userFromStorage) {
-      user = JSON.parse(userFromStorage) as LoginUser;
+      try {
+        user = JSON.parse(userFromStorage) as LoginUser;
+      } catch (e) {
+        console.log(e);
+        user = undefined;
+      }
     }
 
     if (!user) {
@@ -51,7 +56,7 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
     if (!validToken?.body) {
       toast.error('Your session has expired, please login again');
       logout();
-      return null;
+      return undefined;
     }
     return user;
   }

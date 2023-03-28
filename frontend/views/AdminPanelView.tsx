@@ -14,6 +14,7 @@ import { MultiSelect, NativeSelect, Switch } from '@mantine/core';
 import { RadioGroup } from '@headlessui/react';
 import { toast } from 'react-toastify';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
+import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 
 enum Menu {
   USERS = 'USERS',
@@ -125,73 +126,43 @@ export default function AdminPanelView() {
 
   return (
     <main className='min-h-screen w-full relative flex'>
-      <aside className='sticky top-0 h-screen w-1/5 min-w-fit flex flex-col pt-44 pb-20 px-16'>
-        <ul className='flex flex-col gap-6 flex-1'>
-          <li
-            onClick={() => setMenu(Menu.USERS)}
-            className={
-              (menu === Menu.USERS
-                ? 'bg-black shadow-md '
-                : 'hover:bg-gray-200/40 ') +
-              ' px-4 py-2 rounded-xl flex items-center justify-start gap-3 cursor-pointer '
-            }
-          >
-            <RiUserSettingsFill
-              color={menu === Menu.USERS ? 'white' : 'gray'}
-            ></RiUserSettingsFill>
-            <p
-              className={
-                (menu === Menu.USERS ? 'text-white' : 'text-gray-500') +
-                ' font-semibold'
-              }
-            >
-              Utilizadores
-            </p>
-          </li>
-          <li
-            onClick={() => setMenu(Menu.CHAT)}
-            className={
-              (menu === Menu.CHAT
-                ? 'bg-black shadow-md '
-                : 'hover:bg-gray-200/40 ') +
-              ' px-4 py-2 rounded-xl flex items-center justify-start gap-3 cursor-pointer '
-            }
-          >
-            <RiUserSettingsFill
-              color={menu === Menu.CHAT ? 'white' : 'gray'}
-            ></RiUserSettingsFill>
-            <p
-              className={
-                (menu === Menu.CHAT ? 'text-white' : 'text-gray-500') +
-                ' font-semibold'
-              }
-            >
-              Chat
-            </p>
-          </li>
-        </ul>
-        <div className=''>
-          <h3 className='font-bold text-center m-0 text-lg my-4'>
-            {user?.firstname} {user?.lastname}
-          </h3>
-          <h4 className='m-0 text-center text-gray-300 text-sm my-4'>
-            {user?.email}
-          </h4>
-          <div className='w-full flex justify-center gap-4 p-4'>
-            <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
-              <IoMdSettings size={20} />
-            </button>
-            <button
-              className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'
-              onClick={() => {
-                logout();
-              }}
-            >
-              <IoIosLogOut />
-            </button>
-          </div>
-        </div>
-      </aside>
+      <SidePanel
+        key={user?.id}
+        user={user}
+        logout={logout}
+        content={[
+          {
+            id: 0,
+            icon: (
+              <RiUserSettingsFill
+                color={menu === Menu.USERS ? 'white' : 'black'}
+              />
+            ),
+            activator: {
+              setter: setMenu,
+              state: menu,
+            },
+            text: 'Utilizadores',
+            link: '/admin/users',
+            targetState: Menu.USERS,
+          },
+          {
+            id: 1,
+            icon: (
+              <RiUserSettingsFill
+                color={menu === Menu.CHAT ? 'white' : 'black'}
+              />
+            ),
+            activator: {
+              setter: setMenu,
+              state: menu,
+            },
+            text: 'Chat',
+            link: '/admin/users',
+            targetState: Menu.CHAT,
+          },
+        ]}
+      ></SidePanel>
       <div id='content' className='flex flex-1 pr-28 relative'>
         {menu === Menu.USERS && (
           <div className='flex-1 relative'>
