@@ -37,7 +37,7 @@ export default function SidePanel({
                 (item.targetState === item.activator.state
                   ? 'bg-black shadow-md '
                   : 'hover:bg-gray-200/40 ') +
-                ' px-4 py-2 rounded-xl flex items-center justify-start gap-3 cursor-pointer w-36'
+                ' px-4 py-2 rounded-xl flex items-center justify-start gap-3 cursor-pointer w-52'
               }
             >
               {item.icon}
