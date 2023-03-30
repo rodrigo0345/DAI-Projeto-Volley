@@ -1,6 +1,8 @@
 package com.example.application.model.User;
 
 import com.example.application.model.Token.Token;
+
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.Entity;
@@ -36,6 +38,8 @@ public class User implements UserDetails {
   @Unique @Email private String email;
 
   private String password;
+
+  private LocalDate dataNascimento;
 
   @Enumerated(EnumType.STRING) private Roles role;
 
