@@ -84,7 +84,7 @@ export default function DashboardView() {
         {menu === Menu.DASHBOARD && (
           <div className='flex flex-col gap-4 pt-28 relative px-4 max-w-[60em] m-auto'>
             <h1 className='text-3xl font-bold'>Dashboard</h1>
-            <div className='w-full max-w-full grid grid-cols-4 grid-rows-4 gap-x-4 gap-y-10 self-center'>
+            <div className='w-full max-w-full grid md:!grid-cols-4 sm:!grid-cols-2 grid-cols-1 grid-rows-4 gap-x-4 gap-y-10 self-center'>
               <Box className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
                 <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                   Equipa
@@ -139,7 +139,12 @@ export default function DashboardView() {
                   className='icon absolute -right-10 -bottom-10 '
                 ></CgProfile>
               </Box>
-              <Box className='bg-gradient-to-tr from-yellow-300/100 to-yellow-500/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+              <Box
+                className='bg-gradient-to-tr from-yellow-300/100 to-yellow-500/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                onClick={() => {
+                  window.location.href = '/forum';
+                }}
+              >
                 <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                   Fórum
                 </h2>
