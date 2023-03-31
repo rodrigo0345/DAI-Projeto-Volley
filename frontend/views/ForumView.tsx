@@ -2,7 +2,7 @@ import SidePanel, {
   AsideContent,
 } from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { BsCalendarDate, BsCarFront } from 'react-icons/bs';
 import { MdOutlineForum } from 'react-icons/md';
@@ -14,6 +14,7 @@ import {
   ChevronUpIcon,
 } from '@radix-ui/react-icons';
 import React from 'react';
+import { TfiWrite } from 'react-icons/tfi';
 
 enum Menu {
   ALL = 'ALL',
@@ -25,10 +26,14 @@ export default function ForumView() {
   const { user, logout } = useContext(UserContext);
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
 
+  useEffect(() => {
+    // filtrar os posts pelo menu selecionado
+  }, [menu]);
+
   const content: AsideContent<Menu>[] = [
     {
       id: 0,
-      text: 'All Posts',
+      text: 'Todos os posts',
       icon: (
         <MdOutlineForum
           color={menu === Menu.ALL ? 'white' : 'black'}
@@ -81,40 +86,57 @@ export default function ForumView() {
     <div className='min-h-screen flex relative'>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
       <div className='flex-1 relative pt-36 px-10 text-gray-300'>
-        <div className='flex justify-between items-center max-w-[60em] m-auto'>
+        <div className='flex lg:!flex-row lg:!items-start flex-col justify-between items-start gap-4 max-w-[60em] m-auto'>
           <h1 className='text-3xl font-bold m-0'>Forum</h1>
-          <div className='shadow-lg min-w-[10em] bg-zinc-800 rounded-md h-10 flex items-center p-4'>
-            <label htmlFor='' className='text-white text-sm'>
-              Ordernar por:{' '}
-            </label>
-            <Select.Root>
-              <Select.Trigger
-                className='inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-transparent shadow-black/10 data-[placeholder]:text-gray-600 focus:outline-none aria-selected:outline-none text-white font-semibold'
-                aria-label='Ordenar por...'
+          <div className='shadow-lg min-w-[10em] bg-zinc-800 rounded-md h-10 flex items-center p-4 gap-4'>
+            <nav>
+              <button
+                onClick={() => {
+                  window.location.href = '/new-post';
+                }}
+                className='bg-gradient-to-tr from-yellow-200 to-yellow-500 p-3 rounded-full shadow-lg hover:!from-gray-300 transition-all'
+                aria-label='Novo post'
               >
-                <Select.Value placeholder='Select a fruit…' />
-                <Select.Icon className='text-gray-300'>
-                  <ChevronDownIcon />
-                </Select.Icon>
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Content className='overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]'>
-                  <Select.ScrollUpButton className='flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default'>
-                    <ChevronUpIcon />
-                  </Select.ScrollUpButton>
-                  <Select.Viewport className='p-[5px]'>
-                    <Select.Group>
-                      <SelectItem value='mais recente'>Mais recente</SelectItem>
-                      <SelectItem value='banana'>Mais antigo</SelectItem>
-                      <SelectItem value='blueberry'>Mais relevante</SelectItem>
-                    </Select.Group>
-                  </Select.Viewport>
-                  <Select.ScrollDownButton className='flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default'>
+                <TfiWrite size={20} color='#fff'></TfiWrite>
+              </button>
+            </nav>
+            <nav>
+              <label htmlFor='' className='text-white text-sm'>
+                Ordernar por:{' '}
+              </label>
+              <Select.Root>
+                <Select.Trigger
+                  className='inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-transparent shadow-black/10 data-[placeholder]:text-white focus:outline-none aria-selected:outline-none text-white font-semibold'
+                  aria-label='Ordenar por...'
+                >
+                  <Select.Value placeholder='Ordenar' />
+                  <Select.Icon className='text-gray-300'>
                     <ChevronDownIcon />
-                  </Select.ScrollDownButton>
-                </Select.Content>
-              </Select.Portal>
-            </Select.Root>
+                  </Select.Icon>
+                </Select.Trigger>
+                <Select.Portal>
+                  <Select.Content className='overflow-hidden bg-white rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]'>
+                    <Select.ScrollUpButton className='flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default'>
+                      <ChevronUpIcon />
+                    </Select.ScrollUpButton>
+                    <Select.Viewport className='p-[5px]'>
+                      <Select.Group>
+                        <SelectItem value='mais recente'>
+                          Mais recente
+                        </SelectItem>
+                        <SelectItem value='banana'>Mais antigo</SelectItem>
+                        <SelectItem value='blueberry'>
+                          Mais relevante
+                        </SelectItem>
+                      </Select.Group>
+                    </Select.Viewport>
+                    <Select.ScrollDownButton className='flex items-center justify-center h-[25px] bg-white text-violet11 cursor-default'>
+                      <ChevronDownIcon />
+                    </Select.ScrollDownButton>
+                  </Select.Content>
+                </Select.Portal>
+              </Select.Root>
+            </nav>
           </div>
         </div>
       </div>
