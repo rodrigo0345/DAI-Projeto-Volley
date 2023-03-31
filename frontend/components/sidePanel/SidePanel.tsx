@@ -63,7 +63,12 @@ export default function SidePanel({
           {user?.email}
         </h4>
         <div className='w-full flex justify-center gap-4 p-4'>
-          <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
+          <button
+            className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'
+            onClick={() => {
+              window.location.href = '/profiles/' + user?.id;
+            }}
+          >
             <IoMdSettings size={20} />
           </button>
           <AlertDialog.Root>

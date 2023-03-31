@@ -12,7 +12,11 @@ import { RiTeamLine } from 'react-icons/ri';
 import { MdOutlineAdminPanelSettings, MdOutlineForum } from 'react-icons/md';
 import { CgProfile } from 'react-icons/cg';
 import { CiStreamOn } from 'react-icons/ci';
-import { GiHealthNormal } from 'react-icons/gi';
+import { GiHealthNormal, GiWeightLiftingUp } from 'react-icons/gi';
+import { FaVolleyballBall } from 'react-icons/fa';
+import { BiFootball } from 'react-icons/bi';
+import { GrDocumentText } from 'react-icons/gr';
+import { HiOutlineDocumentText } from 'react-icons/hi';
 
 const Box = styled.article`
   & {
@@ -81,7 +85,7 @@ export default function DashboardView() {
           <div className='flex flex-col gap-4 pt-28 relative px-4 max-w-[60em] m-auto'>
             <h1 className='text-3xl font-bold'>Dashboard</h1>
             <div className='w-full max-w-full grid grid-cols-4 grid-rows-4 gap-x-4 gap-y-10 self-center'>
-              <Box className='bg-gradient-to-br from-blue-800/100 to-cyan-500/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+              <Box className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
                 <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                   Equipa
                 </h2>
@@ -120,7 +124,12 @@ export default function DashboardView() {
                 ></MdOutlineAdminPanelSettings>
               </Box>
 
-              <Box className='bg-gradient-to-br from-orange-500/100 to-orange-400/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+              <Box
+                onClick={() => {
+                  window.location.href = `/profiles/${user?.id}`;
+                }}
+                className='bg-gradient-to-br from-orange-500/100 to-orange-400/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+              >
                 <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                   Perfil
                 </h2>
@@ -142,6 +151,40 @@ export default function DashboardView() {
                   color='#e5e7eb'
                   className='icon absolute -right-10 -bottom-10 '
                 ></MdOutlineForum>
+              </Box>
+              <Box className='bg-gradient-to-tr from-red-600/100 to-red-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Jogos{' '}
+                </h2>
+
+                <FaVolleyballBall
+                  size={150}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></FaVolleyballBall>
+              </Box>
+              <Box className='bg-gradient-to-tr from-pink-600/100 to-pink-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Relatórios{' '}
+                </h2>
+                <HiOutlineDocumentText
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></HiOutlineDocumentText>
+              </Box>
+              <Box className='bg-gradient-to-tr from-teal-400/100 to-teal-700/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Treinos
+                </h2>
+                <p className='text-gray-50'>
+                  Comunicar entre todos nunca foi <br /> tão fácil
+                </p>
+                <GiWeightLiftingUp
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></GiWeightLiftingUp>
               </Box>
               <Box className='bg-gradient-to-tl from-green-500/100 to-green-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
                 <h2 className='text-gray-50 font-semibold text-2xl z-20'>

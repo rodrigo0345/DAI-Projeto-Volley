@@ -74,7 +74,7 @@ export default function mainHeader() {
             <HoverCard.Trigger asChild>
               <a
                 className='cursor-pointer flex items-center gap-2 justify-center bg-gradient-to-r from-yellow-400 to-yellow-300/90 rounded-lg shadow-lg px-4 py-0 no-underline hover:no-underline h-10'
-                href='https://twitter.com/radix_ui'
+                href={'profiles/' + user?.id}
                 target='_blank'
                 rel='noreferrer noopener'
               >
