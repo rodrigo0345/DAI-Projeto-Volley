@@ -19,13 +19,13 @@ import java.time.LocalTime;
 @Table(name = "rides")
 public class Ride {
     @Id @GeneratedValue public Long id;
-    private String origem;
-    private String destino;
-    private LocalDate data;
-    private LocalTime hora;
-    private int lugares;
-    private String descricao;
-    private String condutorContacto;
+    private String origin;
+    private String destination;
+    private LocalDate date;
+    private LocalTime time;
+    private int seats;
+    private String description;
+    private String driverContact;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User driver;
