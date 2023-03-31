@@ -130,7 +130,9 @@
     "@radix-ui/react-dropdown-menu": "$@radix-ui/react-dropdown-menu",
     "@radix-ui/react-tooltip": "$@radix-ui/react-tooltip",
     "flowbite": "$flowbite",
-    "radix-ui": "$radix-ui"
+    "radix-ui": "$radix-ui",
+    "@radix-ui/colors": "$@radix-ui/colors",
+    "@radix-ui/react-hover-card": "$@radix-ui/react-hover-card"
   },
   "vaadin": {
     "dependencies": {
@@ -178,6 +180,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "4438fb47ac936cdaa16d9fba9cbc01010cf4b65617b2f4379fdc563899b0f6f4"
+    "hash": "68522ecaf5b6ab04e315e1a48f9cbcb66cfd0502b474f86e199a42f75160725e"
   }
 }
