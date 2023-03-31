@@ -45,7 +45,7 @@ export default function SidePanel({
               <p
                 className={
                   (item.targetState === item.activator.state
-                    ? 'text-white'
+                    ? 'text-white animate-[pulse_2s_ease-in-out_infinite]'
                     : 'text-gray-500') + ' font-semibold'
                 }
               >

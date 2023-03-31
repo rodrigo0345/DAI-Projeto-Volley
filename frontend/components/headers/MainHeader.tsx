@@ -73,7 +73,7 @@ export default function mainHeader() {
           <HoverCard.Root>
             <HoverCard.Trigger asChild>
               <a
-                className='cursor-pointer flex items-center gap-2 justify-center h-full bg-gradient-to-r from-cyan-500 to-blue-800/80 rounded-lg shadow-lg px-3 no-underline hover:no-underline'
+                className='cursor-pointer flex items-center gap-2 justify-center bg-gradient-to-r from-yellow-400 to-yellow-300/90 rounded-lg shadow-lg px-4 py-0 no-underline hover:no-underline h-10'
                 href='https://twitter.com/radix_ui'
                 target='_blank'
                 rel='noreferrer noopener'
@@ -89,12 +89,12 @@ export default function mainHeader() {
                 sideOffset={5}
               >
                 <div className='flex flex-col gap-[7px] z-50'>
-                  <img
-                    className='block h-[60px] w-[60px] rounded-full'
-                    src='https://pbs.twimg.com/profile_images/1337055608613253126/r_eiMp2H_400x400.png'
-                    alt='Radix UI'
-                  />
-                  <div className='flex flex-col gap-[15px]'>
+                  <div className='flex gap-4 items-center'>
+                    <img
+                      className='block h-[60px] w-[60px] rounded-full object-contain'
+                      src='https://creazilla-store.fra1.digitaloceanspaces.com/icons/3214763/user-minus-icon-md.png'
+                      alt='Radix UI'
+                    />
                     <div>
                       <div className='text-mauve12 m-0 text-[15px] font-medium leading-[1.5]'>
                         {user.firstname + ' ' + user.lastname}
@@ -103,28 +103,10 @@ export default function mainHeader() {
                         {'@' + user.role?.toLocaleLowerCase()}
                       </div>
                     </div>
-                    <div className='text-mauve12 m-0 text-[15px] leading-[1.5]'>
-                      Components, icons, colors, and templates for building
-                      high-quality, accessible UI. Free and open-source.
-                    </div>
-                    <div className='flex gap-[15px]'>
-                      <div className='flex gap-[5px]'>
-                        <div className='text-mauve12 m-0 text-[15px] font-medium leading-[1.5]'>
-                          0
-                        </div>{' '}
-                        <div className='text-mauve10 m-0 text-[15px] leading-[1.5]'>
-                          Following
-                        </div>
-                      </div>
-                      <div className='flex gap-[5px]'>
-                        <div className='text-mauve12 m-0 text-[15px] font-medium leading-[1.5]'>
-                          2,900
-                        </div>{' '}
-                        <div className='text-mauve10 m-0 text-[15px] leading-[1.5]'>
-                          Followers
-                        </div>
-                      </div>
-                    </div>
+                  </div>
+                  <div className='text-mauve12 m-0 text-[15px] leading-[1.5]'>
+                    Email:{' '}
+                    <span className='text-mauve10 '>{' ' + user.email}</span>
                   </div>
                 </div>
 
