@@ -1,7 +1,7 @@
 import { Switch } from '@mantine/core';
 import logo from 'Frontend/assets/images/Logo-512x512-1.png';
 import { ThemeContext } from 'Frontend/contexts/themeContext';
-import { useContext, useState } from 'react';
+import { ChangeEventHandler, useContext, useEffect, useState } from 'react';
 import { MdOutlineNightsStay } from 'react-icons/md';
 import { WiDaySunny } from 'react-icons/wi';
 import { RxHamburgerMenu } from 'react-icons/rx';
@@ -10,6 +10,7 @@ import { IoClose } from 'react-icons/io5';
 import MainButton from '../buttons/MainButton';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { Link, Navigate, redirect, useLocation } from 'react-router-dom';
+import * as HoverCard from '@radix-ui/react-hover-card';
 
 export default function mainHeader() {
   const theme = useContext(ThemeContext);
@@ -20,7 +21,7 @@ export default function mainHeader() {
   );
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  function switchTheme(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function switchTheme(e: any) {
     if (!enabledDarkMode) {
       theme?.enableDarkMode();
     } else {
@@ -35,7 +36,7 @@ export default function mainHeader() {
   }
 
   return (
-    <div className='z-50 flex  items-center justify-around bg-zinc-800/20 w-full h-24 fixed px-6 backdrop-blur-sm'>
+    <div className='header z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6 backdrop-blur-sm'>
       <div className='flex items-center bg-transparent w-full px-4 gap-4'>
         <div className='h-10 flex'>
           <a href='/'>
@@ -69,9 +70,68 @@ export default function mainHeader() {
       </div>
       <aside className='relative px-4 flex-row-reverse items-center gap-4 h-12 flex'>
         {user ? (
-          <div className='cursor-pointer hidden md:!block'>
-            {user.firstname}
-          </div>
+          <HoverCard.Root>
+            <HoverCard.Trigger asChild>
+              <a
+                className='cursor-pointer flex items-center gap-2 justify-center h-full bg-gradient-to-r from-cyan-500 to-blue-800/80 rounded-lg shadow-lg px-3 no-underline hover:no-underline'
+                href='https://twitter.com/radix_ui'
+                target='_blank'
+                rel='noreferrer noopener'
+              >
+                <h2 className='text-lg text-gray-100 m-0 font-semibold decoration-none p-0 '>
+                  {user.firstname}
+                </h2>
+              </a>
+            </HoverCard.Trigger>
+            <HoverCard.Portal>
+              <HoverCard.Content
+                className='z-50 data-[side=bottom]:animate-slideUpAndFade data-[side=right]:animate-slideLeftAndFade data-[side=left]:animate-slideRightAndFade data-[side=top]:animate-slideDownAndFade w-[300px] rounded-md bg-white p-5 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] data-[state=open]:transition-all'
+                sideOffset={5}
+              >
+                <div className='flex flex-col gap-[7px] z-50'>
+                  <img
+                    className='block h-[60px] w-[60px] rounded-full'
+                    src='https://pbs.twimg.com/profile_images/1337055608613253126/r_eiMp2H_400x400.png'
+                    alt='Radix UI'
+                  />
+                  <div className='flex flex-col gap-[15px]'>
+                    <div>
+                      <div className='text-mauve12 m-0 text-[15px] font-medium leading-[1.5]'>
+                        {user.firstname + ' ' + user.lastname}
+                      </div>
+                      <div className='text-mauve10 m-0 text-[15px] leading-[1.5]'>
+                        {'@' + user.role?.toLocaleLowerCase()}
+                      </div>
+                    </div>
+                    <div className='text-mauve12 m-0 text-[15px] leading-[1.5]'>
+                      Components, icons, colors, and templates for building
+                      high-quality, accessible UI. Free and open-source.
+                    </div>
+                    <div className='flex gap-[15px]'>
+                      <div className='flex gap-[5px]'>
+                        <div className='text-mauve12 m-0 text-[15px] font-medium leading-[1.5]'>
+                          0
+                        </div>{' '}
+                        <div className='text-mauve10 m-0 text-[15px] leading-[1.5]'>
+                          Following
+                        </div>
+                      </div>
+                      <div className='flex gap-[5px]'>
+                        <div className='text-mauve12 m-0 text-[15px] font-medium leading-[1.5]'>
+                          2,900
+                        </div>{' '}
+                        <div className='text-mauve10 m-0 text-[15px] leading-[1.5]'>
+                          Followers
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <HoverCard.Arrow className='fill-white' />
+              </HoverCard.Content>
+            </HoverCard.Portal>
+          </HoverCard.Root>
         ) : (
           <MainButton href='/login' className='hidden'>
             Começa já

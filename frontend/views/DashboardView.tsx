@@ -6,6 +6,27 @@ import SidePanel, {
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { BsCalendarDate } from 'react-icons/bs';
+import CalendarView from 'Frontend/components/calendar/Calendar';
+import styled from 'styled-components';
+import { RiTeamLine } from 'react-icons/ri';
+import { MdOutlineAdminPanelSettings, MdOutlineForum } from 'react-icons/md';
+import { CgProfile } from 'react-icons/cg';
+import { CiStreamOn } from 'react-icons/ci';
+import { GiHealthNormal } from 'react-icons/gi';
+
+const Box = styled.article`
+  & {
+    cursor: pointer;
+  }
+  &:hover {
+    .icon {
+      transform: translateX(-1.5rem);
+    }
+  }
+  .icon {
+    transition: transform 0.2s ease-in-out;
+  }
+`;
 
 enum Menu {
   DASHBOARD = 'DASHBOARD',
@@ -53,23 +74,92 @@ export default function DashboardView() {
   ];
 
   return (
-    <main className='min-h-screen flex'>
+    <main className='min-h-screen flex relative'>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
-      <div>
+      <div className='relative flex-1'>
         {menu === Menu.DASHBOARD && (
-          <div className='flex flex-col gap-4 pt-28'>
+          <div className='flex flex-col gap-4 pt-28 relative px-4 max-w-[60em] m-auto'>
             <h1 className='text-3xl font-bold'>Dashboard</h1>
-            <p className='text-lg'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            </p>
+            <div className='w-full max-w-full grid grid-cols-4 grid-rows-4 gap-x-4 gap-y-10 self-center'>
+              <Box className='bg-gradient-to-br from-blue-800/100 to-cyan-500/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Equipa
+                </h2>
+                <p className='text-gray-200'>
+                  Descobre tudo sobre a tua equipa!
+                </p>
+                <RiTeamLine
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></RiTeamLine>
+              </Box>
+              <Box className='bg-gradient-to-tl from-purple-500/100 to-purple-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Lives
+                </h2>
+                <CiStreamOn
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></CiStreamOn>
+              </Box>
+              <Box
+                onClick={() => {
+                  window.location.href = '/admin';
+                }}
+                className='bg-gradient-to-br from-zinc-500/100 to-gray-400/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+              >
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Regulador
+                </h2>
+                <MdOutlineAdminPanelSettings
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></MdOutlineAdminPanelSettings>
+              </Box>
+
+              <Box className='bg-gradient-to-br from-orange-500/100 to-orange-400/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Perfil
+                </h2>
+                <CgProfile
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></CgProfile>
+              </Box>
+              <Box className='bg-gradient-to-tr from-yellow-300/100 to-yellow-500/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Fórum
+                </h2>
+                <p className='text-gray-50'>
+                  Comunicar entre todos nunca foi <br /> tão fácil
+                </p>
+                <MdOutlineForum
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></MdOutlineForum>
+              </Box>
+              <Box className='bg-gradient-to-tl from-green-500/100 to-green-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Saúde
+                </h2>
+                <GiHealthNormal
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></GiHealthNormal>
+              </Box>
+            </div>
           </div>
         )}
         {menu === Menu.CALENDAR && (
-          <div className='flex flex-col gap-4 pt-28'>
+          <div className='flex flex-col gap-4 pt-28 relative w-full'>
             <h1 className='text-3xl font-bold'>Calendário</h1>
-            <p className='text-lg'>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            </p>
+            <CalendarView></CalendarView>
           </div>
         )}
       </div>

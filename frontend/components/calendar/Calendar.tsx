@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Group } from '@mantine/core';
+import { Group, Indicator } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
 import dayjs from 'dayjs';
 
-function Demo() {
+export default function CalendarView() {
   const [selected, setSelected] = useState<Date[]>([]);
   const handleSelect = (date: Date) => {
     const isSelected = selected.some((s) => dayjs(date).isSame(s, 'date'));
@@ -19,10 +19,19 @@ function Demo() {
   return (
     <Group position='center'>
       <Calendar
-        getDayProps={(date: any) => ({
-          selected: selected.some((s) => dayjs(date).isSame(s, 'date')),
-          onClick: () => handleSelect(date),
-        })}
+        sx={{
+          '&': {
+            width: '100px',
+          },
+        }}
+        renderDay={(date) => {
+          const day = date.getDate();
+          return (
+            <Indicator size={6} color='red' offset={-2} disabled={day !== 16}>
+              <div>{day}</div>
+            </Indicator>
+          );
+        }}
       />
     </Group>
   );
