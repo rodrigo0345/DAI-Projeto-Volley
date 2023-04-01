@@ -15,6 +15,7 @@ import {
 } from '@radix-ui/react-icons';
 import React from 'react';
 import { TfiWrite } from 'react-icons/tfi';
+import Post from 'Frontend/components/posts/Post';
 
 enum Menu {
   ALL = 'ALL',
@@ -85,21 +86,10 @@ export default function ForumView() {
   return (
     <div className='min-h-screen flex relative'>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
-      <div className='flex-1 relative pt-36 px-10 text-gray-300'>
+      <div className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10'>
         <div className='flex lg:!flex-row lg:!items-start flex-col justify-between items-start gap-4 max-w-[60em] m-auto'>
           <h1 className='text-3xl font-bold m-0'>Forum</h1>
           <div className='shadow-lg min-w-[10em] bg-zinc-800 rounded-md h-10 flex items-center p-4 gap-4'>
-            <nav>
-              <button
-                onClick={() => {
-                  window.location.href = '/new-post';
-                }}
-                className='bg-gradient-to-tr from-yellow-200 to-yellow-500 p-3 rounded-full shadow-lg hover:!from-gray-300 transition-all'
-                aria-label='Novo post'
-              >
-                <TfiWrite size={20} color='#fff'></TfiWrite>
-              </button>
-            </nav>
             <nav>
               <label htmlFor='' className='text-white text-sm'>
                 Ordernar por:{' '}
@@ -139,6 +129,18 @@ export default function ForumView() {
             </nav>
           </div>
         </div>
+        <main className='relative w-full gap-4 max-w-[60em] m-auto'>
+          <button
+            onClick={() => {
+              window.location.href = '/new-post';
+            }}
+            className='fixed z-20 bottom-20 right-10 rounded-md text-white font-semibold bg-gradient-to-tr from-yellow-200 to-yellow-500 p-3  shadow-lg hover:!from-yellow-300/70 hover:!to-yellow-400/80 transition-all'
+            aria-label='Novo post'
+          >
+            <TfiWrite size={20}></TfiWrite>
+          </button>
+          <Post type=''></Post>
+        </main>
       </div>
     </div>
   );

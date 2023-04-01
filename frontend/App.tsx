@@ -20,6 +20,8 @@ const MainLoadingScreen = lazy(
 );
 const ProfilesView = lazy(() => import('./views/ProfilesView'));
 const ForumView = lazy(() => import('./views/ForumView'));
+const NewPostView = lazy(() => import('./views/NewPostView'));
+const PostView = lazy(() => import('./views/PostView'));
 
 const router = createBrowserRouter([
   {
@@ -48,6 +50,8 @@ const router = createBrowserRouter([
             element: <ProfilesView />,
           },
           { path: '/forum', element: <ForumView /> },
+          { path: '/new-post', element: <NewPostView /> },
+          { path: '/post/:id', element: <PostView /> },
         ],
       },
       {
