@@ -15,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.application.repository.*;
 
+import javax.annotation.security.PermitAll;
+
+@PermitAll
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {

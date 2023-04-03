@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 import javax.validation.constraints.*;
 
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +43,7 @@ public class User implements UserDetails {
 
     private String lastname;
 
+    @Unique
     @Email
     private String email;
 

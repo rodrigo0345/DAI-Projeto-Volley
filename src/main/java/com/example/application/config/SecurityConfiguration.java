@@ -28,6 +28,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return http.build();
+        return http.antMatcher("/").build();
     }
 }

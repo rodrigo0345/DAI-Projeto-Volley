@@ -1,8 +1,14 @@
 package com.example.application.controller.Auth;
 
 import java.util.Date;
+import java.util.Optional;
+
+
+import com.example.application.model.User.User;
+import com.example.application.service.JwtService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
 
 import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
@@ -16,19 +22,21 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class AuthControllerTest {
     @Mock
-    private UserRepository user = Mockito.mock(UserRepository.class, Mockito.CALLS_REAL_METHODS);
+    private UserRepository userR = mock(UserRepository.class, Mockito.CALLS_REAL_METHODS);
     @Mock
-    private AuthenticationService service = Mockito.mock(AuthenticationService.class);
-
+    private AuthenticationService service = mock(AuthenticationService.class);
+    @Mock
+    private JwtService jwtService = mock(JwtService.class);
     private AuthenticationController auth;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        auth = new AuthenticationController(service, user);
+        auth = new AuthenticationController(service, userR);
     }
     @Test
     public void testRegister() {
@@ -52,10 +60,14 @@ public class AuthControllerTest {
         System.out.println("0. " + request);
 
         Mockito.when(service.register(request)).thenReturn(expectedResponse);
-        ResponseEntity<AuthenticationResponse> result = auth.register(request);
 
+        assertNotNull(service.register(request));
+        System.out.println("0.1 " + service.register(request));
+
+        ResponseEntity<AuthenticationResponse> result = auth.register(request);
         assertNotNull(result);
         System.out.println("1. " + result);
+
         assertNotNull(result.getBody());
         System.out.println("2. " + result.getBody());
 
@@ -74,6 +86,7 @@ public class AuthControllerTest {
         }
 
         AuthenticationResponse register = service.register(request);
+
         assertNotNull(register);
         System.out.println("5. " + register);
 
@@ -83,6 +96,13 @@ public class AuthControllerTest {
 
         assertNotNull(result.getBody().getToken());
         System.out.println("7. " + result.getBody().getToken());
+
+        User user = new User(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(),
+                Roles.USER);
+
+        assertNotNull(user);
+        System.out.println("8. " + user);
+
 
         RegisterRequest request2 = RegisterRequest.builder()
                 .firstName("Rodrigoo")
@@ -136,6 +156,12 @@ public class AuthControllerTest {
 
         assertNotNull(result2.getBody().getToken());
         System.out.println("72. " + result2.getBody().getToken());
+
+        User user2 = new User(request2.getFirstName(), request2.getLastName(), request2.getEmail(), request2.getPassword(),
+                Roles.USER);
+
+        assertNotNull(user2);
+        System.out.println("82. " + user2);
 
         assertNotEquals(expectedResponse.getToken(), expectedResponse2.getToken());
     }

@@ -12,6 +12,7 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 
 export default function LoginPageView(): JSX.Element {
   const { login } = useContext(UserContext);
@@ -53,7 +54,7 @@ export default function LoginPageView(): JSX.Element {
       return;
     }
 
-    let response: LoginUser | undefined;
+    let response: ResponseEntity | undefined;
     try {
       response = await loginServer(
         email.current?.value,
@@ -63,16 +64,16 @@ export default function LoginPageView(): JSX.Element {
       console.log(e);
     }
 
-    if (!response) {
+    if (response?.body.error) {
       // TODO add error message
-      notify('Email ou Palavra-passe incorretos!');
+      notify(response?.body.error);
       email.current.value = '';
       password.current.value = '';
       setLoading(false);
       return;
     }
 
-    login(response);
+    login(response?.body.success as LoginUser);
 
     setLoading(false);
   }

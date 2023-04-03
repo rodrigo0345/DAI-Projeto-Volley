@@ -13,6 +13,8 @@ import { IoClose } from 'react-icons/io5';
 import { MultiSelect, NativeSelect, Switch } from '@mantine/core';
 import { RadioGroup } from '@headlessui/react';
 import { toast } from 'react-toastify';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
+import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 
 enum Menu {
   USERS = 'USERS',
@@ -23,7 +25,7 @@ export default function AdminPanelView() {
   const { user, logout } = useContext(UserContext);
 
   const [menu, setMenu] = useState<Menu>(Menu.USERS);
-  const [users, setUsers] = useState<(LoginUser | undefined)[]>([]);
+  const [users, setUsers] = useState<Set<LoginUser | undefined>>(new Set([]));
   const [addUser, setAddUser] = useState(false);
   const [isEncarregadoSelected, setEncarregadoSelected] = useState(false);
   const [plan, setPlan] = useState('');
@@ -36,6 +38,7 @@ export default function AdminPanelView() {
   const lastname = useRef<HTMLInputElement>(null);
   const role = useRef<HTMLSelectElement>(null);
   const educandos = useRef<HTMLSelectElement>(null);
+  const form = useRef<HTMLFormElement>(null);
 
   async function onSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     setIsLoading(true);
@@ -85,17 +88,27 @@ export default function AdminPanelView() {
       return;
     }
 
-    let resultSignup;
+    let resultSignup: ResponseEntity | undefined;
     try {
       resultSignup = await signup(user, register);
       console.log({ resultSignup });
     } catch (error) {
+      toast.error('Erro interno do servidor');
       console.log(error);
+      setIsLoading(false);
+      return;
     }
 
-    if (resultSignup && resultSignup)
-      toast.success('Utilizador criado com sucesso');
-    setUsers([...users, resultSignup]);
+    if (resultSignup === undefined) {
+      toast.error('Erro interno do servidor');
+      setIsLoading(false);
+      return;
+    }
+
+    if (resultSignup) toast.success('Utilizador criado com sucesso');
+    setUsers((prev) => prev.add(resultSignup?.body as LoginUser));
+    form.current?.reset();
+    setAddUser(false);
     setIsLoading(false);
   }
 
@@ -103,7 +116,7 @@ export default function AdminPanelView() {
     async function getUsers() {
       try {
         let resultUsers = await UserController.findAll();
-        setUsers(resultUsers);
+        setUsers(new Set(resultUsers));
       } catch (error) {
         console.error({ error });
       }
@@ -112,77 +125,47 @@ export default function AdminPanelView() {
   }, []);
 
   return (
-    <main className='min-h-screen h-screen w-full relative flex'>
-      <aside className='sticky h-full w-1/5 min-w-fit flex flex-col pt-44 pb-20 px-16'>
-        <ul className='flex flex-col gap-6 flex-1'>
-          <li
-            onClick={() => setMenu(Menu.USERS)}
-            className={
-              (menu === Menu.USERS
-                ? 'bg-black shadow-md '
-                : 'hover:bg-gray-200/40 ') +
-              ' px-4 py-2 rounded-xl flex items-center justify-start gap-3 cursor-pointer '
-            }
-          >
-            <RiUserSettingsFill
-              color={menu === Menu.USERS ? 'white' : 'gray'}
-            ></RiUserSettingsFill>
-            <p
-              className={
-                (menu === Menu.USERS ? 'text-white' : 'text-gray-500') +
-                ' font-semibold'
-              }
-            >
-              Utilizadores
-            </p>
-          </li>
-          <li
-            onClick={() => setMenu(Menu.CHAT)}
-            className={
-              (menu === Menu.CHAT
-                ? 'bg-black shadow-md '
-                : 'hover:bg-gray-200/40 ') +
-              ' px-4 py-2 rounded-xl flex items-center justify-start gap-3 cursor-pointer '
-            }
-          >
-            <RiUserSettingsFill
-              color={menu === Menu.CHAT ? 'white' : 'gray'}
-            ></RiUserSettingsFill>
-            <p
-              className={
-                (menu === Menu.CHAT ? 'text-white' : 'text-gray-500') +
-                ' font-semibold'
-              }
-            >
-              Chat
-            </p>
-          </li>
-        </ul>
-        <div className=''>
-          <h3 className='font-bold text-center m-0 text-lg my-4'>
-            {user?.firstname} {user?.lastname}
-          </h3>
-          <h4 className='m-0 text-center text-gray-300 text-sm my-4'>
-            {user?.email}
-          </h4>
-          <div className='w-full flex justify-center gap-4 p-4'>
-            <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
-              <IoMdSettings size={20} />
-            </button>
-            <button
-              className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'
-              onClick={() => {
-                logout();
-              }}
-            >
-              <IoIosLogOut />
-            </button>
-          </div>
-        </div>
-      </aside>
+    <main className='min-h-screen w-full relative flex'>
+      <SidePanel
+        key={user?.id}
+        user={user}
+        logout={logout}
+        content={[
+          {
+            id: 0,
+            icon: (
+              <RiUserSettingsFill
+                color={menu === Menu.USERS ? 'white' : 'black'}
+              />
+            ),
+            activator: {
+              setter: setMenu,
+              state: menu,
+            },
+            text: 'Utilizadores',
+            link: '/admin/users',
+            targetState: Menu.USERS,
+          },
+          {
+            id: 1,
+            icon: (
+              <RiUserSettingsFill
+                color={menu === Menu.CHAT ? 'white' : 'black'}
+              />
+            ),
+            activator: {
+              setter: setMenu,
+              state: menu,
+            },
+            text: 'Chat',
+            link: '/admin/users',
+            targetState: Menu.CHAT,
+          },
+        ]}
+      ></SidePanel>
       <div id='content' className='flex flex-1 pr-28 relative'>
         {menu === Menu.USERS && (
-          <div className='flex-1'>
+          <div className='flex-1 relative'>
             {' '}
             <header className='sticky pt-40 flex items-start justify-between'>
               <div className='flex flex-col justify-start'>
@@ -205,10 +188,49 @@ export default function AdminPanelView() {
                 </button>
               </div>
             </header>
-            <div className='flex-1 pt-10 flex gap-10 flex-wrap'>
-              {users.map((user) => {
-                return <UserCard user={user} key={user?.id} />;
-              })}
+            <div className='flex-1 pt-10 gap-10 flex-wrap flex flex-col pb-8 relative w-full'>
+              <div>
+                <h3>Administradores</h3>
+                <div className='flex gap-4 max-w-98'>
+                  {[...users]
+                    .filter((mappedUser) => {
+                      return mappedUser?.role === 'ADMIN';
+                    })
+                    .map((mappedUser) => {
+                      return (
+                        <UserCard user={mappedUser} key={mappedUser?.id} />
+                      );
+                    })}
+                </div>
+              </div>
+              <div>
+                <h3>Treinadores</h3>
+                <div className='flex gap-4'>
+                  {[...users]
+                    .filter((mappedUser) => {
+                      return mappedUser?.role === 'MANAGER';
+                    })
+                    .map((mappedUser) => {
+                      return (
+                        <UserCard user={mappedUser} key={mappedUser?.id} />
+                      );
+                    })}
+                </div>
+              </div>
+              <div>
+                <h3>Atletas</h3>
+                <div className='flex gap-4'>
+                  {[...users]
+                    .filter((mappedUser) => {
+                      return mappedUser?.role === 'USER';
+                    })
+                    .map((mappedUser) => {
+                      return (
+                        <UserCard user={mappedUser} key={mappedUser?.id} />
+                      );
+                    })}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -239,6 +261,7 @@ export default function AdminPanelView() {
               animate={{ x: 0 }}
               exit={{ x: 500 }}
               transition={{ duration: 0.2 }}
+              ref={form}
             >
               <div className='flex flex-col gap-4'>
                 <h1 className='m-0 text-xl'>Adicionar utilizador</h1>

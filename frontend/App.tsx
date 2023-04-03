@@ -7,6 +7,8 @@ import {
 } from './routes/PrivateRoutes';
 import { Suspense, lazy, useContext } from 'react';
 import { UserContext } from './contexts/UserContext';
+import { findById } from './generated/UserController';
+import LoginUser from './generated/com/example/application/model/User/LoginUser';
 
 const MainLayout = lazy(() => import('./views/MainLayout'));
 const LandPageView = lazy(() => import('./views/LandPageView'));
@@ -16,6 +18,10 @@ const AdminPanelView = lazy(() => import('./views/AdminPanelView'));
 const MainLoadingScreen = lazy(
   () => import('./components/loaders/MainLoadingScreen')
 );
+const ProfilesView = lazy(() => import('./views/ProfilesView'));
+const ForumView = lazy(() => import('./views/ForumView'));
+const NewPostView = lazy(() => import('./views/NewPostView'));
+const PostView = lazy(() => import('./views/PostView'));
 
 const router = createBrowserRouter([
   {
@@ -37,7 +43,16 @@ const router = createBrowserRouter([
       },
       {
         element: <PrivateRouteNoGuests />,
-        children: [{ path: '/dashboard', element: <DashboardView /> }],
+        children: [
+          { path: '/dashboard', element: <DashboardView /> },
+          {
+            path: '/profiles/:id',
+            element: <ProfilesView />,
+          },
+          { path: '/forum', element: <ForumView /> },
+          { path: '/new-post', element: <NewPostView /> },
+          { path: '/post/:id', element: <PostView /> },
+        ],
       },
       {
         element: <PrivateAdminRoute />,

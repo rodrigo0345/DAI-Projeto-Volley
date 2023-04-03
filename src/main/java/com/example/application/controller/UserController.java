@@ -36,4 +36,13 @@ public class UserController {
         return loginUserList;
     }
 
+    public LoginUser findById(Integer id) throws Exception {
+        if(id == null) return null;
+        User user = users.findById(id).get();
+        LoginUser loginUser = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
+                user.getRole().toString(),
+                null);
+        return loginUser;
+    }
+
 }
