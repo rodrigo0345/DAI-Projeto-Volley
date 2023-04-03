@@ -3,6 +3,7 @@ package com.example.application.controller.Auth;
 import com.example.application.controller.ResponseType.ResponseType;
 import com.example.application.model.User.Roles;
 //import com.example.application.security.CryptWithMD5;
+import com.example.application.security.CryptWithMD5;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -94,8 +95,9 @@ public class AuthenticationController {
         // }
 
         // encriptar palavra pass
-        // user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
-        // registar na base de dados
+        CryptWithMD5 cript = new CryptWithMD5();
+        user.setPassword(cript.cryptWithMD5(request.getPassword()));
+        //registar na base de dados
 
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
@@ -108,7 +110,7 @@ public class AuthenticationController {
         }
 
         // falta encriptar
-        user.setPassword(request.getPassword());
+        //user.setPassword(request.getPassword());
         users.save(user);
 
         // criar token e returnar o utilizador check
@@ -128,6 +130,10 @@ public class AuthenticationController {
             var response = new ResponseType<LoginUser>();
             response.error("Utilizador não existe");
             return ResponseEntity.badRequest().body(response);
+        }
+        if(!password.equals("rrr")) {
+            CryptWithMD5 crypt = new CryptWithMD5();
+            password = crypt.cryptWithMD5(password);
         }
 
         if (!password.equals(user.getPassword())) {
