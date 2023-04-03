@@ -10,6 +10,7 @@ import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -19,7 +20,7 @@ import org.springframework.context.annotation.Bean;
  * and some desktop browsers.
  *
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @Theme(value = "hilla-todo")
 public class Application implements AppShellConfigurator {
 
@@ -29,11 +30,13 @@ public class Application implements AppShellConfigurator {
     }
 
     @Bean
-    CommandLineRunner init(PostRepository posts, UserRepository users) {
+    CommandLineRunner init(PostRepository posts, UserRepository users){
         return args -> {
-            posts.save(new Post("First Post", "first-post", "This is the first post", "David"));
+            posts.save(new Post("Post", "first-post", "This is the first post", "David"));
             User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", "rrr", Roles.ADMIN);
+            User aux2 = new User("Manuel", "Algo", "rr@gmail.com", "rrr", Roles.MANAGER);
             users.save(aux);
+            users.save(aux2);
         };
     }
 
