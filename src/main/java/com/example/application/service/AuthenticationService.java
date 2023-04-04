@@ -56,7 +56,10 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) {
         User user = new User(request.getFirstName(), request.getLastName(), request.getEmail(), request.getPassword(),
                 Roles.USER);
-        var savedUser = repository.save(user);
+        var savedUser = repository.findByEmail(request.getEmail()).get();
+        if (savedUser == null) {
+            throw new RuntimeException("Cannot generate a token for a User that does not exist");
+        }
         var jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()

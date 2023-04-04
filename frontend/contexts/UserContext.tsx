@@ -1,5 +1,4 @@
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
-import User from 'Frontend/generated/com/example/application/model/User/User';
 import {
   Dispatch,
   SetStateAction,
@@ -9,22 +8,57 @@ import {
   useState,
 } from 'react';
 import { redirect } from 'react-router-dom';
+import { validateToken } from 'Frontend/generated/AuthenticationController';
+import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
+import { toast } from 'react-toastify';
 
 export const UserContext = createContext<{
-  user: LoginUser | null;
+  user: LoginUser | undefined;
   login: (user: LoginUser) => void;
   logout: () => void;
-}>({ user: null, login: () => {}, logout: () => {} });
+  reAuthenticate: () => Promise<LoginUser | undefined>;
+}>({
+  user: undefined,
+  login: () => {},
+  logout: () => {},
+  reAuthenticate: () => Promise.resolve(undefined),
+});
 
 export default function Context({ children }: React.PropsWithChildren<{}>) {
-  const [user, setUser] = useState<LoginUser | null>(null);
+  const [user, setUser] = useState<LoginUser | undefined>();
 
-  function getUserFromStorage() {
+  async function getUserFromStorage() {
     const userFromStorage = localStorage.user;
+
+    let user: LoginUser | undefined = undefined;
     if (userFromStorage) {
-      return JSON.parse(userFromStorage);
+      try {
+        user = JSON.parse(userFromStorage) as LoginUser;
+      } catch (e) {
+        console.log(e);
+        user = undefined;
+      }
     }
-    return null;
+
+    if (!user) {
+      return null;
+    }
+
+    let validToken;
+    try {
+      validToken = await validateToken(user, user.stringToken);
+    } catch (e) {
+      console.log(e);
+    }
+
+    console.log({ validToken });
+
+    if (!validToken?.body) {
+      toast.error('Your session has expired, please login again');
+      logout();
+      return undefined;
+    }
+    return user;
   }
 
   function saveUserToStorage(user: LoginUser | null) {
@@ -33,7 +67,7 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
 
   function logout() {
     window.location.href = '/login';
-    setUser(null);
+    setUser(undefined);
     saveUserToStorage(null);
   }
 
@@ -42,13 +76,31 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
     saveUserToStorage(user);
   }
 
+  async function reAuthenticate() {
+    let userAux;
+    userAux = await getUserFromStorage();
+
+    console.log({ reauth: user });
+    if (!userAux) {
+      logout();
+      return undefined;
+    }
+    return userAux;
+  }
+
   useEffect(() => {
-    setUser(getUserFromStorage());
-    console.log(getUserFromStorage());
+    (async () => {
+      const user = await getUserFromStorage();
+      if (!user) {
+        return;
+      }
+      setUser(user);
+      console.log({ stored: user });
+    })();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, reAuthenticate }}>
       {children}
     </UserContext.Provider>
   );

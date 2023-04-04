@@ -11,9 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.*;
 
 import org.springframework.context.annotation.Role;
+import org.checkerframework.common.aliasing.qual.Unique;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,17 +36,18 @@ import lombok.NoArgsConstructor;
 public class User implements UserDetails {
     @Id
     @GeneratedValue
-    private Integer id;
-    private String firstname;
+    public Integer id;
+
+    public String firstname;
 
     private String lastname;
 
+    @Unique
     @Email
     private String email;
 
     private String password;
 
-    
     @Enumerated(EnumType.STRING)
     private Roles role;
 

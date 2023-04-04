@@ -2,7 +2,10 @@ package com.example.application.controller;
 
 import com.example.application.repository.UserRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import dev.hilla.Nonnull;
@@ -19,7 +22,27 @@ public class UserController {
         this.users = users;
     }
 
-    public @Nonnull Iterable<User> findAll() {
-        return users.findAll();
+    public @Nonnull Iterable<LoginUser> findAll() throws Exception {
+        Iterable<User> usersAux = users.findAll();
+        List<LoginUser> loginUserList = new ArrayList<>();
+        for (User user : usersAux) {
+            System.out.println(user);
+            System.out.println(user.getTokens());
+            LoginUser aux = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
+                    user.getRole().toString(),
+                    null);
+            loginUserList.add(aux);
+        }
+        return loginUserList;
     }
+
+    public LoginUser findById(Integer id) throws Exception {
+        if(id == null) return null;
+        User user = users.findById(id).get();
+        LoginUser loginUser = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
+                user.getRole().toString(),
+                null);
+        return loginUser;
+    }
+
 }
