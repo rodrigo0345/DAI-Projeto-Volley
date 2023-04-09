@@ -9,7 +9,7 @@ import java.util.List;
 
 @Table(name = "news")
 public interface NewsRepository extends CrudRepository<News, Integer> {
-    public News findByAuthor(User author);
+    public List<News> findByAuthor(User author);
     public News findByTitle(String title);
     public List<News> findAllByOrderByDateDesc();
 }
