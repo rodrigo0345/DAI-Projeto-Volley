@@ -57,9 +57,17 @@ public class RideController {
     }
 
     public Ride save(Ride ride) throws Exception {
-        if (ride == null || ride.getDate().isBefore(LocalDate.now()))
+        if (ride == null || ride.getDate().isBefore(LocalDate.now().minusDays(1))
+                || ride.getSeats() <= 0 )
             return null;
         return rides.save(ride);
+    }
+
+    public Ride remove(Ride ride) throws Exception {
+        if (ride == null)
+            return null;
+        rides.delete(ride);
+        return ride;
     }
 
 }
