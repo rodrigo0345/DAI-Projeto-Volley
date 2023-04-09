@@ -21,7 +21,8 @@ export default function ProfilesView() {
   const [role, setRole] = useState(userProfile?.role);
 
   useEffect(() => {
-    if (!userId) return;
+    console.log({ user }, { userId });
+    //if (!userId || user?.id) window.location.href = '/404';
 
     if (user?.id === Number(userId)) setNotMyProfile(false);
 
@@ -43,7 +44,7 @@ export default function ProfilesView() {
         setRole(user?.role);
       })();
     });
-  }, [userId]);
+  }, [user]);
 
   function submitChanges(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>

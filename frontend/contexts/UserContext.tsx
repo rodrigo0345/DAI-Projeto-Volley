@@ -66,9 +66,9 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
   }
 
   function logout() {
-    window.location.href = '/login';
     setUser(undefined);
     saveUserToStorage(null);
+    window.location.href = '/login';
   }
 
   function login(user: LoginUser) {

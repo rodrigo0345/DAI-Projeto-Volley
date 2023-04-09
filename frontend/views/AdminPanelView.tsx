@@ -15,6 +15,7 @@ import { RadioGroup } from '@headlessui/react';
 import { toast } from 'react-toastify';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';
+import SearchUsers from 'Frontend/components/search/SearchUsers';
 
 enum Menu {
   USERS = 'USERS',
@@ -39,6 +40,23 @@ export default function AdminPanelView() {
   const role = useRef<HTMLSelectElement>(null);
   const educandos = useRef<HTMLSelectElement>(null);
   const form = useRef<HTMLFormElement>(null);
+
+  function filterUsersBy(role: string): JSX.Element[] {
+    const result = [...users].filter((mappedUser) => {
+      return mappedUser?.role === role;
+    });
+
+    if (result.length === 0) {
+      return [
+        <p className='text-center text-gray-500'>
+          Nenhum utilizador encontrado
+        </p>,
+      ];
+    }
+    return result.map((mappedUser) => {
+      return <UserCard user={mappedUser} key={mappedUser?.id} />;
+    });
+  }
 
   async function onSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     setIsLoading(true);
@@ -174,12 +192,10 @@ export default function AdminPanelView() {
                   Informação dos utilizadores
                 </h3>
               </div>
-              <div className='flex  justify-center gap-4 h-full'>
-                <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
-                  <FaSearch />
-                </button>
+              <div className='flex flex-col lg:!flex-row justify-center gap-4 h-full'>
+                <SearchUsers users={[...users]}></SearchUsers>
                 <button
-                  className=' p-2 rounded-md outline-gray-300/70 outline outline-1 h-10 flex items-center justify-center hover:bg-yellow-600 px-4 bg-yellow-500'
+                  className=' p-2 rounded-md outline-gray-300/70 outline outline-1 h-10 flex items-center justify-center px-4 bg-gradient-to-tr from-yellow-300 to-yellow-400'
                   onClick={() => {
                     setAddUser(true);
                   }}
@@ -190,45 +206,23 @@ export default function AdminPanelView() {
             </header>
             <div className='flex-1 pt-10 gap-10 flex-wrap flex flex-col pb-8 relative w-full'>
               <div>
-                <h3>Administradores</h3>
+                <h3 className='font-semibold'>Administradores</h3>
                 <div className='flex gap-4 max-w-98'>
-                  {[...users]
-                    .filter((mappedUser) => {
-                      return mappedUser?.role === 'ADMIN';
-                    })
-                    .map((mappedUser) => {
-                      return (
-                        <UserCard user={mappedUser} key={mappedUser?.id} />
-                      );
-                    })}
+                  {filterUsersBy('ADMIN')}
                 </div>
               </div>
               <div>
                 <h3>Treinadores</h3>
-                <div className='flex gap-4'>
-                  {[...users]
-                    .filter((mappedUser) => {
-                      return mappedUser?.role === 'MANAGER';
-                    })
-                    .map((mappedUser) => {
-                      return (
-                        <UserCard user={mappedUser} key={mappedUser?.id} />
-                      );
-                    })}
-                </div>
+                <div className='flex gap-4'>{filterUsersBy('MANAGER')}</div>
               </div>
-              <div>
+              <div className='h-56'>
                 <h3>Atletas</h3>
+                <div className='flex gap-4'>{filterUsersBy('USER')}</div>
+              </div>
+              <div className='h-56'>
+                <h3>Seccionistas</h3>
                 <div className='flex gap-4'>
-                  {[...users]
-                    .filter((mappedUser) => {
-                      return mappedUser?.role === 'USER';
-                    })
-                    .map((mappedUser) => {
-                      return (
-                        <UserCard user={mappedUser} key={mappedUser?.id} />
-                      );
-                    })}
+                  {filterUsersBy('SECCIONISTAS')}
                 </div>
               </div>
             </div>
