@@ -68,15 +68,13 @@ export default function mainHeader() {
           </ul>
         </div>
       </div>
-      <aside className='relative px-4 flex-row-reverse items-center gap-4 h-12 flex'>
+      <aside className='relative px-4 sm:flex-row-reverse items-center gap-4 h-12 flex'>
         {user ? (
           <HoverCard.Root>
             <HoverCard.Trigger asChild>
               <a
                 className='cursor-pointer flex items-center gap-2 justify-center bg-gradient-to-r from-yellow-400 to-yellow-300/90 rounded-lg shadow-lg px-4 py-0 no-underline hover:no-underline h-10'
                 href={'profiles/' + user?.id}
-                target='_blank'
-                rel='noreferrer noopener'
               >
                 <h2 className='text-lg text-gray-100 m-0 font-semibold decoration-none p-0 '>
                   {user.firstname}
@@ -138,7 +136,7 @@ export default function mainHeader() {
           onClick={toggleModal}
           className='h-full flex items-center sm:hidden dark:text-white'
         >
-          <RxHamburgerMenu size={25}></RxHamburgerMenu>
+          <RxHamburgerMenu size={25} color='black'></RxHamburgerMenu>
         </div>
       </aside>
 
