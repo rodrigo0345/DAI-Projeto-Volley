@@ -1,6 +1,7 @@
 import React from 'react';
 import { BsBookmark } from 'react-icons/bs';
 import { toast } from 'react-toastify';
+import Post from 'Frontend/generated/com/example/application/model/Post';
 
 export type Content = {
   id: number;
@@ -16,12 +17,12 @@ function savePost(id: number) {
   toast.success('Post guardado com sucesso!');
 }
 
-export default function Post({ type }: { type?: string }) {
+export function PostComponent({ post, type }: { post?: Post; type?: string }) {
   return (
     <div className='relative bg-zinc-800 w-full min-h-[15em] rounded-lg shadow-lg overflow-hidden outline outline-1 outline-gray-300 py-4 cursor-pointer max-h-[20em] shadow-gray-400 max-w-[60em] text-white'>
       <div className='flex items-start px-4 justify-between'>
         <h3 className='font-bold text-center m-0 text-lg text-white'>
-          Titulo{' '}
+          {post?.title}{' '}
           <span className='text-sm font-normal italic'>{' @' + 'tipo'}</span>
           <span className='font-normal text-sm italic'>
             {' / ' + 'Há 14 horas'}
@@ -30,12 +31,7 @@ export default function Post({ type }: { type?: string }) {
         <p className=' text-gray-300 font-semibold text-sm '>12/02/2022</p>
       </div>
       <div className='px-4 pb-2 text-gray-200'>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias
-          ducimus nemo molestiae nobis? Ea repellat quam esse, eum eos ducimus
-          exercitationem aut quibusdam repellendus laborum, delectus illo est
-          nobis amet.
-        </p>
+        <p>{post?.content}</p>
       </div>
       <img
         width={300}

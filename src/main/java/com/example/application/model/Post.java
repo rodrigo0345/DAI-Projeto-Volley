@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 
 import javax.persistence.Id;
 
+import com.example.application.model.User.LoginUser;
+
 @Entity
 public class Post {
 
@@ -17,18 +19,18 @@ public class Post {
     private String title;
     private String slug;
     private String content;
-    private String author;
+    private Integer authorId;
     private LocalDateTime publishedOn;
     private LocalDateTime updatedOn;
 
     public Post() {
     }
 
-    public Post(String title, String slug, String content, String author) {
+    public Post(String title, String slug, String content, Integer authorId) {
         this.title = title;
         this.slug = slug;
         this.content = content;
-        this.author = author;
+        this.authorId = authorId;
         this.publishedOn = LocalDateTime.now();
     }
 
@@ -64,12 +66,12 @@ public class Post {
         this.content = content;
     }
 
-    public String getAuthor() {
-        return author;
+    public Integer getAuthor() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthor(Integer authorId) {
+        this.authorId = authorId;
     }
 
     public LocalDateTime getPublishedOn() {
@@ -90,7 +92,7 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post [author=" + author + ", content=" + content + ", id=" + id + ", publishedOn=" + publishedOn
+        return "Post [author id=" + authorId + ", content=" + content + ", id=" + id + ", publishedOn=" + publishedOn
                 + ", slug=" + slug + ", title=" + title + ", updatedOn=" + updatedOn + "]";
     }
 
