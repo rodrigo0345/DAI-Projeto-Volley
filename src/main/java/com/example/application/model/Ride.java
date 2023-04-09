@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,7 +17,9 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "rides")
 public class Ride {
-    @Id @GeneratedValue public Long id;
+    @Id
+    @GeneratedValue
+    public Long id;
     private String origin;
     private String destination;
     private LocalDate date;
@@ -29,6 +30,7 @@ public class Ride {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User driver;
+
     public User getUser() {
         return driver;
     }
@@ -36,6 +38,5 @@ public class Ride {
     public void setUser(User user) {
         this.driver = user;
     }
-
 
 }

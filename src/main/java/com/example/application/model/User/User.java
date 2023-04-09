@@ -1,6 +1,5 @@
 package com.example.application.model.User;
 
-<<<<<<< HEAD
 import java.util.Collection;
 import java.util.List;
 
@@ -21,8 +20,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-=======
->>>>>>> restyled/Signup
 import com.example.application.model.Token.Token;
 
 import java.time.LocalDate;
@@ -40,13 +37,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-<<<<<<< HEAD
-=======
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
->>>>>>> restyled/Signup
 
 @Data
 @Builder
@@ -55,40 +49,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
-  @Id @GeneratedValue public Integer id;
+  @Id
+  @GeneratedValue
+  public Integer id;
 
-<<<<<<< HEAD
-    public String firstname;
-
-    private String lastname;
-=======
   public String firstname;
 
-  private String lastname;
+  public String lastname;
 
-  @Unique @Email private String email;
+  @Unique
+  @Email
+  private String email;
 
   private String password;
 
   private LocalDate dataNascimento;
->>>>>>> restyled/Signup
 
-  @Enumerated(EnumType.STRING) private Roles role;
-
-<<<<<<< HEAD
-    private String password;
-=======
-  @OneToMany(mappedBy = "user") private List<Token> tokens;
+  @Enumerated(EnumType.STRING)
+  private Roles role;
 
   public User(String firstname, String lastname, String email, String password,
-              Roles role) {
+      Roles role) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
     this.password = password;
     this.role = role;
   }
->>>>>>> restyled/Signup
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -125,19 +112,43 @@ public class User implements UserDetails {
     return true;
   }
 
-  public Integer getId() { return id; }
+  public Integer getId() {
+    return id;
+  }
 
-  public void setId(Integer id) { this.id = id; }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-  public String getFirstname() { return firstname; }
+  public String getFirstname() {
+    return firstname;
+  }
 
-  public void setFirstname(String firstname) { this.firstname = firstname; }
+  public void setFirstname(String firstname) {
+    this.firstname = firstname;
+  }
 
-  public String getLastname() { return lastname; }
+  public String getLastname() {
+    return lastname;
+  }
 
-  public void setLastname(String lastname) { this.lastname = lastname; }
+  public void setLastname(String lastname) {
+    this.lastname = lastname;
+  }
 
-  public Roles getRole() { return role; }
+  public Roles getRole() {
+    return role;
+  }
 
-  public void setRole(Roles role) { this.role = role; }
+  public void setRole(Roles role) {
+    this.role = role;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getEmail() {
+    return email;
+  }
 }

@@ -22,5 +22,4 @@ public class PostController {
         return posts.findById(id).orElse(null);
     }
 
-    
 }
