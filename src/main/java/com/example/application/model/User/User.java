@@ -1,6 +1,5 @@
 package com.example.application.model.User;
 
-
 import java.util.Collection;
 import java.util.List;
 
@@ -42,7 +41,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -50,13 +48,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
-  @Id @GeneratedValue public Integer id;
+  @Id
+  @GeneratedValue
+  public Integer id;
 
   public String firstname;
 
-  private String lastname;
+  public String lastname;
 
-  @Unique @Email private String email;
+  @Unique
+  @Email
+  private String email;
 
   private String password;
 
@@ -67,7 +69,7 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user") private List<Token> tokens;
 
   public User(String firstname, String lastname, String email, String password,
-              Roles role) {
+      Roles role) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
@@ -110,19 +112,43 @@ public class User implements UserDetails {
     return true;
   }
 
-  public Integer getId() { return id; }
+  public Integer getId() {
+    return id;
+  }
 
-  public void setId(Integer id) { this.id = id; }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-  public String getFirstname() { return firstname; }
+  public String getFirstname() {
+    return firstname;
+  }
 
-  public void setFirstname(String firstname) { this.firstname = firstname; }
+  public void setFirstname(String firstname) {
+    this.firstname = firstname;
+  }
 
-  public String getLastname() { return lastname; }
+  public String getLastname() {
+    return lastname;
+  }
 
-  public void setLastname(String lastname) { this.lastname = lastname; }
+  public void setLastname(String lastname) {
+    this.lastname = lastname;
+  }
 
-  public Roles getRole() { return role; }
+  public Roles getRole() {
+    return role;
+  }
 
-  public void setRole(Roles role) { this.role = role; }
+  public void setRole(Roles role) {
+    this.role = role;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getEmail() {
+    return email;
+  }
 }

@@ -1,6 +1,7 @@
 package com.example.application;
 
 import com.example.application.model.Post;
+import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
 import com.example.application.repository.PostRepository;
@@ -25,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 @Theme(value = "hilla-todo")
 public class Application implements AppShellConfigurator {
 
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
         SpringApplication.run(Application.class, args);
     }
@@ -33,7 +34,7 @@ public class Application implements AppShellConfigurator {
     @Bean
     CommandLineRunner init(PostRepository posts, UserRepository users) {
         return args -> {
-            posts.save(new Post("Post", "first-post", "This is the first post", "David"));
+            posts.save(new Post("Post", "first-post", "This is the first post", 0));
 
             String auxPassword = CryptWithMD5.cryptWithMD5("rrr");
             User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", auxPassword, Roles.ADMIN);
@@ -43,4 +44,3 @@ public class Application implements AppShellConfigurator {
         };
     }
 }
-

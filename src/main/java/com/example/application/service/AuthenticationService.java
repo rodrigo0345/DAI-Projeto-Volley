@@ -27,10 +27,10 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationService(UserRepository repository,
-                               TokenRepository tokenRepository,
-                               PasswordEncoder passwordEncoder,
-                               JwtService jwtService,
-                               AuthenticationManager authenticationManager) {
+      TokenRepository tokenRepository,
+      PasswordEncoder passwordEncoder,
+      JwtService jwtService,
+      AuthenticationManager authenticationManager) {
     this.repository = repository;
     this.tokenRepository = tokenRepository;
     this.passwordEncoder = passwordEncoder;
@@ -52,7 +52,7 @@ public class AuthenticationService {
 
   public AuthenticationResponse register(RegisterRequest request) {
     User user = new User(request.getFirstName(), request.getLastName(),
-                         request.getEmail(), request.getPassword(), Roles.USER);
+        request.getEmail(), request.getPassword(), Roles.USER);
     var savedUser = repository.findByEmail(request.getEmail()).get();
     if (savedUser == null) {
       throw new RuntimeException(
@@ -69,14 +69,14 @@ public class AuthenticationService {
     try {
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
-              (Object)request.getEmail(), (Object)request.getPassword()));
+              (Object) request.getEmail(), (Object) request.getPassword()));
     } catch (Exception e) {
       throw new Exception(
           "Invalid request, the token might be expired or revoked");
     }
 
     var user = repository.findByEmail(request.getEmail())
-                   .orElseThrow(() -> new Exception("User not found"));
+        .orElseThrow(() -> new Exception("User not found"));
     var jwtToken = jwtService.generateToken(user);
     revokeAllUserTokens(user);
     saveUserToken(user, jwtToken);
@@ -85,18 +85,17 @@ public class AuthenticationService {
 
   private void saveUserToken(User user, String jwtToken) {
     var token = Token.builder()
-                    .user(user)
-                    .token(jwtToken)
-                    .tokenType(TokenType.BEARER)
-                    .expired(false)
-                    .revoked(false)
-                    .build();
+        .user(user)
+        .token(jwtToken)
+        .tokenType(TokenType.BEARER)
+        .expired(false)
+        .revoked(false)
+        .build();
     tokenRepository.save(token);
   }
 
   private void revokeAllUserTokens(User user) {
-    List<Token> validUserTokens =
-        tokenRepository.findAllValidTokenByUser(user.getId());
+    List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
     if (validUserTokens.isEmpty())
       return;
     validUserTokens.forEach(token -> {

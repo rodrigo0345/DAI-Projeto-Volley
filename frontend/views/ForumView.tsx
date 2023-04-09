@@ -15,7 +15,10 @@ import {
 } from '@radix-ui/react-icons';
 import React from 'react';
 import { TfiWrite } from 'react-icons/tfi';
-import Post from 'Frontend/components/posts/Post';
+import Post from 'Frontend/generated/com/example/application/model/Post';
+import { Subscription } from '@hilla/frontend';
+import { ForumController } from 'Frontend/generated/endpoints';
+import { PostComponent } from 'Frontend/components/posts/Post';
 
 enum Menu {
   ALL = 'ALL',
@@ -26,10 +29,29 @@ enum Menu {
 export default function ForumView() {
   const { user, logout } = useContext(UserContext);
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
+  const [subscription, setSubscription] = useState<
+    Subscription<Post> | undefined
+  >();
+  const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     // filtrar os posts pelo menu selecionado
   }, [menu]);
+
+  useEffect(() => {
+    // cria uma conexão com o backend para receber os posts
+    (async () => {
+      console.log('joined! :)');
+      await ForumController.join(0, 10)
+        .onError(() => {
+          console.log('some error');
+        })
+        .onNext((post) => {
+          console.log({ post });
+          if (post) setPosts((posts) => [...posts, post]);
+        });
+    })();
+  }, []);
 
   const content: AsideContent<Menu>[] = [
     {
@@ -139,7 +161,17 @@ export default function ForumView() {
           >
             <TfiWrite size={20}></TfiWrite>
           </button>
-          <Post type=''></Post>
+          {posts
+            .filter(() => {
+              // para filtrar os posts
+            })
+            .map((post) => (
+              <PostComponent
+                key={post.id}
+                post={post}
+                type='none'
+              ></PostComponent>
+            ))}
         </main>
       </div>
     </div>

@@ -17,8 +17,9 @@ public class RideController {
 
     private final RideRepository rides;
 
-
-    public RideController(RideRepository rides) {this.rides = rides;}
+    public RideController(RideRepository rides) {
+        this.rides = rides;
+    }
 
     public @Nonnull Iterable<Ride> findAll() throws Exception {
         Iterable<Ride> ridesAux = rides.findAll();
@@ -34,9 +35,7 @@ public class RideController {
                             ride.getSeats(),
                             ride.getDescription(),
                             ride.getDriverContact(),
-                            ride.getUser()
-                    )
-            );
+                            ride.getUser()));
         }
         return ridesList;
     }
@@ -54,8 +53,7 @@ public class RideController {
                 ride.getSeats(),
                 ride.getDescription(),
                 ride.getDriverContact(),
-                ride.getUser()
-        );
+                ride.getUser());
     }
 
     public Ride save(Ride ride) throws Exception {
@@ -65,4 +63,3 @@ public class RideController {
     }
 
 }
-
