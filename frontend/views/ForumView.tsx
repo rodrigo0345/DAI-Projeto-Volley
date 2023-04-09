@@ -15,10 +15,15 @@ import {
 } from '@radix-ui/react-icons';
 import React from 'react';
 import { TfiWrite } from 'react-icons/tfi';
-import Post from 'Frontend/generated/com/example/application/model/Post';
 import { Subscription } from '@hilla/frontend';
-import { ForumController } from 'Frontend/generated/endpoints';
+import {
+  ForumController,
+  NewsController,
+  RideController,
+} from 'Frontend/generated/endpoints';
 import { PostComponent } from 'Frontend/components/posts/Post';
+import News from 'Frontend/generated/com/example/application/model/News';
+import Ride from 'Frontend/generated/com/example/application/model/Ride';
 
 enum Menu {
   ALL = 'ALL',
@@ -29,10 +34,7 @@ enum Menu {
 export default function ForumView() {
   const { user, logout } = useContext(UserContext);
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
-  const [subscription, setSubscription] = useState<
-    Subscription<Post> | undefined
-  >();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<(News | Ride | undefined)[]>([]);
 
   useEffect(() => {
     // filtrar os posts pelo menu selecionado
@@ -41,15 +43,9 @@ export default function ForumView() {
   useEffect(() => {
     // cria uma conexão com o backend para receber os posts
     (async () => {
-      console.log('joined! :)');
-      await ForumController.join(0, 10)
-        .onError(() => {
-          console.log('some error');
-        })
-        .onNext((post) => {
-          console.log({ post });
-          if (post) setPosts((posts) => [...posts, post]);
-        });
+      const news = await NewsController.findAll();
+      const rides = await RideController.findAll();
+      setPosts([...news, ...rides]);
     })();
   }, []);
 
@@ -167,7 +163,7 @@ export default function ForumView() {
             })
             .map((post) => (
               <PostComponent
-                key={post.id}
+                key={post?.id}
                 post={post}
                 type='none'
               ></PostComponent>

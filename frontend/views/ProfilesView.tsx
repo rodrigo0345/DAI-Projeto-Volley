@@ -92,7 +92,7 @@ export default function ProfilesView() {
           {...(editable ? { disabled: false } : { disabled: true })}
           value={lastName}
           onChange={(e) => {
-            setFirstName(e.target.value);
+            setLastName(e.target.value);
           }}
         />
         <input
@@ -105,7 +105,7 @@ export default function ProfilesView() {
           {...(editable ? { disabled: false } : { disabled: true })}
           value={email}
           onChange={(e) => {
-            setFirstName(e.target.value);
+            setEmail(e.target.value);
           }}
         />
 
@@ -115,7 +115,7 @@ export default function ProfilesView() {
           disabled
           value={role}
           onChange={(e) => {
-            setFirstName(e.target.value);
+            setRole(e.target.value);
           }}
         />
 
