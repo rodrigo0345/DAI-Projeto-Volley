@@ -5,9 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-<<<<<<< HEAD
-
-
 public class CryptWithMD5 {
   private static MessageDigest md;
 
@@ -34,7 +31,6 @@ public class CryptWithMD5 {
   }
  }
 
-=======
 /*
  * public class CryptWithMD5 {
  * private static MessageDigest md;
@@ -59,4 +55,4 @@ public class CryptWithMD5 {
  * }
  * }
  */
->>>>>>> restyled/Signup
+

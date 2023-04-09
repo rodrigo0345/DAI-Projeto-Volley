@@ -40,4 +40,5 @@ public class UserController {
                       user.getEmail(), user.getRole().toString(), null);
     return loginUser;
   }
+
 }

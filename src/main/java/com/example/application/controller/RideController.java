@@ -55,5 +55,11 @@ public class RideController {
                 ride.getUser()
         );
     }
+
+    public Ride save(Ride ride) throws Exception {
+
+        return rides.save(ride);
+    }
+
 }
 
