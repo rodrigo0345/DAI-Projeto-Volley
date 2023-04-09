@@ -1,6 +1,6 @@
 package com.example.application.model.User;
 
-<<<<<<< HEAD
+
 import java.util.Collection;
 import java.util.List;
 
@@ -20,9 +20,6 @@ import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-=======
->>>>>>> restyled/Signup
 import com.example.application.model.Token.Token;
 
 import java.time.LocalDate;
@@ -40,13 +37,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-<<<<<<< HEAD
-=======
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
->>>>>>> restyled/Signup
+
 
 @Data
 @Builder
@@ -57,11 +52,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
   @Id @GeneratedValue public Integer id;
 
-<<<<<<< HEAD
-    public String firstname;
-
-    private String lastname;
-=======
   public String firstname;
 
   private String lastname;
@@ -71,13 +61,9 @@ public class User implements UserDetails {
   private String password;
 
   private LocalDate dataNascimento;
->>>>>>> restyled/Signup
 
   @Enumerated(EnumType.STRING) private Roles role;
 
-<<<<<<< HEAD
-    private String password;
-=======
   @OneToMany(mappedBy = "user") private List<Token> tokens;
 
   public User(String firstname, String lastname, String email, String password,
@@ -88,7 +74,6 @@ public class User implements UserDetails {
     this.password = password;
     this.role = role;
   }
->>>>>>> restyled/Signup
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

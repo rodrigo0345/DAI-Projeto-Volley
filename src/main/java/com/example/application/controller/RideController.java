@@ -6,6 +6,8 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +59,8 @@ public class RideController {
     }
 
     public Ride save(Ride ride) throws Exception {
-
+        if (ride == null || ride.getDate().isBefore(LocalDate.now()))
+            return null;
         return rides.save(ride);
     }
 

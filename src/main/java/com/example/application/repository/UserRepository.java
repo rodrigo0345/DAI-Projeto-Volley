@@ -15,7 +15,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
   Optional<User> findByEmail(String email) throws UsernameNotFoundException;
 
   @Query(
-      "SELECT firstname, lastname, email, role, tokens FROM User WHERE email = :email")
+      "SELECT firstname, lastname, email, role FROM User WHERE email = :email")
   Optional<User>
   findLoginUserByEmail(String email) throws UsernameNotFoundException;
 }
