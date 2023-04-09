@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 @Theme(value = "hilla-todo")
 public class Application implements AppShellConfigurator {
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
         SpringApplication.run(Application.class, args);
     }
@@ -43,5 +43,5 @@ public class Application implements AppShellConfigurator {
             users.save(aux2);
         };
     }
-
 }
+
