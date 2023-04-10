@@ -125,7 +125,7 @@ export default function LoginPageView(): JSX.Element {
                         name='Email'
                         id='email'
                         placeholder='Email'
-                        className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500'
+                        className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-transparent focus:border-yellow-400'
                       />
                     </div>
                     <div className='flex flex-col items-start justify-center gap-4'>
@@ -144,14 +144,14 @@ export default function LoginPageView(): JSX.Element {
                         name='password'
                         id='password'
                         placeholder='Password'
-                        className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500'
+                        className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-transparent focus:border-yellow-400'
                       />
                     </div>
                   </div>
                   <div className='flex flex-col items-center justify-center gap-4'>
                     <button
                       type='submit'
-                      className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500 hover:bg-gray-300 disabled:bg-gray-200/30 dark:text-white'
+                      className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-400 hover:bg-gray-300 disabled:bg-gray-200/30 dark:text-white'
                       disabled={loading}
                     >
                       Login
