@@ -70,9 +70,9 @@ export default function ProfilesView() {
           )}
         </div>
         <input
-          className={`outline outline-1 border-none rounded-md ${
+          className={`outline outline-1  border-none rounded-md focus:ring-transparent ${
             editable
-              ? 'outline-green-500 focus:border-none'
+              ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none'
               : 'outline-none focus:outline-none focus:border-none'
           }`}
           type='text'
@@ -83,9 +83,9 @@ export default function ProfilesView() {
           }}
         />
         <input
-          className={`outline outline-1 border-none rounded-md ${
+          className={`outline outline-1 border-none rounded-md focus:ring-transparent ${
             editable
-              ? 'outline-green-500 focus:border-none'
+              ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none'
               : 'outline-none focus:outline-none focus:border-none'
           }`}
           type='text'
@@ -96,9 +96,9 @@ export default function ProfilesView() {
           }}
         />
         <input
-          className={`outline outline-1 border-none rounded-md ${
+          className={`outline outline-1 border-none rounded-md focus:ring-transparent ${
             editable
-              ? 'outline-green-500 focus:border-none'
+              ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none'
               : 'outline-none focus:outline-none focus:border-none'
           }`}
           type='email'
@@ -110,7 +110,7 @@ export default function ProfilesView() {
         />
 
         <input
-          className={`outline outline-1 border-none rounded-md`}
+          className={`outline outline-1 border-none rounded-md focus:ring-transparent`}
           type='text'
           disabled
           value={role}

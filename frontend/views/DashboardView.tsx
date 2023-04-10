@@ -48,7 +48,7 @@ export default function DashboardView() {
       icon: (
         <AiOutlineDashboard
           color={menu === Menu.DASHBOARD ? 'white' : 'black'}
-          size={20}
+          size={25}
         ></AiOutlineDashboard>
       ),
       activator: {
@@ -64,7 +64,7 @@ export default function DashboardView() {
       icon: (
         <BsCalendarDate
           color={menu === Menu.CALENDAR ? 'white' : 'black'}
-          size={20}
+          size={25}
         ></BsCalendarDate>
       ),
       activator: {

@@ -112,7 +112,7 @@ export default function SidePanel({
         </div>
       </aside>
       {/* for smaller screens */}
-      <aside className='w-full z-50 fixed bottom-0 flex md:hidden md:absolute max-h-[4em] mt-32 bg-gradient-to-l from-yellow-300/60 to-yellow-500/80 backdrop-blur-md'>
+      <aside className='w-full z-50 fixed bottom-0 flex md:hidden md:absolute max-h-[4em] mt-32 bg-gradient-to-l h-16 from-yellow-300 to-yellow-500 backdrop-blur-md'>
         <ul className='flex justify-center gap-8 py-2 w-full items-center'>
           {content.map((item) => {
             return (
@@ -121,21 +121,12 @@ export default function SidePanel({
                 onClick={() => item.activator.setter(item.targetState)}
                 className={
                   (item.targetState === item.activator.state
-                    ? 'bg-black shadow-lg hover:bg-zinc-700/80 '
+                    ? ' hover:bg-zinc-700/80 '
                     : 'hover:bg-gray-200/40 ') +
                   ' px-4 py-2 rounded-xl flex flex-col items-center justify-start cursor-pointer transition-all h-fit'
                 }
               >
                 {item.icon}
-                {item.targetState === item.activator.state && (
-                  <p
-                    className={
-                      'text-white animate-[pulse_2s_ease-in-out_infinite]'
-                    }
-                  >
-                    {item.text}
-                  </p>
-                )}
               </li>
             );
           })}
