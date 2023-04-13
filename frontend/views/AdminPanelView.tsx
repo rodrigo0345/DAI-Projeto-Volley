@@ -192,9 +192,9 @@ export default function AdminPanelView() {
       ></SidePanel>
       <div id='content' className='flex flex-1 pr-28 '>
         {menu === Menu.USERS && (
-          <div className='flex-1  m-auto relative !max-w-[45em] lg:max-w-[50em]'>
+          <div className='flex-1  m-auto relative !max-w-[45em] lg:max-w-[50em] overflow-x-hidden'>
             <div className='flex flex-col gap-4 relative w-full'>
-              <header className='flex justify-between items-center pt-44'>
+              <header className='flex justify-between items-center pt-28'>
                 <h1 className='text-4xl font-bold'>Utilizadores</h1>
                 <button
                   className='flex items-center gap-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-100 px-4 py-2 rounded-md shadow-md hover:shadow-lg transition duration-200'
