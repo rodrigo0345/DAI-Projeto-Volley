@@ -111,7 +111,7 @@ export default function AdminPanelView() {
       resultSignup = await signup(user, register);
       console.log({ resultSignup });
     } catch (error) {
-      toast.error('Erro interno do servidor');
+      toast.error('Erro interno do servidor, por favor tente mais tarde.');
       console.log(error);
       setIsLoading(false);
       return;
@@ -123,8 +123,17 @@ export default function AdminPanelView() {
       return;
     }
 
+    if (resultSignup.body.error !== undefined) {
+      toast.error(resultSignup.body.error);
+      setIsLoading(false);
+      return;
+    }
+
     if (resultSignup) toast.success('Utilizador criado com sucesso');
-    setUsers((prev) => prev.add(resultSignup?.body as LoginUser));
+    setUsers((prev) => {
+      // provavelmente extramamente ineficiente
+      return new Set([...prev, resultSignup?.body.success as LoginUser]);
+    });
     form.current?.reset();
     setAddUser(false);
     setIsLoading(false);
@@ -247,9 +256,6 @@ export default function AdminPanelView() {
             ></div>
             <motion.form
               onSubmit={onSubmit}
-              onClick={(e) => {
-                e.stopPropagation;
-              }}
               className='!fixed flex flex-col bg-zinc-100 dark:bg-zinc-700 opacity-100 z-20 p-4 w-[30em] h-[30em] left-1/2 !-translate-x-1/2 top-1/2 -translate-y-1/2 rounded-md gap-4 justify-between px-8 pt-6'
               initial={{ x: 500 }}
               animate={{ x: 0 }}
@@ -273,7 +279,6 @@ export default function AdminPanelView() {
                       type='text'
                       placeholder='Último nome'
                       name=''
-                      id=''
                       ref={lastname}
                     />
                   </div>
@@ -286,7 +291,6 @@ export default function AdminPanelView() {
                       type='email'
                       name=''
                       placeholder='Email'
-                      id=''
                       ref={email}
                     />
                   </div>
@@ -299,7 +303,6 @@ export default function AdminPanelView() {
                       type='password'
                       placeholder='Password'
                       name=''
-                      id=''
                       ref={password}
                     />
                     <input
@@ -307,7 +310,6 @@ export default function AdminPanelView() {
                       type='password'
                       placeholder='Confirmar password'
                       name=''
-                      id=''
                       ref={passwordConfirm}
                     />
                   </div>

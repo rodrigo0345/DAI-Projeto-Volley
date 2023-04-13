@@ -113,7 +113,7 @@ public class AuthenticationController {
         users.save(user);
 
         // criar token e returnar o utilizador check
-        return this.login(user.getEmail(), user.getPassword());
+        return this.login(user.getEmail(), request.getPassword());
     }
 
     public ResponseEntity<ResponseType<LoginUser>> login(String email, String password) throws Exception {

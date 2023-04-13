@@ -1,6 +1,7 @@
 package com.example.application.controller;
 
 import com.example.application.repository.PostRepository;
+import com.example.application.model.News;
 import com.example.application.model.Post;
 
 import dev.hilla.Endpoint;
