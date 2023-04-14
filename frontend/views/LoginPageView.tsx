@@ -3,8 +3,8 @@ import {
   authenticate,
   register,
 } from 'Frontend/generated/AuthenticationController';
-import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
-import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
+import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/AuthenticationRequest';
+import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/RegisterRequest';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
 import { login as loginServer } from 'Frontend/generated/AuthenticationController';

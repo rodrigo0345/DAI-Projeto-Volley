@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { redirect } from 'react-router-dom';
 import { validateToken } from 'Frontend/generated/AuthenticationController';
-import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
+import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers//AuthenticationRequest';
 import { toast } from 'react-toastify';
 
 export const UserContext = createContext<{

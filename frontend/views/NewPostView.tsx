@@ -2,7 +2,6 @@ import React, { useContext, useRef } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import Post from 'Frontend/generated/com/example/application/model/Post';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { ForumController } from 'Frontend/generated/endpoints';
 
 export default function NewPostView() {
   const { user } = useContext(UserContext);
@@ -15,18 +14,6 @@ export default function NewPostView() {
     e.preventDefault();
     console.log(name.current?.value);
     console.log(username.current?.value);
-    const post: Post = {
-      title: name.current?.value,
-      content: username.current?.value,
-      slug: 'slug',
-      authorId: user?.id,
-    };
-    try {
-      await ForumController.send(post);
-      console.log('sent!');
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   return (
