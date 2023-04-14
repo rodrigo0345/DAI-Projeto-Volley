@@ -55,16 +55,22 @@ export default function ForumView() {
     const descricao = noticia.descricao.current?.value;
     const imagem = noticia.imagem.current?.value;
     if (titulo && descricao) {
-      await PostController.createPost('news', {
-        news: {
-          title: titulo,
-          clicks: 0,
-          authorID: user?.id,
-          content: descricao,
-          date: '',
-          id: 0,
-        },
-      });
+      try {
+        await PostController.createPost('news', {
+          news: {
+            title: titulo,
+            clicks: 0,
+            authorID: user?.id,
+            content: descricao,
+            date: '',
+            id: 0,
+          },
+        });
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+      toast.success('Notícia criada com sucesso');
     } else {
       toast.error('Preencha todos os campos');
     }
