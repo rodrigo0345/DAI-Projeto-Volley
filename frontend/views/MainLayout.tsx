@@ -37,10 +37,10 @@ export default function MainLayout() {
   return (
     <Context>
       <ThemeProvider>
-        <AppLayout className='' primarySection='drawer'>
+        <AppLayout className='max-w-screen' primarySection='drawer'>
           <MainHeader></MainHeader>
           <Suspense fallback={<Placeholder />}>
-              <Outlet />
+            <Outlet />
           </Suspense>
           <MainFooter></MainFooter>
         </AppLayout>

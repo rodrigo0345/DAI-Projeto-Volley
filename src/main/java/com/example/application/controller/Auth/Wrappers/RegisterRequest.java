@@ -1,4 +1,4 @@
-package com.example.application.controller.Auth;
+package com.example.application.controller.Auth.Wrappers;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class RegisterRequest {
+    private String firstName;
+    private String lastName;
+    private String username;
     private String email;
     private String password;
+    private String roles;
 }

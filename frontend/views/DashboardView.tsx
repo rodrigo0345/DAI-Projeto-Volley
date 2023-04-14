@@ -1,4 +1,4 @@
-import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
+import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/RegisterRequest';
 import { useContext, useRef, useState } from 'react';
 import SidePanel, {
   AsideContent,

@@ -1,9 +1,9 @@
 package com.example.application.service;
 
 import com.example.application.config.RequiredArgsConstructor;
-import com.example.application.controller.Auth.AuthenticationRequest;
-import com.example.application.controller.Auth.AuthenticationResponse;
-import com.example.application.controller.Auth.RegisterRequest;
+import com.example.application.controller.Auth.Wrappers.AuthenticationRequest;
+import com.example.application.controller.Auth.Wrappers.AuthenticationResponse;
+import com.example.application.controller.Auth.Wrappers.RegisterRequest;
 import com.example.application.model.Token.Token;
 import com.example.application.model.Token.TokenType;
 import com.example.application.model.User.Roles;

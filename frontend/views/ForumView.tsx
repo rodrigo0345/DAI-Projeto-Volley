@@ -16,11 +16,7 @@ import {
 import React from 'react';
 import { TfiWrite } from 'react-icons/tfi';
 import { Subscription } from '@hilla/frontend';
-import {
-  ForumController,
-  NewsController,
-  RideController,
-} from 'Frontend/generated/endpoints';
+import { NewsController, RideController } from 'Frontend/generated/endpoints';
 import { PostComponent } from 'Frontend/components/posts/Post';
 import News from 'Frontend/generated/com/example/application/model/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';

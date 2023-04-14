@@ -31,16 +31,20 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
     }
 
-    @Bean
-    CommandLineRunner init(PostRepository posts, UserRepository users) {
-        return args -> {
-            posts.save(new Post("Post", "first-post", "This is the first post", 0));
-
-            String auxPassword = CryptWithMD5.cryptWithMD5("rrr");
-            User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", auxPassword, Roles.ADMIN);
-            User aux2 = new User("Manuel", "Algo", "rr@gmail.com", auxPassword, Roles.MANAGER);
-            users.save(aux);
-            users.save(aux2);
-        };
-    }
+    /*
+     * @Bean
+     * CommandLineRunner init(PostRepository posts, UserRepository users) {
+     * return args -> {
+     * posts.save(new Post("Post", "first-post", "This is the first post", 0));
+     * 
+     * String auxPassword = CryptWithMD5.cryptWithMD5("rrr");
+     * User aux = new User("Rodrigo", "Ralha", "rodrigo@gmail.com", auxPassword,
+     * Roles.ADMIN);
+     * User aux2 = new User("Manuel", "Algo", "rr@gmail.com", auxPassword,
+     * Roles.MANAGER);
+     * users.save(aux);
+     * users.save(aux2);
+     * };
+     * }
+     */
 }

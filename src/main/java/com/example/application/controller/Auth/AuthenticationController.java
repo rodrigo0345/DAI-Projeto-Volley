@@ -1,5 +1,8 @@
 package com.example.application.controller.Auth;
 
+import com.example.application.controller.Auth.Wrappers.AuthenticationRequest;
+import com.example.application.controller.Auth.Wrappers.AuthenticationResponse;
+import com.example.application.controller.Auth.Wrappers.RegisterRequest;
 import com.example.application.controller.ResponseType.ResponseType;
 import com.example.application.model.User.Roles;
 //import com.example.application.security.CryptWithMD5;
@@ -113,7 +116,7 @@ public class AuthenticationController {
         users.save(user);
 
         // criar token e returnar o utilizador check
-        return this.login(user.getEmail(), user.getPassword());
+        return this.login(user.getEmail(), request.getPassword());
     }
 
     public ResponseEntity<ResponseType<LoginUser>> login(String email, String password) throws Exception {

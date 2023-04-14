@@ -33,5 +33,4 @@ public class News {
     public void setUser(User user) {
         this.author = user;
     }
-
 }
