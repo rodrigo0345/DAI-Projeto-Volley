@@ -1,6 +1,6 @@
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { signup } from 'Frontend/generated/AuthenticationController';
-import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
+import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/RegisterRequest';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { IoIosLogOut, IoMdSettings } from 'react-icons/io';
 import { RiAddFill, RiUserSettingsFill } from 'react-icons/ri';

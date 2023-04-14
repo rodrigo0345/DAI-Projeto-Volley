@@ -24,10 +24,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final TokenRepository tokenRepository;
 
   @Override
-  protected void
-  doFilterInternal(javax.servlet.http.HttpServletRequest request,
-                   javax.servlet.http.HttpServletResponse response,
-                   javax.servlet.FilterChain filterChain)
+  protected void doFilterInternal(javax.servlet.http.HttpServletRequest request,
+      javax.servlet.http.HttpServletResponse response,
+      javax.servlet.FilterChain filterChain)
       throws IOException, javax.servlet.ServletException {
     final String authHeader = request.getHeader("Authorization");
     final String jwt;
@@ -40,15 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     userEmail = jwtService.extractUsername(jwt);
     if (userEmail != null &&
         SecurityContextHolder.getContext().getAuthentication() == null) {
-      UserDetails userDetails =
-          this.userDetailsService.loadUserByUsername(userEmail);
+      UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
       var isTokenValid = tokenRepository.findByToken(jwt)
-                             .map(t -> !t.isExpired() && !t.isRevoked())
-                             .orElse(false);
+          .map(t -> !t.isExpired() && !t.isRevoked())
+          .orElse(false);
       if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
-        UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+            userDetails, null, userDetails.getAuthorities());
         authToken.setDetails(
             new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);

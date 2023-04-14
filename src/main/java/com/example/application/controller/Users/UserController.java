@@ -1,4 +1,4 @@
-package com.example.application.controller;
+package com.example.application.controller.Users;
 
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;

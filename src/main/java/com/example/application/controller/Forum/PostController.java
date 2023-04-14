@@ -1,4 +1,4 @@
-package com.example.application.controller;
+package com.example.application.controller.Forum;
 
 import com.example.application.repository.PostRepository;
 import com.example.application.model.News;
