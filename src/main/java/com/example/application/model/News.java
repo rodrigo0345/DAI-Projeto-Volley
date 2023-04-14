@@ -1,7 +1,7 @@
 package com.example.application.model;
 
 import com.example.application.model.User.LoginUser;
-import com.example.application.model.User.User;
+
 //import com.mysql.cj.jdbc.Blob;
 
 import lombok.AllArgsConstructor;
