@@ -1,25 +1,21 @@
 package com.example.application.controller;
 
-import com.example.application.repository.PostRepository;
 import com.example.application.model.Post;
-
 import dev.hilla.Endpoint;
+
+import java.time.LocalDate;
 
 @Endpoint
 public class PostController {
 
-    private final PostRepository posts;
+   public void creatPost(String type, String slug, String content, Integer authorId) {
+      Post post = new Post();
 
-    public PostController(PostRepository posts) {
-        this.posts = posts;
-    }
+      if (type.equals("Ride")) {
 
-    public Iterable<Post> findAll() {
-        return posts.findAll();
-    }
+      } else if (type.equals("News")) {
 
-    public Post findById(Long id) {
-        return posts.findById(id).orElse(null);
-    }
+      }
 
+   }
 }
