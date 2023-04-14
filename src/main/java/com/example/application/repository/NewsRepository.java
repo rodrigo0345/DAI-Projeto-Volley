@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "news")
 public interface NewsRepository extends CrudRepository<News, Integer> {
 
-    @Query(value = "SELECT n FROM news n ORDER BY n.id DESC LIMIT :pag OFFSET :index")
+    @Query(value = "SELECT n FROM news n ORDER BY n.date DESC LIMIT :pag OFFSET :index")
     public List<News> findLimitedNews(Sort sort, @Param("pag")Integer pag,
                                      @Param("index")Integer index);
 

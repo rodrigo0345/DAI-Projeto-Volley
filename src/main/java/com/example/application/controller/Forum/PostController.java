@@ -3,7 +3,6 @@ package com.example.application.controller.Forum;
 import com.example.application.controller.ResponseType.ResponseType;
 import com.example.application.model.User.LoginUser;
 import com.example.application.repository.NewsRepository;
-import com.example.application.repository.PostRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -14,6 +13,14 @@ import com.example.application.model.Ride;
 
 import dev.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.hibernate.event.spi.PostCommitUpdateEventListener;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 
 @Endpoint
@@ -25,9 +32,23 @@ public class PostController {
 
     private final NewsRepository newsRepository;
 
-    public Iterable<Post> popularPosts(int pageSize, int index) {
-        // PRIORITY
-        return null;
+    public Iterable<PostType> popularPosts(Integer pageSize, Integer index) {
+        List<News> newsAux = newsRepository.findLimitedNews(Sort.by("clicks"), pageSize, index);
+        List<Ride> ridesAux = ridesRepository.findLimitedRides(Sort.by("clicks"), pageSize, index);
+        List<PostType> posts = new ArrayList<>();
+        PostType postType = new PostType();
+        newsAux.forEach(el -> {
+            postType.news = el;
+            posts.add(postType);
+        });
+        ridesAux.forEach(el -> {
+            postType.ride = el;
+            posts.add(postType);
+        });
+        
+        
+
+        return  ;
     }
 
     public Post postsByNewest(int pageSize, int index) {
