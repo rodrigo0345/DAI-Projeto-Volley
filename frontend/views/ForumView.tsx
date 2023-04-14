@@ -62,12 +62,11 @@ export default function ForumView() {
         news: {
           title: titulo,
           clicks: 0,
-          author: ,
+          author: user,
           content: descricao,
-          date: "",
+          date: '',
           id: 0,
-        }
-
+        },
       });
     }
   }
