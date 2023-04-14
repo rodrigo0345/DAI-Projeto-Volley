@@ -46,9 +46,9 @@ public class PostController {
             posts.add(postType);
         });
         
-        
+        Collections.sort(posts);
 
-        return  ;
+        return posts;
     }
 
     public Post postsByNewest(int pageSize, int index) {
