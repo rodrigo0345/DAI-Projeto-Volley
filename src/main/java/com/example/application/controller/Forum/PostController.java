@@ -1,6 +1,11 @@
 package com.example.application.controller.Forum;
 
+import com.example.application.controller.ResponseType.ResponseType;
+import com.example.application.model.User.LoginUser;
+import com.example.application.repository.NewsRepository;
 import com.example.application.repository.PostRepository;
+import com.example.application.repository.RideRepository;
+import com.example.application.repository.UserRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.News;
@@ -8,16 +13,17 @@ import com.example.application.model.Post;
 import com.example.application.model.Ride;
 
 import dev.hilla.Endpoint;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 @Endpoint
 @AnonymousAllowed
+@RequiredArgsConstructor
 public class PostController {
 
-    private final PostRepository posts;
+    private final RideRepository ridesRepository;
 
-    public PostController(PostRepository posts) {
-        this.posts = posts;
-    }
+    private final NewsRepository newsRepository;
 
     public Iterable<Post> popularPosts(int pageSize, int index) {
         // PRIORITY
@@ -32,32 +38,53 @@ public class PostController {
         return null;
     }
 
-    public void createPost(String postType, PostType post) {
+    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) {
         // PRIORITY
         if (postType.toLowerCase().trim().equals("news")) {
             if (post.news == null) {
-                // handle error
-                return;
+                var response = new ResponseType<PostType>();
+                response.error("O conteúdo não pode estar vazio");
+                return ResponseEntity.badRequest().body(response);
             }
 
             News news = post.news;
 
-            // save the post on the respective table
+            try{
+              newsRepository.save(news);
+            }catch (Exception e){
+                var response = new ResponseType<PostType>();
+                response.error(e.getMessage());
+                return ResponseEntity.badRequest().body(response);
+            }
 
         } else if (postType.toLowerCase().trim().equals("ride")) {
             if (post.ride == null) {
-                // handle error
-                return;
+                var response = new ResponseType<PostType>();
+                response.error("O conteúdo não pode estar vazio");
+                return ResponseEntity.badRequest().body(response);
             }
 
             Ride ride = post.ride;
 
-            // save the post on the respective table
+            try{
+                ridesRepository.save(ride);
+            }catch (Exception e){
+                var response = new ResponseType<PostType>();
+                response.error(e.getMessage());
+                return ResponseEntity.badRequest().body(response);
+            }
 
         } else {
-            // handle error
+            var response = new ResponseType<PostType>();
+            response.error("O tipo do post está incorreto");
+            return ResponseEntity.badRequest().body(response);
         }
+        var response = new ResponseType<PostType>();
+        response.success(post);
+        return ResponseEntity.ok().body(response);
     }
+
+
 
     public void editPost(String postType, PostType post) {
     }
