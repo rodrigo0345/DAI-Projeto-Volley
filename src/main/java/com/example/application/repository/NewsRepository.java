@@ -21,7 +21,7 @@ public interface NewsRepository extends CrudRepository<News, Integer> {
 
     // public List<News> findByAuthor(User author);
 
-    // public News findByTitle(String title);
+     public News findByTitle(String title);
 
     // public List<News> findAllByOrderByDateDesc();
 
