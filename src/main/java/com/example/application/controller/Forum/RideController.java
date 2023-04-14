@@ -6,8 +6,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +29,13 @@ public class RideController {
                             ride.getId(),
                             ride.getOrigin(),
                             ride.getDestination(),
-                            ride.getDate(),
-                            ride.getTime(),
+                            ride.getDateTime(),
                             ride.getSeats(),
+                            ride.getFreeSeats(),
                             ride.getDescription(),
                             ride.getDriverContact(),
-                            ride.getUser()));
+                            ride.getUser(),
+                            ride.getClicks()));
         }
         return ridesList;
     }
@@ -48,16 +48,17 @@ public class RideController {
                 ride.getId(),
                 ride.getOrigin(),
                 ride.getDestination(),
-                ride.getDate(),
-                ride.getTime(),
+                ride.getDateTime(),
                 ride.getSeats(),
+                ride.getFreeSeats(),
                 ride.getDescription(),
                 ride.getDriverContact(),
-                ride.getUser());
+                ride.getUser(),
+                ride.getClicks());
     }
 
     public Ride save(Ride ride) throws Exception {
-        if (ride == null || ride.getDate().isBefore(LocalDate.now().minusDays(1))
+        if (ride == null || ride.getDateTime().isBefore(LocalDateTime.now().minusDays(1))
                 || ride.getSeats() <= 0 )
             return null;
         return rides.save(ride);
@@ -68,6 +69,14 @@ public class RideController {
             return null;
         rides.delete(ride);
         return ride;
+    }
+
+    public void addClick(Long id) throws Exception {
+        Ride ride = rides.findById(id);
+        if (ride == null)
+            return;
+        ride.setClicks(ride.getClicks() + 1);
+        rides.save(ride);
     }
 
 }

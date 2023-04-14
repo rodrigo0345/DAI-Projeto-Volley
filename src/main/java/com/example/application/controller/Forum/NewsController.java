@@ -29,7 +29,8 @@ public class NewsController {
                             n.getTitle(),
                             n.getContent(),
                             n.getAuthor(),
-                            n.getDate()));
+                            n.getDate(),
+                            n.getClicks()));
         }
         return newsList;
     }
@@ -43,7 +44,8 @@ public class NewsController {
                 newsAux.getTitle(),
                 newsAux.getContent(),
                 newsAux.getAuthor(),
-                newsAux.getDate());
+                newsAux.getDate(),
+                newsAux.getClicks());
     }
 
     public Iterable<News> findByAuthor(User author) throws Exception {
@@ -56,7 +58,8 @@ public class NewsController {
                             n.getTitle(),
                             n.getContent(),
                             n.getAuthor(),
-                            n.getDate()));
+                            n.getDate(),
+                            n.getClicks()));
         }
         return newsList;
     }
@@ -74,5 +77,14 @@ public class NewsController {
         newsRepository.delete(news);
         return news;
     }
+
+    public void addClick(Long id) throws Exception {
+        News news = newsRepository.findById(id);
+        if (news == null)
+            return;
+        news.setClicks(news.getClicks() + 1);
+        newsRepository.save(news);
+    }
+
 }
 

@@ -25,6 +25,7 @@ public class News {
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
     private LocalDateTime date;
+    private int clicks;
 
     public User getUser() {
         return author;
