@@ -81,6 +81,11 @@ export default function DashboardView() {
     <main className='min-h-screen flex flex-col md:!flex-row relative'>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
       <div className='relative flex-1'>
+        <img
+          src='../assets/svgs/sport.svg'
+          alt=''
+          className='absolute bottom-1/2 left-10 object-cover opacity-25 bg-fixed translate-y-1/2 hidden md:block'
+        />
         {menu === Menu.DASHBOARD && (
           <div className='flex flex-col gap-4 pb-24 pt-28 relative px-4 max-w-[60em] m-auto'>
             <h1 className='text-3xl font-bold'>Dashboard</h1>
