@@ -36,7 +36,7 @@ public class NewsController {
         return newsList;
     }
 
-    /*public News findByTitle(String title) throws Exception {
+    public News findByTitle(String title) throws Exception {
         News newsAux = newsRepository.findByTitle(title);
         if (newsAux == null)
             return null;
@@ -49,7 +49,7 @@ public class NewsController {
                 newsAux.getClicks());
     }
 
-    public Iterable<News> findByAuthor(User author) throws Exception {
+    /*public Iterable<News> findByAuthor(User author) throws Exception {
         Iterable<News> newsAux = newsRepository.findByAuthor(author);
         List<News> newsList = new ArrayList<>();
         for (News n : newsAux) {

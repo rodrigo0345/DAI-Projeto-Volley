@@ -30,11 +30,11 @@ public class PostController {
         return null;
     }
 
-    public Post postsByMostRecent(int pageSize, int index) {
+    public Post postsByNewest(int pageSize, int index) {
         return null;
     }
 
-    public Post postsByMostOlder(int pageSize, int index) {
+    public Post postsByOlder(int pageSize, int index) {
         return null;
     }
 
