@@ -21,7 +21,7 @@ public class NewsController {
         this.newsRepository = news;
     }
 
-    /*public @Nonnull Iterable<News> findAll() throws Exception {
+    public @Nonnull Iterable<News> findAll() throws Exception {
         Iterable<News> newsAux = newsRepository.findAll();
         List<News> newsList = new ArrayList<>();
         for (News n : newsAux) {
@@ -30,11 +30,11 @@ public class NewsController {
                             n.getId(),
                             n.getTitle(),
                             n.getContent(),
-                            n.getAuthor(),
+                            n.getAuthorID(),
                             n.getDate(),
                             n.getClicks()));
         }
-        return newsList;*/
+        return newsList;
     }
 
     /*
