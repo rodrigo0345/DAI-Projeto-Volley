@@ -18,9 +18,7 @@ import React from 'react';
 import { TfiWrite } from 'react-icons/tfi';
 import { Subscription } from '@hilla/frontend';
 import {
-  NewsController,
   PostController,
-  RideController,
 } from 'Frontend/generated/endpoints';
 import { PostComponent } from 'Frontend/components/posts/Post';
 import News from 'Frontend/generated/com/example/application/model/News';
@@ -62,7 +60,7 @@ export default function ForumView() {
         news: {
           title: titulo,
           clicks: 0,
-          author: user,
+          authorID: user?.id,
           content: descricao,
           date: '',
           id: 0,

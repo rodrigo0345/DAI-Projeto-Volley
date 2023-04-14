@@ -59,7 +59,7 @@ public class RideController {
 
     public Ride save(Ride ride) throws Exception {
         if (ride == null || ride.getDateTime().isBefore(LocalDateTime.now().minusDays(1))
-                || ride.getSeats() <= 0 )
+                || ride.getSeats() <= 0)
             return null;
         return rides.save(ride);
     }
@@ -71,12 +71,14 @@ public class RideController {
         return ride;
     }
 
-    public void addClick(Long id) throws Exception {
-        Ride ride = rides.findById(id);
-        if (ride == null)
-            return;
-        ride.setClicks(ride.getClicks() + 1);
-        rides.save(ride);
-    }
+    /*
+     * public void addClick(Long id) throws Exception {
+     * Ride ride = rides.findById(id);
+     * if (ride == null)
+     * return;
+     * ride.setClicks(ride.getClicks() + 1);
+     * rides.save(ride);
+     * }
+     */
 
 }

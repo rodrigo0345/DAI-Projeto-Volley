@@ -25,17 +25,10 @@ public class News {
     private String title;
     private String content;
     // private Blob image; Later
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private LoginUser author;
+    // @ManyToOne
+    // @JoinColumn(name = "user_id", nullable = false)
+    private Long authorID;
     private LocalDateTime date;
     private int clicks;
 
-    public LoginUser getUser() {
-        return author;
-    }
-
-    public void setUser(LoginUser user) {
-        this.author = user;
-    }
 }
