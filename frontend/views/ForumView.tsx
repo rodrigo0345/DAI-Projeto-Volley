@@ -2,7 +2,7 @@ import SidePanel, {
   AsideContent,
 } from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { BsCalendarDate, BsCarFront, BsCloudUpload } from 'react-icons/bs';
 import { MdOutlineForum } from 'react-icons/md';
@@ -17,12 +17,16 @@ import {
 import React from 'react';
 import { TfiWrite } from 'react-icons/tfi';
 import { Subscription } from '@hilla/frontend';
-import { NewsController, RideController } from 'Frontend/generated/endpoints';
+import {
+  NewsController,
+  PostController,
+  RideController,
+} from 'Frontend/generated/endpoints';
 import { PostComponent } from 'Frontend/components/posts/Post';
 import News from 'Frontend/generated/com/example/application/model/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
-import Dropzone from 'react-dropzone';
+import Dropzone, { DropzoneRef } from 'react-dropzone';
 
 enum Menu {
   ALL = 'ALL',
@@ -35,6 +39,38 @@ export default function ForumView() {
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
   const [posts, setPosts] = useState<(News | Ride | undefined)[]>([]);
   const [openModal, setOpenModal] = useState(false);
+
+  const noticia = {
+    titulo: useRef<HTMLInputElement>(null),
+    descricao: useRef<HTMLTextAreaElement>(null),
+    imagem: useRef<HTMLInputElement>(null),
+  };
+
+  const [imagem, setImagem] = useState<any>(null);
+  const boleia = {
+    titulo: useRef<HTMLInputElement>(null),
+    descricao: useRef<HTMLTextAreaElement>(null),
+    imagem,
+  };
+
+  function enviarNoticia() {
+    const titulo = noticia.titulo.current?.value;
+    const descricao = noticia.descricao.current?.value;
+    const imagem = noticia.imagem.current?.value;
+    if (titulo && descricao && imagem) {
+      PostController.createPost('news', {
+        news: {
+          title: titulo,
+          clicks: 0,
+          author: ,
+          content: descricao,
+          date: "",
+          id: 0,
+        }
+
+      });
+    }
+  }
 
   useEffect(() => {
     // filtrar os posts pelo menu selecionado
@@ -220,6 +256,7 @@ export default function ForumView() {
                 Título
               </label>
               <input
+                ref={noticia.titulo}
                 type='text'
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
                 id='name'
@@ -233,6 +270,7 @@ export default function ForumView() {
                 Conteúdo
               </label>
               <textarea
+                ref={noticia.descricao}
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none h-32'
                 id='name'
               />
@@ -244,7 +282,7 @@ export default function ForumView() {
               >
                 Foto <span className='text-xs font-normal'>(opcional)</span>
               </label>
-              <Dropzone onDrop={(acceptedFiles) => console.log(acceptedFiles)}>
+              <Dropzone onDrop={(acceptedFiles) => setImagem(acceptedFiles)}>
                 {({ getRootProps, getInputProps }) => (
                   <section className='w-full flex items-center justify-center relative'>
                     <div {...getRootProps()}>

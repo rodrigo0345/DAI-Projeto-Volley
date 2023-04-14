@@ -1,6 +1,8 @@
 package com.example.application.model;
 
 import com.example.application.model.User.User;
+//import com.mysql.cj.jdbc.Blob;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +23,7 @@ public class News {
     private Long id;
     private String title;
     private String content;
+    //private Blob image; Later
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User author;

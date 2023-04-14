@@ -64,6 +64,22 @@ public class NewsController {
         return newsList;
     }
 
+    public Iterable<News> findLimitedNews(Integer pag, Integer index) throws Exception {
+        Iterable<News> newsAux = newsRepository.findLimitedNews( pag, index);
+        List<News> newsList = new ArrayList<>();
+        for (News n : newsAux) {
+            newsList.add(
+                    new News(
+                            n.getId(),
+                            n.getTitle(),
+                            n.getContent(),
+                            n.getAuthor(),
+                            n.getDate(),
+                            n.getClicks()));
+        }
+        return newsList;
+    }
+
     public News save(News news) throws Exception {
         if (news == null)
             return null;

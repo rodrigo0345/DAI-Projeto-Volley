@@ -141,7 +141,8 @@
     "@radix-ui/react-hover-card": "$@radix-ui/react-hover-card",
     "@radix-ui/react-icons": "$@radix-ui/react-icons",
     "@radix-ui/react-select": "$@radix-ui/react-select",
-    "@radix-ui/react-tabs": "$@radix-ui/react-tabs"
+    "@radix-ui/react-tabs": "$@radix-ui/react-tabs",
+    "react-dropzone": "$react-dropzone"
   },
   "vaadin": {
     "dependencies": {
@@ -189,6 +190,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "f8d6fbf5bb44a878914d6583da1808885c2d4aa449a560e801ab74b0d8e7b7e6"
+    "hash": "ee9b3e2aceec47f1810381cd76c327873685e8f2d7f104bb48c5f8a30c48fb5b"
   }
 }
