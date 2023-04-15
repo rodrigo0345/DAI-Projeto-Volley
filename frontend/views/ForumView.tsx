@@ -24,6 +24,8 @@ import Ride from 'Frontend/generated/com/example/application/model/Ride';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import Dropzone, { DropzoneRef } from 'react-dropzone';
 import { toast } from 'react-toastify';
+import { popularPosts } from 'Frontend/generated/PostController';
+import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
 
 enum Menu {
   ALL = 'ALL',
@@ -34,7 +36,7 @@ enum Menu {
 export default function ForumView() {
   const { user, logout } = useContext(UserContext);
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
-  const [posts, setPosts] = useState<(News | Ride | undefined)[]>([]);
+  const [posts, setPosts] = useState<(PostType | undefined)[]>([]);
   const [openModal, setOpenModal] = useState(false);
 
   const noticia = {
@@ -62,7 +64,7 @@ export default function ForumView() {
             clicks: 0,
             authorID: user?.id,
             content: descricao,
-            date: '',
+            createdAt: '',
             id: 0,
           },
         });
@@ -80,10 +82,21 @@ export default function ForumView() {
     // filtrar os posts pelo menu selecionado
   }, [menu]);
 
+  function checkTypeOfPost(post: PostType): string | undefined {
+    if (post.news) {
+      return 'news';
+    } else if (post.ride) {
+      return 'ride';
+    }
+    return undefined;
+  }
+
   useEffect(() => {
     // cria uma conexão com o backend para receber os posts
     (async () => {
-      // fetch data
+      const posts = await popularPosts(8, 0);
+      if (!posts) return;
+      setPosts(posts);
     })();
   }, []);
 
@@ -311,8 +324,8 @@ export default function ForumView() {
         </Tabs.Root>
       </ModalBox>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
-      <div className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10'>
-        <div className='flex lg:!flex-row lg:!items-start flex-col justify-between items-start gap-4 max-w-[60em] m-auto'>
+      <main className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10'>
+        <header className='flex lg:!flex-row lg:!items-start flex-col justify-between items-start gap-4 max-w-[60em] m-auto'>
           <h1 className='text-3xl font-bold m-0'>Forum</h1>
           <div className='shadow-lg min-w-[10em] bg-zinc-800 rounded-md h-10 flex items-center p-4 gap-4'>
             <nav>
@@ -353,7 +366,7 @@ export default function ForumView() {
               </Select.Root>
             </nav>
           </div>
-        </div>
+        </header>
         <main className='relative w-full gap-4 max-w-[60em] m-auto'>
           <button
             onClick={() => {
@@ -364,19 +377,32 @@ export default function ForumView() {
           >
             <TfiWrite size={20}></TfiWrite>
           </button>
-          {posts
-            .filter(() => {
-              // para filtrar os posts
-            })
-            .map((post) => (
+          {posts.map((post) => {
+            if (post?.news) {
+              return (
+                <PostComponent
+                  key={post?.news.id}
+                  post={{
+                    id: post.news.id,
+                    title: post.news.title,
+                    content: post.news.content,
+                  }}
+                ></PostComponent>
+              );
+            }
+            return (
               <PostComponent
-                key={post?.id}
-                post={post}
-                type='none'
+                key={post?.ride?.id}
+                post={{
+                  id: post?.ride?.id,
+                  title: 'Boleia',
+                  content: 'Boleia',
+                }}
               ></PostComponent>
-            ))}
+            );
+          })}
         </main>
-      </div>
+      </main>
     </div>
   );
 }

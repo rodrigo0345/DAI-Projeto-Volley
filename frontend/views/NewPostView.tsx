@@ -1,6 +1,5 @@
 import React, { useContext, useRef } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
-import Post from 'Frontend/generated/com/example/application/model/Post';
 import { UserContext } from 'Frontend/contexts/UserContext';
 
 export default function NewPostView() {
