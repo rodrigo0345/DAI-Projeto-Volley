@@ -8,7 +8,6 @@ import com.example.application.repository.UserRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.News;
-import com.example.application.model.Post;
 import com.example.application.model.Ride;
 
 import dev.hilla.Endpoint;
@@ -45,17 +44,17 @@ public class PostController {
             postType.ride = el;
             posts.add(postType);
         });
-        
+
         Collections.sort(posts);
 
         return posts;
     }
 
-    public Post postsByNewest(int pageSize, int index) {
+    public ResponseEntity<ResponseType<PostType>> postsByNewest(int pageSize, int index) {
         return null;
     }
 
-    public Post postsByOlder(int pageSize, int index) {
+    public ResponseEntity<ResponseType<PostType>> postsByOlder(int pageSize, int index) {
         return null;
     }
 
@@ -70,9 +69,9 @@ public class PostController {
 
             News news = post.news;
 
-            try{
-              newsRepository.save(news);
-            }catch (Exception e){
+            try {
+                newsRepository.save(news);
+            } catch (Exception e) {
                 var response = new ResponseType<PostType>();
                 response.error(e.getMessage());
                 return ResponseEntity.badRequest().body(response);
@@ -87,9 +86,9 @@ public class PostController {
 
             Ride ride = post.ride;
 
-            try{
+            try {
                 ridesRepository.save(ride);
-            }catch (Exception e){
+            } catch (Exception e) {
                 var response = new ResponseType<PostType>();
                 response.error(e.getMessage());
                 return ResponseEntity.badRequest().body(response);
@@ -104,8 +103,6 @@ public class PostController {
         response.success(post);
         return ResponseEntity.ok().body(response);
     }
-
-
 
     public void editPost(String postType, PostType post) {
     }

@@ -4,7 +4,6 @@ import com.example.application.model.Post;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
-import com.example.application.repository.PostRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.security.CryptWithMD5;
 import com.vaadin.flow.component.page.AppShellConfigurator;
