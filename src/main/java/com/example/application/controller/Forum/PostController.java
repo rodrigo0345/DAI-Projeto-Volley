@@ -52,12 +52,42 @@ public class PostController {
         return posts;
     }
 
-    public ResponseEntity<ResponseType<PostType>> postsByNewest(int pageSize, int index) {
-        return null;
+    public Iterable<PostType> postsByNewest(int pageSize, int index) {
+        List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").descending()));
+        List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").descending()));
+        List<PostType> posts = new ArrayList<>();
+        PostType postType = new PostType();
+        newsAux.forEach(el -> {
+            postType.news = el;
+            posts.add(postType);
+        });
+        ridesAux.forEach(el -> {
+            postType.ride = el;
+            posts.add(postType);
+        });
+
+        Collections.sort(posts);
+
+        return posts;
     }
 
-    public ResponseEntity<ResponseType<PostType>> postsByOlder(int pageSize, int index) {
-        return null;
+    public Iterable<PostType> postsByOlder(int pageSize, int index) {
+        List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").ascending()));
+        List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").ascending()));
+        List<PostType> posts = new ArrayList<>();
+        PostType postType = new PostType();
+        newsAux.forEach(el -> {
+            postType.news = el;
+            posts.add(postType);
+        });
+        ridesAux.forEach(el -> {
+            postType.ride = el;
+            posts.add(postType);
+        });
+
+        Collections.sort(posts);
+
+        return posts;
     }
 
     public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) {
