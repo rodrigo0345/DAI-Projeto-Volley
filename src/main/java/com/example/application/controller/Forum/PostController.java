@@ -13,12 +13,14 @@ import com.example.application.model.Ride;
 import dev.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.event.spi.PostCommitUpdateEventListener;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 
@@ -32,8 +34,8 @@ public class PostController {
     private final NewsRepository newsRepository;
 
     public Iterable<PostType> popularPosts(Integer pageSize, Integer index) {
-        List<News> newsAux = newsRepository.findLimitedNews(Sort.by("clicks"), pageSize, index);
-        List<Ride> ridesAux = ridesRepository.findLimitedRides(Sort.by("clicks"), pageSize, index);
+        List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
+        List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
         List<PostType> posts = new ArrayList<>();
         PostType postType = new PostType();
         newsAux.forEach(el -> {
@@ -68,6 +70,7 @@ public class PostController {
             }
 
             News news = post.news;
+            news.setCreatedAt(LocalDateTime.now());
 
             try {
                 newsRepository.save(news);
@@ -85,6 +88,7 @@ public class PostController {
             }
 
             Ride ride = post.ride;
+            ride.setCreatedAt(LocalDateTime.now());
 
             try {
                 ridesRepository.save(ride);

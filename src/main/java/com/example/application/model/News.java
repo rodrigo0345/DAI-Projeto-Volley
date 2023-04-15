@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -28,7 +30,6 @@ public class News {
     // @ManyToOne
     // @JoinColumn(name = "user_id", nullable = false)
     private Long authorID;
-    private LocalDateTime date;
+    public LocalDateTime createdAt;
     private int clicks;
-
 }

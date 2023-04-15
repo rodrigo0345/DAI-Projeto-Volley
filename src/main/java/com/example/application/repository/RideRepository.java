@@ -3,6 +3,7 @@ package com.example.application.repository;
 import com.example.application.model.Ride;
 import com.example.application.model.User.User;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import org.springframework.data.jpa.repository.Query;
@@ -17,9 +18,7 @@ import java.util.Optional;
 @Table(name = "rides")
 public interface RideRepository extends CrudRepository<Ride, Integer> {
 
-    @Query("SELECT r FROM rides r ORDER BY r.dateTime DESC LIMIT :pag OFFSET :index")
-    public List<Ride> findLimitedRides(Sort sort, @Param("pag")Integer pag,
-                                      @Param("index")Integer index);
+    public List<Ride> findAll(Pageable rq);
 
     // @Query("SELECT r FROM rides ORDER BY clicks DESC LIMIT ?1 OFFSET ?2")
     // public List<Ride> findPopularPosts(Integer pag, Integer index);

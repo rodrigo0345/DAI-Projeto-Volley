@@ -29,7 +29,7 @@ public class RideController {
                             ride.getId(),
                             ride.getOrigin(),
                             ride.getDestination(),
-                            ride.getDateTime(),
+                            ride.getCreatedAt(),
                             ride.getSeats(),
                             ride.getFreeSeats(),
                             ride.getDescription(),
@@ -48,7 +48,7 @@ public class RideController {
                 ride.getId(),
                 ride.getOrigin(),
                 ride.getDestination(),
-                ride.getDateTime(),
+                ride.getCreatedAt(),
                 ride.getSeats(),
                 ride.getFreeSeats(),
                 ride.getDescription(),
@@ -58,7 +58,7 @@ public class RideController {
     }
 
     public Ride save(Ride ride) throws Exception {
-        if (ride == null || ride.getDateTime().isBefore(LocalDateTime.now().minusDays(1))
+        if (ride == null || ride.getCreatedAt().isBefore(LocalDateTime.now().minusDays(1))
                 || ride.getSeats() <= 0)
             return null;
         return rides.save(ride);

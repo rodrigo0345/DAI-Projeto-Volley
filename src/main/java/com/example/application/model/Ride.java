@@ -28,7 +28,7 @@ public class Ride {
     public Long id;
     private String origin;
     private String destination;
-    private LocalDateTime dateTime;
+    public LocalDateTime createdAt;
     private int seats;
     private int freeSeats;
     private String description;

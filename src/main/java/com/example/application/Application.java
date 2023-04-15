@@ -1,6 +1,5 @@
 package com.example.application;
 
-import com.example.application.model.Post;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
