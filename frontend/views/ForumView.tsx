@@ -26,6 +26,9 @@ import Dropzone, { DropzoneRef } from 'react-dropzone';
 import { toast } from 'react-toastify';
 import { popularPosts } from 'Frontend/generated/PostController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
+import { NewsPost } from 'Frontend/components/posts/NewsPost';
+import { Skeleton } from '@mantine/core';
+import { AnimatePresence, motion } from 'framer-motion';
 
 enum Menu {
   ALL = 'ALL',
@@ -38,6 +41,7 @@ export default function ForumView() {
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
   const [posts, setPosts] = useState<(PostType | undefined)[]>([]);
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const noticia = {
     titulo: useRef<HTMLInputElement>(null),
@@ -76,27 +80,27 @@ export default function ForumView() {
     } else {
       toast.error('Preencha todos os campos');
     }
+
+    setOpenModal(false);
   }
 
   useEffect(() => {
     // filtrar os posts pelo menu selecionado
   }, [menu]);
 
-  function checkTypeOfPost(post: PostType): string | undefined {
-    if (post.news) {
-      return 'news';
-    } else if (post.ride) {
-      return 'ride';
-    }
-    return undefined;
-  }
-
   useEffect(() => {
     // cria uma conexão com o backend para receber os posts
+    if (posts.length > 0) return;
+
     (async () => {
+      setLoading(true);
       const posts = await popularPosts(8, 0);
-      if (!posts) return;
+      if (!posts) {
+        setLoading(false);
+        return;
+      }
       setPosts(posts);
+      setLoading(false);
     })();
   }, []);
 
@@ -156,7 +160,7 @@ export default function ForumView() {
     <div className='min-h-screen flex relative'>
       <ModalBox openModal={openModal} setOpenModal={setOpenModal}>
         <Tabs.Root
-          className='p-4 m-auto relative !max-w-[45em] lg:max-w-[50em] md:!w-[25em] w-full overflow-x-hidden shadow-lg rounded-lg z-[100]'
+          className='m-auto relative !max-w-[45em] lg:max-w-[50em] md:!w-[25em] w-full overflow-x-hidden shadow-lg rounded-lg z-[100]'
           defaultValue='tab1'
         >
           <Tabs.List
@@ -177,7 +181,7 @@ export default function ForumView() {
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content
-            className='grow p-5 bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-transparent'
+            className='grow p-4 bg-white outline-none focus:shadow-[0_0_0_2px] focus:shadow-transparent rounded-lg'
             value='tab1'
           >
             <p className='mb-5 text-mauve11 text-[15px] leading-normal'>
@@ -367,40 +371,45 @@ export default function ForumView() {
             </nav>
           </div>
         </header>
-        <main className='relative w-full gap-4 max-w-[60em] m-auto'>
-          <button
-            onClick={() => {
-              setOpenModal(true);
-            }}
-            className='fixed z-20 bottom-20 right-10 rounded-md text-white font-semibold bg-gradient-to-tr from-yellow-200 to-yellow-500 p-3  shadow-lg hover:!from-yellow-300/70 hover:!to-yellow-400/80 transition-all'
-            aria-label='Novo post'
-          >
-            <TfiWrite size={20}></TfiWrite>
-          </button>
-          {posts.map((post) => {
-            if (post?.news) {
+        <main className='relative w-full flex flex-col gap-4 max-w-[60em] m-auto pb-8'>
+          <AnimatePresence>
+            {loading &&
+              [0, 1, 2, 3, 4].map((i) => {
+                return (
+                  <Skeleton
+                    key={i}
+                    visible={loading}
+                    className='h-52'
+                  ></Skeleton>
+                );
+              })}
+            <button
+              onClick={() => {
+                setOpenModal(true);
+              }}
+              className='fixed z-20 bottom-20 right-10 rounded-md text-white font-semibold bg-gradient-to-tr from-yellow-200 to-yellow-500 p-3  shadow-lg hover:!from-yellow-300/70 hover:!to-yellow-400/80 transition-all'
+              aria-label='Novo post'
+            >
+              <TfiWrite size={20}></TfiWrite>
+            </button>
+            {posts.map((post) => {
+              if (post?.news) {
+                return (
+                  <NewsPost key={post?.news.id} post={post.news}></NewsPost>
+                );
+              }
               return (
                 <PostComponent
-                  key={post?.news.id}
+                  key={post?.ride?.id}
                   post={{
-                    id: post.news.id,
-                    title: post.news.title,
-                    content: post.news.content,
+                    id: post?.ride?.id,
+                    title: 'Boleia',
+                    content: 'Boleia',
                   }}
                 ></PostComponent>
               );
-            }
-            return (
-              <PostComponent
-                key={post?.ride?.id}
-                post={{
-                  id: post?.ride?.id,
-                  title: 'Boleia',
-                  content: 'Boleia',
-                }}
-              ></PostComponent>
-            );
-          })}
+            })}
+          </AnimatePresence>
         </main>
       </main>
     </div>

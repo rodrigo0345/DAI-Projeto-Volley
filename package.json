@@ -42,6 +42,7 @@
     "@vaadin/vaadin-material-styles": "23.3.7",
     "@vaadin/vaadin-themable-mixin": "23.3.7",
     "construct-style-sheets-polyfill": "3.1.0",
+    "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
     "flowbite": "^1.6.4",
     "framer-motion": "^10.0.1",
@@ -142,7 +143,8 @@
     "@radix-ui/react-icons": "$@radix-ui/react-icons",
     "@radix-ui/react-select": "$@radix-ui/react-select",
     "@radix-ui/react-tabs": "$@radix-ui/react-tabs",
-    "react-dropzone": "$react-dropzone"
+    "react-dropzone": "$react-dropzone",
+    "date-fns": "$date-fns"
   },
   "vaadin": {
     "dependencies": {
@@ -190,6 +192,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "ee9b3e2aceec47f1810381cd76c327873685e8f2d7f104bb48c5f8a30c48fb5b"
+    "hash": "61f0c2e314281b6c34c7ddd041cffe0700b13a3e9e97d3b8f653c4e8260d88e0"
   }
 }

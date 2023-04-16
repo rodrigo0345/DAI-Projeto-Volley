@@ -37,15 +37,17 @@ public class PostController {
         List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
         List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
         List<PostType> posts = new ArrayList<>();
-        PostType postType = new PostType();
-        newsAux.forEach(el -> {
-            postType.news = el;
+
+        for (News news : newsAux) {
+            PostType postType = new PostType();
+            postType.news = news;
             posts.add(postType);
-        });
-        ridesAux.forEach(el -> {
-            postType.ride = el;
+        }
+        for (Ride ride : ridesAux) {
+            PostType postType = new PostType();
+            postType.ride = ride;
             posts.add(postType);
-        });
+        }
 
         Collections.sort(posts);
 
