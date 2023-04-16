@@ -25,6 +25,9 @@ public class News {
     @GeneratedValue
     private Long id;
     private String title;
+
+    @Lob
+    @Column(name = "content", length = 512)
     private String content;
     // private Blob image; Later
     // @ManyToOne

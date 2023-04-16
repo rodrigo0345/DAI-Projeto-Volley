@@ -29,6 +29,7 @@ import PostType from 'Frontend/generated/com/example/application/controller/Foru
 import { NewsPost } from 'Frontend/components/posts/NewsPost';
 import { Skeleton } from '@mantine/core';
 import { AnimatePresence, motion } from 'framer-motion';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 
 enum Menu {
   ALL = 'ALL',
@@ -61,8 +62,9 @@ export default function ForumView() {
     const descricao = noticia.descricao.current?.value;
     const imagem = noticia.imagem.current?.value;
     if (titulo && descricao) {
+      let serverResult: ResponseEntity | undefined;
       try {
-        await PostController.createPost('news', {
+        serverResult = await PostController.createPost('news', {
           news: {
             title: titulo,
             clicks: 0,
@@ -72,13 +74,19 @@ export default function ForumView() {
             id: 0,
           },
         });
-      } catch (e) {
-        console.log(e);
+      } catch (e: any) {
+        toast.error(e.message);
+        return;
+      }
+
+      if (serverResult?.body.error) {
+        toast.error(serverResult?.body.error);
         return;
       }
       toast.success('Notícia criada com sucesso');
     } else {
       toast.error('Preencha todos os campos');
+      return;
     }
 
     setOpenModal(false);
@@ -275,6 +283,7 @@ export default function ForumView() {
                 Título
               </label>
               <input
+                max={20}
                 ref={noticia.titulo}
                 type='text'
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'

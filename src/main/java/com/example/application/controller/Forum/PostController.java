@@ -62,7 +62,7 @@ public class PostController {
         return null;
     }
 
-    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) {
+    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) throws Exception {
         // PRIORITY
         if (postType.toLowerCase().trim().equals("news")) {
             if (post.news == null) {
