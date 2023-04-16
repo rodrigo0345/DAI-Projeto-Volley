@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,63 +34,73 @@ public class PostController {
 
     private final NewsRepository newsRepository;
 
+    private List<PostType> mixPosts(List<News> news, List<Ride> rides, Comparator<? super PostType> cmp) {
+        List<PostType> posts = new ArrayList<>();
+        for (News n : news) {
+            PostType postType = new PostType();
+            postType.news = n;
+            posts.add(postType);
+        }
+        for (Ride r : rides) {
+            PostType postType = new PostType();
+            postType.ride = r;
+            posts.add(postType);
+        }
+
+        Collections.sort(posts, cmp);
+        return posts;
+    }
+
     public Iterable<PostType> popularPosts(Integer pageSize, Integer index) {
         List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
         List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
-        List<PostType> posts = new ArrayList<>();
 
-        for (News news : newsAux) {
-            PostType postType = new PostType();
-            postType.news = news;
-            posts.add(postType);
-        }
-        for (Ride ride : ridesAux) {
-            PostType postType = new PostType();
-            postType.ride = ride;
-            posts.add(postType);
-        }
+        Comparator<? super PostType> cmp = (PostType p1, PostType p2) -> {
+            var p1Type = p1.getType();
+            var p2Type = p2.getType();
 
-        Collections.sort(posts);
+            Integer p1Value = p1Type.equals("news") ? p1.news.getClicks() : p1.ride.getClicks();
+            Integer p2Value = p2Type.equals("news") ? p2.news.getClicks() : p2.ride.getClicks();
 
-        return posts;
+            return p1Value.compareTo(p2Value);
+        };
+        return mixPosts(newsAux, ridesAux, cmp);
     }
 
     public Iterable<PostType> postsByNewest(int pageSize, int index) {
         List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").descending()));
-        List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").descending()));
-        List<PostType> posts = new ArrayList<>();
-        PostType postType = new PostType();
-        newsAux.forEach(el -> {
-            postType.news = el;
-            posts.add(postType);
-        });
-        ridesAux.forEach(el -> {
-            postType.ride = el;
-            posts.add(postType);
-        });
+        List<Ride> ridesAux = ridesRepository
+                .findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").descending()));
 
-        Collections.sort(posts);
+        Comparator<? super PostType> cmp = (PostType p1, PostType p2) -> {
+            var p1Type = p1.getType();
+            var p2Type = p2.getType();
 
-        return posts;
+            LocalDateTime p1Value = p1Type.equals("news") ? p1.news.getCreatedAt() : p1.ride.getCreatedAt();
+            LocalDateTime p2Value = p2Type.equals("news") ? p2.news.getCreatedAt() : p2.ride.getCreatedAt();
+
+            return p2Value.compareTo(p1Value);
+        };
+
+        return mixPosts(newsAux, ridesAux, cmp);
     }
 
     public Iterable<PostType> postsByOlder(int pageSize, int index) {
         List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").ascending()));
-        List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").ascending()));
-        List<PostType> posts = new ArrayList<>();
-        PostType postType = new PostType();
-        newsAux.forEach(el -> {
-            postType.news = el;
-            posts.add(postType);
-        });
-        ridesAux.forEach(el -> {
-            postType.ride = el;
-            posts.add(postType);
-        });
+        List<Ride> ridesAux = ridesRepository
+                .findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").ascending()));
 
-        Collections.sort(posts);
+        Comparator<? super PostType> cmp = (PostType p1, PostType p2) -> {
+            var p1Type = p1.getType();
+            var p2Type = p2.getType();
 
-        return posts;
+            LocalDateTime p1Value = p1Type.equals("news") ? p1.news.getCreatedAt() : p1.ride.getCreatedAt();
+            LocalDateTime p2Value = p2Type.equals("news") ? p2.news.getCreatedAt() : p2.ride.getCreatedAt();
+
+            return p1Value.compareTo(p2Value);
+        };
+
+        return mixPosts(newsAux, ridesAux, cmp);
     }
 
     public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) throws Exception {

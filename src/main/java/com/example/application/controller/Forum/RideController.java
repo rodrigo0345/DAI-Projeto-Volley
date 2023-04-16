@@ -29,13 +29,16 @@ public class RideController {
                             ride.getId(),
                             ride.getOrigin(),
                             ride.getDestination(),
-                            ride.getCreatedAt(),
+                            ride.getStartDate(),
                             ride.getSeats(),
                             ride.getFreeSeats(),
                             ride.getDescription(),
                             ride.getDriverContact(),
-                            ride.getUser(),
-                            ride.getClicks()));
+                            ride.getDriverID(),
+                            ride.getClicks(),
+                            ride.getLocation(),
+                            ride.getCreatedAt(),
+                            ride.getPassengers()));
         }
         return ridesList;
     }
@@ -48,17 +51,20 @@ public class RideController {
                 ride.getId(),
                 ride.getOrigin(),
                 ride.getDestination(),
-                ride.getCreatedAt(),
+                ride.getStartDate(),
                 ride.getSeats(),
                 ride.getFreeSeats(),
                 ride.getDescription(),
                 ride.getDriverContact(),
-                ride.getUser(),
-                ride.getClicks());
+                ride.getDriverID(),
+                ride.getClicks(),
+                ride.getLocation(),
+                ride.getCreatedAt(),
+                ride.getPassengers());
     }
 
     public Ride save(Ride ride) throws Exception {
-        if (ride == null || ride.getCreatedAt().isBefore(LocalDateTime.now().minusDays(1))
+        if (ride == null
                 || ride.getSeats() <= 0)
             return null;
         return rides.save(ride);

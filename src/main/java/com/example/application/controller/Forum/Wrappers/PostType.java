@@ -15,6 +15,15 @@ public class PostType implements Comparable<PostType> {
     public PostType() {
     }
 
+    public String getType() {
+        if (news != null) {
+            return "news";
+        } else if (ride != null) {
+            return "ride";
+        }
+        return null;
+    }
+
     @Override
     public int compareTo(PostType arg0) {
         String typeArg0 = null;

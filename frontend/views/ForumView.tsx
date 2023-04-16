@@ -24,12 +24,17 @@ import Ride from 'Frontend/generated/com/example/application/model/Ride';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import Dropzone, { DropzoneRef } from 'react-dropzone';
 import { toast } from 'react-toastify';
-import { popularPosts } from 'Frontend/generated/PostController';
+import {
+  popularPosts,
+  postsByNewest,
+  postsByOlder,
+} from 'Frontend/generated/PostController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
 import { NewsPost } from 'Frontend/components/posts/NewsPost';
 import { Skeleton } from '@mantine/core';
 import { AnimatePresence, motion } from 'framer-motion';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
+import searching from 'Frontend/assets/svgs/searching.svg';
 
 enum Menu {
   ALL = 'ALL',
@@ -43,6 +48,7 @@ export default function ForumView() {
   const [posts, setPosts] = useState<(PostType | undefined)[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [order, setOrder] = useState<string>('popular');
 
   const noticia = {
     titulo: useRef<HTMLInputElement>(null),
@@ -51,50 +57,162 @@ export default function ForumView() {
   };
 
   const [imagem, setImagem] = useState<any>(null);
-  const boleia = {
-    titulo: useRef<HTMLInputElement>(null),
-    descricao: useRef<HTMLTextAreaElement>(null),
-    imagem,
-  };
 
-  async function enviarNoticia() {
+  async function criarNoticia() {
     const titulo = noticia.titulo.current?.value;
     const descricao = noticia.descricao.current?.value;
     const imagem = noticia.imagem.current?.value;
-    if (titulo && descricao) {
-      let serverResult: ResponseEntity | undefined;
-      try {
-        serverResult = await PostController.createPost('news', {
-          news: {
-            title: titulo,
-            clicks: 0,
-            authorID: user?.id,
-            content: descricao,
-            createdAt: '',
-            id: 0,
-          },
-        });
-      } catch (e: any) {
-        toast.error(e.message);
-        return;
-      }
 
-      if (serverResult?.body.error) {
-        toast.error(serverResult?.body.error);
-        return;
-      }
-      toast.success('Notícia criada com sucesso');
-    } else {
+    if (!(titulo && descricao)) {
       toast.error('Preencha todos os campos');
       return;
     }
 
+    let serverResult: ResponseEntity | undefined;
+    try {
+      serverResult = await PostController.createPost('news', {
+        news: {
+          title: titulo,
+          clicks: 0,
+          authorID: user?.id,
+          content: descricao,
+          createdAt: '',
+          id: 0,
+        },
+      });
+    } catch (e: any) {
+      toast.error(e.message);
+      return;
+    }
+
+    if (serverResult?.body.error) {
+      toast.error(serverResult?.body.error);
+      return;
+    }
+    toast.success('Notícia criada com sucesso');
+
     setOpenModal(false);
   }
 
+  const boleia = {
+    destino: useRef<HTMLInputElement>(null),
+    dataPartida: useRef<HTMLInputElement>(null),
+    lugaresDisp: useRef<HTMLInputElement>(null),
+    descricao: useRef<HTMLTextAreaElement>(null),
+    telefone: useRef<HTMLInputElement>(null),
+    localPartida: useRef<HTMLInputElement>(null),
+  };
+
+  async function criarBoleia() {
+    const destino = boleia.destino.current?.value;
+    const dataPartida = boleia.dataPartida.current?.value;
+    const lugaresDisp = boleia.lugaresDisp.current?.value;
+    const descricao = boleia.descricao.current?.value;
+    const telefone = boleia.telefone.current?.value;
+    const localPartida = boleia.localPartida.current?.value;
+
+    if (!(destino && dataPartida && lugaresDisp && descricao && telefone)) {
+      toast.error('Preencha todos os campos');
+      return;
+    }
+
+    let serverResult: ResponseEntity | undefined;
+    try {
+      serverResult = await PostController.createPost('ride', {
+        ride: {
+          destination: destino,
+          freeSeats: Number(lugaresDisp),
+          clicks: 0,
+          startDate: dataPartida,
+          seats: Number(lugaresDisp),
+          driverContact: telefone,
+          description: descricao,
+          driverID: user?.id,
+          location: localPartida,
+          passengers: undefined,
+        },
+      });
+    } catch (e: any) {
+      toast.error(e.message);
+      return;
+    }
+
+    if (serverResult?.body.error) {
+      toast.error(serverResult?.body.error);
+      return;
+    }
+
+    toast.success('Boleia criada com sucesso');
+  }
+
+  async function fetchPopularPosts(
+    index: number,
+    filter?: (el: PostType | undefined) => boolean
+  ) {
+    const posts = await popularPosts(8, index);
+    if (!posts) {
+      setLoading(false);
+      return;
+    }
+    const filteredPosts = filter ? posts.filter((el) => filter(el)) : posts;
+    setPosts(filteredPosts);
+  }
+
+  async function fetchPostsByMostRecent(
+    index: number,
+    filter?: (el: PostType | undefined) => boolean
+  ) {
+    const posts = await postsByNewest(8, index);
+    if (!posts) {
+      setLoading(false);
+      return;
+    }
+    const filteredPosts = filter ? posts.filter((el) => filter(el)) : posts;
+    setPosts(filteredPosts);
+  }
+
+  async function fetchPostsByOldest(
+    index: number,
+    filter?: (el: PostType | undefined) => boolean
+  ) {
+    const posts = await postsByOlder(8, index);
+    if (!posts) {
+      setLoading(false);
+      return;
+    }
+    const filteredPosts = filter ? posts.filter((el) => filter(el)) : posts;
+    setPosts(filteredPosts);
+  }
+
   useEffect(() => {
-    // filtrar os posts pelo menu selecionado
+    setOrder('relevant');
+    (async () => {
+      setLoading(true);
+      if (menu === Menu.ALL) {
+        await fetchPopularPosts(0);
+      } else if (menu === Menu.NEWS) {
+        await fetchPopularPosts(0, (el) => el?.news !== undefined);
+      } else {
+        await fetchPopularPosts(0, (el) => el?.ride !== undefined);
+      }
+      setLoading(false);
+    })();
   }, [menu]);
+
+  useEffect(() => {
+    console.log(order);
+    (async () => {
+      setLoading(true);
+      if (order === 'relevante') {
+        await fetchPopularPosts(0);
+      } else if (order === 'recente') {
+        await fetchPostsByMostRecent(0, (el) => el?.news !== undefined);
+      } else if (order === 'antigo') {
+        await fetchPostsByOldest(0, (el) => el?.ride !== undefined);
+      }
+      setLoading(false);
+    })();
+  }, [order]);
 
   useEffect(() => {
     // cria uma conexão com o backend para receber os posts
@@ -102,12 +220,10 @@ export default function ForumView() {
 
     (async () => {
       setLoading(true);
-      const posts = await popularPosts(8, 0);
-      if (!posts) {
-        setLoading(false);
-        return;
-      }
-      setPosts(posts);
+      if (menu === Menu.ALL) await fetchPopularPosts(0);
+      else if (menu === Menu.NEWS)
+        await fetchPopularPosts(0, (el) => el?.news !== undefined);
+      else await fetchPopularPosts(0, (el) => el?.ride !== undefined);
       setLoading(false);
     })();
   }, []);
@@ -203,6 +319,7 @@ export default function ForumView() {
                 Destino
               </label>
               <input
+                ref={boleia.destino}
                 type='text'
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
                 id='name'
@@ -213,9 +330,24 @@ export default function ForumView() {
                 className='text-[13px] leading-none mb-2.5 text-gray-800 font-semibold block'
                 htmlFor='username'
               >
+                Local de partida
+              </label>
+              <input
+                ref={boleia.dataPartida}
+                type='text'
+                className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
+                id='username'
+              />
+            </fieldset>
+            <fieldset className='mb-[15px] w-full flex flex-col justify-start'>
+              <label
+                className='text-[13px] leading-none mb-2.5 text-gray-800 font-semibold block'
+                htmlFor='username'
+              >
                 Data de partida
               </label>
               <input
+                ref={boleia.dataPartida}
                 type='datetime-local'
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
                 id='username'
@@ -230,6 +362,7 @@ export default function ForumView() {
                 Lugares disponíveis
               </label>
               <input
+                ref={boleia.lugaresDisp}
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
                 id='username'
                 type='number'
@@ -246,6 +379,7 @@ export default function ForumView() {
                 Descrição
               </label>
               <textarea
+                ref={boleia.descricao}
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
                 aria-expanded='false'
               />
@@ -258,12 +392,18 @@ export default function ForumView() {
                 Telefone
               </label>
               <input
+                ref={boleia.telefone}
                 type='tel'
                 className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
               />
             </fieldset>
             <div className='flex justify-end mt-5'>
-              <button className='inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none hover:bg-yellow-300 cursor-pointer'>
+              <button
+                onClick={() => {
+                  criarBoleia();
+                }}
+                className='inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none hover:bg-yellow-300 cursor-pointer'
+              >
                 Publicar
               </button>
             </div>
@@ -327,7 +467,7 @@ export default function ForumView() {
               <button
                 className='inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none hover:bg-yellow-300 cursor-pointer'
                 onClick={() => {
-                  enviarNoticia();
+                  criarNoticia();
                 }}
               >
                 Publicar
@@ -345,7 +485,11 @@ export default function ForumView() {
               <label htmlFor='' className='text-white text-sm'>
                 Ordernar por:{' '}
               </label>
-              <Select.Root>
+              <Select.Root
+                onValueChange={(e) => {
+                  setOrder(e);
+                }}
+              >
                 <Select.Trigger
                   className='inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-transparent shadow-black/10 data-[placeholder]:text-white focus:outline-none aria-selected:outline-none text-white font-semibold'
                   aria-label='Ordenar por...'
@@ -362,11 +506,9 @@ export default function ForumView() {
                     </Select.ScrollUpButton>
                     <Select.Viewport className='p-[5px]'>
                       <Select.Group>
-                        <SelectItem value='mais recente'>
-                          Mais recente
-                        </SelectItem>
-                        <SelectItem value='banana'>Mais antigo</SelectItem>
-                        <SelectItem value='blueberry'>
+                        <SelectItem value='recente'>Mais recente</SelectItem>
+                        <SelectItem value='antigo'>Mais antigo</SelectItem>
+                        <SelectItem value='relevante'>
                           Mais relevante
                         </SelectItem>
                       </Select.Group>
@@ -396,28 +538,45 @@ export default function ForumView() {
               onClick={() => {
                 setOpenModal(true);
               }}
-              className='fixed z-20 bottom-20 right-10 rounded-md text-white font-semibold bg-gradient-to-tr from-yellow-200 to-yellow-500 p-3  shadow-lg hover:!from-yellow-300/70 hover:!to-yellow-400/80 transition-all'
+              className='fixed z-20 bottom-20 right-10 rounded-md text-white font-semibold bg-gradient-to-tr from-yellow-200 to-yellow-500 p-3   hover:!from-yellow-300/70 hover:!to-yellow-400/80 transition-all '
               aria-label='Novo post'
             >
               <TfiWrite size={20}></TfiWrite>
             </button>
-            {posts.map((post) => {
-              if (post?.news) {
+            {posts.length > 0 ? (
+              posts.map((post) => {
+                if (post?.news) {
+                  return (
+                    <NewsPost key={post?.news.id} post={post.news}></NewsPost>
+                  );
+                }
                 return (
-                  <NewsPost key={post?.news.id} post={post.news}></NewsPost>
+                  <PostComponent
+                    key={post?.ride?.id}
+                    post={{
+                      id: post?.ride?.id,
+                      title: 'Boleia',
+                      content: 'Boleia',
+                    }}
+                  ></PostComponent>
                 );
-              }
-              return (
-                <PostComponent
-                  key={post?.ride?.id}
-                  post={{
-                    id: post?.ride?.id,
-                    title: 'Boleia',
-                    content: 'Boleia',
-                  }}
-                ></PostComponent>
-              );
-            })}
+              })
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className='text-gray-500 flex flex-col justify-center items-center w-full h-full gap-4'
+              >
+                <h3>À procura de posts...</h3>
+                <img
+                  src={searching}
+                  className='w-full object-cover max-w-[10em]'
+                  alt=''
+                />
+              </motion.div>
+            )}
           </AnimatePresence>
         </main>
       </main>
