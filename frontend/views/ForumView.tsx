@@ -31,7 +31,7 @@ import {
 } from 'Frontend/generated/PostController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
 import { NewsPost } from 'Frontend/components/posts/NewsPost';
-import { Skeleton } from '@mantine/core';
+import { Button, Skeleton } from '@mantine/core';
 import { AnimatePresence, motion } from 'framer-motion';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 import searching from 'Frontend/assets/svgs/searching.svg';
@@ -49,6 +49,7 @@ export default function ForumView() {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState<string>('popular');
+  const [currIndex, setCurrIndex] = useState(0);
 
   const noticia = {
     titulo: useRef<HTMLInputElement>(null),
@@ -147,68 +148,63 @@ export default function ForumView() {
 
   async function fetchPopularPosts(
     index: number,
-    filter?: (el: PostType | undefined) => boolean
+    prevPosts?: (PostType | undefined)[]
   ) {
     const posts = await popularPosts(8, index);
-    if (!posts) {
+    if (!posts || posts.length === 0) {
+      toast.warn('Não existem mais posts');
       setLoading(false);
       return;
     }
-    const filteredPosts = filter ? posts.filter((el) => filter(el)) : posts;
-    setPosts(filteredPosts);
+    setPosts([...(prevPosts ?? []), ...posts]);
   }
 
   async function fetchPostsByMostRecent(
     index: number,
-    filter?: (el: PostType | undefined) => boolean
+    prevPosts?: (PostType | undefined)[]
   ) {
     const posts = await postsByNewest(8, index);
     if (!posts) {
+      toast.warn('Não existem mais posts');
       setLoading(false);
       return;
     }
-    const filteredPosts = filter ? posts.filter((el) => filter(el)) : posts;
-    setPosts(filteredPosts);
+    setPosts([...(prevPosts ?? []), ...posts]);
   }
 
   async function fetchPostsByOldest(
     index: number,
-    filter?: (el: PostType | undefined) => boolean
+    prevPosts?: (PostType | undefined)[]
   ) {
     const posts = await postsByOlder(8, index);
     if (!posts) {
+      toast.warn('Não existem mais posts');
       setLoading(false);
       return;
     }
-    const filteredPosts = filter ? posts.filter((el) => filter(el)) : posts;
-    setPosts(filteredPosts);
+
+    setPosts([...(prevPosts ?? []), ...posts]);
   }
 
   useEffect(() => {
-    setOrder('relevant');
+    setOrder('relevante');
+    setCurrIndex(0);
     (async () => {
-      setLoading(true);
-      if (menu === Menu.ALL) {
-        await fetchPopularPosts(0);
-      } else if (menu === Menu.NEWS) {
-        await fetchPopularPosts(0, (el) => el?.news !== undefined);
-      } else {
-        await fetchPopularPosts(0, (el) => el?.ride !== undefined);
-      }
-      setLoading(false);
+      await fetchPopularPosts(0);
     })();
   }, [menu]);
 
   useEffect(() => {
     console.log(order);
+    setCurrIndex(0);
     (async () => {
       setLoading(true);
       if (order === 'relevante') {
         await fetchPopularPosts(0);
       } else if (order === 'recente') {
-        await fetchPostsByMostRecent(0, (el) => el?.news !== undefined);
+        await fetchPostsByMostRecent(0);
       } else if (order === 'antigo') {
-        await fetchPostsByOldest(0, (el) => el?.ride !== undefined);
+        await fetchPostsByOldest(0);
       }
       setLoading(false);
     })();
@@ -221,12 +217,24 @@ export default function ForumView() {
     (async () => {
       setLoading(true);
       if (menu === Menu.ALL) await fetchPopularPosts(0);
-      else if (menu === Menu.NEWS)
-        await fetchPopularPosts(0, (el) => el?.news !== undefined);
-      else await fetchPopularPosts(0, (el) => el?.ride !== undefined);
+      else if (menu === Menu.NEWS) await fetchPopularPosts(0);
+      else await fetchPopularPosts(0);
       setLoading(false);
     })();
   }, []);
+
+  async function loadMore() {
+    const newIndex = currIndex + 1;
+    setCurrIndex(newIndex);
+
+    if (order === 'relevante') {
+      await fetchPopularPosts(newIndex, posts);
+    } else if (order === 'recente') {
+      await fetchPostsByMostRecent(newIndex, posts);
+    } else if (order === 'antigo') {
+      await fetchPostsByOldest(newIndex, posts);
+    }
+  }
 
   const content: AsideContent<Menu>[] = [
     {
@@ -489,6 +497,7 @@ export default function ForumView() {
                 onValueChange={(e) => {
                   setOrder(e);
                 }}
+                value={order}
               >
                 <Select.Trigger
                   className='inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-transparent shadow-black/10 data-[placeholder]:text-white focus:outline-none aria-selected:outline-none text-white font-semibold'
@@ -543,24 +552,33 @@ export default function ForumView() {
             >
               <TfiWrite size={20}></TfiWrite>
             </button>
-            {posts.length > 0 ? (
-              posts.map((post) => {
-                if (post?.news) {
+            {posts.length > 1 || posts !== undefined ? (
+              posts
+                .filter((el) => {
+                  if (menu === Menu.NEWS) {
+                    return el?.news !== undefined;
+                  } else if (menu === Menu.RIDES) {
+                    return el?.ride !== undefined;
+                  }
+                  return true;
+                })
+                .map((post) => {
+                  if (post?.news) {
+                    return (
+                      <NewsPost key={post?.news.id} post={post.news}></NewsPost>
+                    );
+                  }
                   return (
-                    <NewsPost key={post?.news.id} post={post.news}></NewsPost>
+                    <PostComponent
+                      key={post?.ride?.id}
+                      post={{
+                        id: post?.ride?.id,
+                        title: 'Boleia',
+                        content: 'Boleia',
+                      }}
+                    ></PostComponent>
                   );
-                }
-                return (
-                  <PostComponent
-                    key={post?.ride?.id}
-                    post={{
-                      id: post?.ride?.id,
-                      title: 'Boleia',
-                      content: 'Boleia',
-                    }}
-                  ></PostComponent>
-                );
-              })
+                })
             ) : (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -576,6 +594,14 @@ export default function ForumView() {
                   alt=''
                 />
               </motion.div>
+            )}
+            {posts.length > 0 && (
+              <button
+                onClick={loadMore}
+                className='p-2 w-24 rounded-md text-black font-bold self-center hover:bg-gray-500 hover:text-white transition-all'
+              >
+                Ver mais
+              </button>
             )}
           </AnimatePresence>
         </main>
