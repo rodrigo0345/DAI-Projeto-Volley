@@ -1,5 +1,5 @@
 import News from 'Frontend/generated/com/example/application/model/News';
-import { formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { BsBookmark } from 'react-icons/bs';
 
@@ -21,7 +21,9 @@ export function NewsPost({ post, type }: { post?: News; type?: string }) {
             })}
           </span>
         </h3>
-        <p className=' text-gray-300 font-semibold text-sm '>12/02/2022</p>
+        <p className=' text-gray-300 font-semibold text-sm '>
+          {format(Date.parse(post?.createdAt ?? ''), 'dd/MM/yyyy')}
+        </p>
       </div>
       <div className='px-4 pb-2 text-gray-200'>
         <p>{post?.content}</p>
