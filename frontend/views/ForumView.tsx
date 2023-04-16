@@ -51,6 +51,13 @@ export default function ForumView() {
   const [order, setOrder] = useState<string>('popular');
   const [currIndex, setCurrIndex] = useState(0);
 
+  const filteredPosts = posts.filter((post) => {
+    if (menu === Menu.ALL) return true;
+    if (menu === Menu.NEWS && post?.news) return true;
+    if (menu === Menu.RIDES && post?.ride) return true;
+    return false;
+  });
+
   const noticia = {
     titulo: useRef<HTMLInputElement>(null),
     descricao: useRef<HTMLTextAreaElement>(null),
@@ -187,6 +194,8 @@ export default function ForumView() {
   }
 
   useEffect(() => {
+    // scroll to top
+    window.scrollTo(0, 0);
     setOrder('relevante');
     setCurrIndex(0);
     (async () => {
@@ -552,33 +561,24 @@ export default function ForumView() {
             >
               <TfiWrite size={20}></TfiWrite>
             </button>
-            {posts.length > 1 || posts !== undefined ? (
-              posts
-                .filter((el) => {
-                  if (menu === Menu.NEWS) {
-                    return el?.news !== undefined;
-                  } else if (menu === Menu.RIDES) {
-                    return el?.ride !== undefined;
-                  }
-                  return true;
-                })
-                .map((post) => {
-                  if (post?.news) {
-                    return (
-                      <NewsPost key={post?.news.id} post={post.news}></NewsPost>
-                    );
-                  }
+            {filteredPosts.length > 0 ? (
+              filteredPosts.map((post) => {
+                if (post?.news) {
                   return (
-                    <PostComponent
-                      key={post?.ride?.id}
-                      post={{
-                        id: post?.ride?.id,
-                        title: 'Boleia',
-                        content: 'Boleia',
-                      }}
-                    ></PostComponent>
+                    <NewsPost key={post?.news.id} post={post.news}></NewsPost>
                   );
-                })
+                }
+                return (
+                  <PostComponent
+                    key={post?.ride?.id}
+                    post={{
+                      id: post?.ride?.id,
+                      title: 'Boleia',
+                      content: 'Boleia',
+                    }}
+                  ></PostComponent>
+                );
+              })
             ) : (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -595,7 +595,7 @@ export default function ForumView() {
                 />
               </motion.div>
             )}
-            {posts.length > 0 && (
+            {filteredPosts.length > 6 && (
               <button
                 onClick={loadMore}
                 className='p-2 w-24 rounded-md text-black font-bold self-center hover:bg-gray-500 hover:text-white transition-all'
