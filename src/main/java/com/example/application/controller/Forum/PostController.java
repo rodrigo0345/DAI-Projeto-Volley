@@ -150,4 +150,22 @@ public class PostController {
     public void editPost(String postType, PostType post) {
     }
 
+    public void addClick(PostType post) throws Exception {
+        String type = post.getType();
+        News news;
+        Ride ride;
+        if (post == null) return;
+        if (type == "news") {
+            news = post.news;
+            news.setClicks(news.getClicks() + 1);
+            newsRepository.save(news);
+        }
+        else {
+
+            ride = post.ride;
+            ride.setClicks(ride.getClicks() + 1);
+            ridesRepository.save(ride);
+        }
+    }
+
 }
