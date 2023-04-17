@@ -1,8 +1,6 @@
 package com.example.application.controller.Forum;
 
 import com.example.application.model.News;
-import com.example.application.model.User.LoginUser;
-import com.example.application.model.User.User;
 import com.example.application.repository.NewsRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;

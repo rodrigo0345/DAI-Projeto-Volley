@@ -1,19 +1,14 @@
 package com.example.application.repository;
 
 import com.example.application.model.Ride;
-import com.example.application.model.User.User;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import javax.persistence.Table;
 
 import java.util.List;
-import java.util.Optional;
 
 @Table(name = "rides")
 public interface RideRepository extends CrudRepository<Ride, Integer> {

@@ -1,7 +1,5 @@
 package com.example.application.model.User;
 
-import java.util.List;
-import javax.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

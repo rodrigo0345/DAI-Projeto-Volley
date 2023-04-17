@@ -2,11 +2,8 @@ package com.example.application.JWT;
 
 import com.example.application.repository.TokenRepository;
 import com.example.application.service.JwtService;
-import com.github.jknack.handlebars.internal.antlr.TokenFactory;
 import java.io.IOException;
-import java.security.Security;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

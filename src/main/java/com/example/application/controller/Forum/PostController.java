@@ -1,10 +1,8 @@
 package com.example.application.controller.Forum;
 
 import com.example.application.controller.ResponseType.ResponseType;
-import com.example.application.model.User.LoginUser;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
-import com.example.application.repository.UserRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.News;
@@ -18,9 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
-import org.hibernate.event.spi.PostCommitUpdateEventListener;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
