@@ -1,5 +1,7 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 export default function PostView() {
-  return <div>PostView</div>;
+  const { id } = useParams<{ id: string }>();
+  return <div>PostView - {id}</div>;
 }
