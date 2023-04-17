@@ -3,7 +3,6 @@ package com.example.application.model.User;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.security.DeclareRoles;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 import javax.validation.constraints.*;
 
-import org.springframework.context.annotation.Role;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -22,24 +20,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.application.model.Token.Token;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.common.aliasing.qual.Unique;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
 @Builder

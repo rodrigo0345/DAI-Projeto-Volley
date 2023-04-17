@@ -1,8 +1,5 @@
 package com.example.application.controller.ResponseType;
 
-import org.springframework.http.ResponseEntity;
-
-import java.util.ResourceBundle;
 
 // Just a wrapper to make the response more readable
 // on the front-end

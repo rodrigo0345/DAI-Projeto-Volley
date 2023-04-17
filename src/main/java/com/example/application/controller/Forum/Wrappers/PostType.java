@@ -1,9 +1,5 @@
 package com.example.application.controller.Forum.Wrappers;
 
-import java.util.concurrent.Callable;
-
-import org.atmosphere.config.service.Post;
-
 import com.example.application.model.News;
 import com.example.application.model.Ride;
 

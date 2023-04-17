@@ -1,6 +1,5 @@
 package com.example.application.model;
 
-import com.example.application.model.User.LoginUser;
 
 //import com.mysql.cj.jdbc.Blob;
 
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
