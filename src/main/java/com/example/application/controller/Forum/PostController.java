@@ -150,4 +150,30 @@ public class PostController {
     public void editPost(String postType, PostType post) {
     }
 
+    private News getNews(Long id) {
+        News news = newsRepository.findById(id);
+        news.setClicks(news.getClicks() + 1);
+        newsRepository.save(news);
+        return news;
+    }
+
+    private Ride getRide(Long id) {
+        Ride ride = ridesRepository.findById(id);
+        ride.setClicks(ride.getClicks() + 1);
+        ridesRepository.save(ride);
+        return ride;
+    }
+
+    public PostType getPost(String postType, Long id) {
+        // add +1 on the click because it means it was clicked
+        PostType post = new PostType();
+        if (postType.toLowerCase().trim().equals("news")) {
+            post.news = getNews(id);
+            return post;
+        } else if (postType.toLowerCase().trim().equals("ride")) {
+            post.ride = getRide(id);
+            return post;
+        }
+        return null;
+    }
 }

@@ -14,7 +14,7 @@ export function NewsPost({ post, type }: { post?: News; type?: string }) {
       <div
         className='flex items-start px-4 justify-between cursor-pointer'
         onClick={() => {
-          window.location.href = '/post/' + post?.id;
+          window.location.href = '/post/news/' + post?.id;
         }}
       >
         <h3 className='font-bold text-center m-0 text-lg text-white'>
