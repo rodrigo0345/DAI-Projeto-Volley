@@ -1,10 +1,10 @@
 package com.example.application.controller.Forum;
 
-import com.example.application.controller.ResponseType.ResponseType;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
+import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.News;
 import com.example.application.model.Ride;
 

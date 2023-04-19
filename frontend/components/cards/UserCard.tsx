@@ -4,6 +4,10 @@ import { GrUserManager } from 'react-icons/gr';
 import styled from 'styled-components';
 import { BsPersonFill } from 'react-icons/bs';
 import { AiOutlineCloseCircle, AiOutlineDelete } from 'react-icons/ai';
+import { deleteUser } from 'Frontend/generated/UserController';
+import { useContext } from 'react';
+import { UserContext } from 'Frontend/contexts/UserContext';
+import { toast } from 'react-toastify';
 
 const Card = styled.div`
   position: relative;
@@ -25,36 +29,52 @@ const Card = styled.div`
   }
 `;
 
-export default function UserCard({ user }: { user: LoginUser | undefined }) {
+export default function UserCard({
+  userSubject,
+}: {
+  userSubject: LoginUser | undefined;
+}) {
+  const { user } = useContext(UserContext);
+
   return (
     <Card>
       <button
         className='delete bg-red-400 font-bold absolute z-10 right-0 p-2 rounded-md overflow-hidden hover:bg-red-500'
         title='Delete'
-        onClick={() => {}}
+        onClick={() => {
+          (async () => {
+            const result = await deleteUser(userSubject?.id, user);
+            if (!result) {
+              toast.error('Error deleting user');
+            }
+            toast.success('User deleted');
+            // reload window
+            window.location.reload();
+          })();
+        }}
       >
         <AiOutlineCloseCircle size={25}></AiOutlineCloseCircle>
       </button>
       <a
-        href={'/profiles/' + user?.id}
+        href={'/profiles/' + userSubject?.id}
         className='overflow-hidden relative w-52 h-60 bg-gray-300 rounded-lg flex flex-col px-4 shadow-lg hover:bg-yellow-500/40 transition-all cursor-pointer underline-none hover:no-underline
         '
       >
         <div className='transition-all flex items-center pt-4 gap-1'>
           <h5 className='transition-all lowercase font-light m-0'>
-            {user?.role}
+            {userSubject?.role}
           </h5>
         </div>
         <h2 className='text-base m-0'>
-          {user?.firstname} {user?.lastname}
+          {user?.firstname} {userSubject?.lastname}
         </h2>
-        {user?.role?.includes('ADMIN') && (
+        {userSubject?.role?.includes('ADMIN') && (
           <MdOutlineAdminPanelSettings
             className='symbol absolute font-light text-gray-400/40 -right-20 -bottom-10'
             size={200}
           ></MdOutlineAdminPanelSettings>
         )}
-        {user?.role?.includes('MANAGER') && (
+        {userSubject?.role?.includes('MANAGER') && (
           <BsPersonFill
             className='symbol absolute font-light text-gray-400/40 -right-20 -bottom-10'
             size={200}
