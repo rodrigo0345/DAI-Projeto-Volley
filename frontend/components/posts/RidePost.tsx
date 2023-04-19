@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { BsBookmark } from 'react-icons/bs';
 
-export function NewsPost({ post, type }: { post?: Ride; type?: string }) {
+export function RidePost({ post, type }: { post?: Ride; type?: string }) {
   const [driver, setDriver] = useState<string | undefined>(undefined);
 
   useEffect(() => {
