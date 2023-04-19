@@ -19,6 +19,7 @@ export function NewsPost({ post, type }: { post?: Ride; type?: string }) {
     <>
       {isBefore(Date.parse(post?.startDate ?? ''), Date.now()) && (
         <motion.div
+          key={post?.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

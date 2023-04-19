@@ -58,7 +58,7 @@ public class PostController {
             Integer p1Value = p1Type.equals("news") ? p1.news.getClicks() : p1.ride.getClicks();
             Integer p2Value = p2Type.equals("news") ? p2.news.getClicks() : p2.ride.getClicks();
 
-            return p1Value.compareTo(p2Value);
+            return p2Value.compareTo(p1Value);
         };
         return mixPosts(newsAux, ridesAux, cmp);
     }

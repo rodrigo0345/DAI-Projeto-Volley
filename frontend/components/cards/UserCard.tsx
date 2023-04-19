@@ -66,7 +66,7 @@ export default function UserCard({
           </h5>
         </div>
         <h2 className='text-base m-0'>
-          {user?.firstname} {userSubject?.lastname}
+          {userSubject?.firstname} {userSubject?.lastname}
         </h2>
         {userSubject?.role?.includes('ADMIN') && (
           <MdOutlineAdminPanelSettings
