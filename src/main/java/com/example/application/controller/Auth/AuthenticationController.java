@@ -7,6 +7,8 @@ import com.example.application.controller.ResponseType.ResponseType;
 import com.example.application.model.User.Roles;
 //import com.example.application.security.CryptWithMD5;
 import com.example.application.security.CryptWithMD5;
+import com.example.application.service.TokenService;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -45,8 +47,10 @@ public class AuthenticationController {
     public ResponseEntity<ResponseType<LoginUser>> signup(
             @RequestBody LoginUser currentUser,
             @RequestBody RegisterRequest request) throws Exception {
+
+        TokenService serviceToken = new TokenService();
         // verificar se currentUser é admin
-        var isValidToken = this.validateToken(currentUser, currentUser.getStringToken()).getBody();
+        var isValidToken = serviceToken.validateToken(currentUser, currentUser.getStringToken()).getBody();
         if (!isValidToken) {
             var response = new ResponseType<LoginUser>();
             response.error("Token inválida");
@@ -171,9 +175,23 @@ public class AuthenticationController {
         return ResponseEntity.accepted().body(response);
     }
 
-    @AnonymousAllowed
+    /*@AnonymousAllowed
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
         return ResponseEntity.ok(service.isTokenValid(token, user.getEmail()));
+    }*/
+
+    public ResponseEntity<ResponseType<LoginUser>> editUser(
+            @RequestBody LoginUser currentuser,
+            @RequestBody LoginUser user) throws Exception {
+        if (currentuser.getRole() != "ADMIN") {
+            var response = new ResponseType<LoginUser>();
+            response.error("Não tem permissão para editar o utilizador");
+            return ResponseEntity.badRequest().body(response);
+        }
+        User aux = users.findById(user.getId()).get();
+        users.save(aux);
+
+        return ResponseEntity.ok().build();
     }
 
 }
