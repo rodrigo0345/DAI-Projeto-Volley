@@ -1,6 +1,6 @@
 package com.example.application.controller.Forum;
 
-import com.example.application.model.News;
+import com.example.application.model.News.News;
 import com.example.application.repository.NewsRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
@@ -31,7 +31,8 @@ public class NewsController {
                             n.getContent(),
                             n.getAuthorID(),
                             n.getCreatedAt(),
-                            n.getClicks()));
+                            n.getClicks(),
+                            n.getLikes()));
         }
         return newsList;
     }
@@ -46,7 +47,8 @@ public class NewsController {
                 newsAux.getContent(),
                 newsAux.getAuthorID(),
                 newsAux.getCreatedAt(),
-                newsAux.getClicks());
+                newsAux.getClicks(),
+                newsAux.getLikes());
     }
 
     /*

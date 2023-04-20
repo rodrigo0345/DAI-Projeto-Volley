@@ -1,4 +1,4 @@
-package com.example.application.model;
+package com.example.application.model.News;
 
 
 //import com.mysql.cj.jdbc.Blob;
@@ -33,4 +33,7 @@ public class News {
     private Long authorID;
     public LocalDateTime createdAt;
     private int clicks;
+    @Builder.Default
+    private int likes = 0;
+    
 }

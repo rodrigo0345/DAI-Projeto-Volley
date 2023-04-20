@@ -2,11 +2,13 @@ package com.example.application.controller.Forum;
 
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
+import com.example.application.repository.UserRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
-import com.example.application.model.News;
 import com.example.application.model.Ride;
+import com.example.application.model.News.News;
+import com.example.application.model.User.User;
 
 import dev.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,6 +32,8 @@ public class PostController {
     private final RideRepository ridesRepository;
 
     private final NewsRepository newsRepository;
+
+    private final UserRepository usersRepository;
 
     private List<PostType> mixPosts(List<News> news, List<Ride> rides, Comparator<? super PostType> cmp) {
         List<PostType> posts = new ArrayList<>();
@@ -166,4 +171,10 @@ public class PostController {
             ridesRepository.save(ride);
         }
     }
+
+    public void reactNews(Long userId) {
+        Optional<User> user = usersRepository.findById(userId);
+
+    }
+
 }
