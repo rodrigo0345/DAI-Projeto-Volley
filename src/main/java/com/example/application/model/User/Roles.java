@@ -4,5 +4,6 @@ public enum Roles {
 
   USER,
   ADMIN,
-  MANAGER
+  MANAGER,
+  SECCTIONIST
 }

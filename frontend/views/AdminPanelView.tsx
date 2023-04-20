@@ -16,11 +16,28 @@ import { toast } from 'react-toastify';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import SearchUsers from 'Frontend/components/search/SearchUsers';
+import styled from 'styled-components';
 
 enum Menu {
   USERS = 'USERS',
   CHAT = 'CHAT',
 }
+
+const CustomScrollbar = styled.div`
+  '&::-webkit-scrollbar': {
+    width: '0.5rem',
+    background: '#fff',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#f1f1f1',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#888',
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    background: '#555',
+  },
+`;
 
 export default function AdminPanelView() {
   const { user, logout } = useContext(UserContext);
@@ -152,7 +169,7 @@ export default function AdminPanelView() {
   }, []);
 
   return (
-    <main className='min-h-screen max-w-screen relative flex'>
+    <main className='min-h-screen max-w-screen relative flex z-10 bg-white '>
       <SidePanel
         key={user?.id}
         user={user}
@@ -210,9 +227,9 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Administradores</h2>
                 </div>
-                <div className='flex flex-row gap-4 max-w-full h-72 overflow-x-auto'>
+                <CustomScrollbar className='flex flex-row gap-4 max-w-full h-72 overflow-x-auto'>
                   {filterUsersBy('ADMIN')}
-                </div>
+                </CustomScrollbar>
               </div>
               <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
                 <div className='flex justify-between items-center'>

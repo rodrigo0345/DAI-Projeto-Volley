@@ -1,6 +1,6 @@
 import { getPost } from 'Frontend/generated/PostController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
-import News from 'Frontend/generated/com/example/application/model/News';
+import News from 'Frontend/generated/com/example/application/model/News/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -19,7 +19,7 @@ export default function PostView() {
   }, []);
 
   return (
-    <div className='h-screen'>
+    <div className='h-screen z-10 bg-white'>
       <article className='pt-20'>
         <h1>{news?.title ?? rides?.destination}</h1>
         <h3>{news ? 'News' : 'Ride'}</h3>

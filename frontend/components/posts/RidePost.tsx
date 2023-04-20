@@ -1,5 +1,5 @@
 import { findById } from 'Frontend/generated/UserController';
-import News from 'Frontend/generated/com/example/application/model/News';
+import News from 'Frontend/generated/com/example/application/model/News/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';
 import { formatDistanceToNow, isBefore } from 'date-fns';
 import { motion } from 'framer-motion';

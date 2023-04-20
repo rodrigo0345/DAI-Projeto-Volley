@@ -18,7 +18,7 @@ import { TfiWrite } from 'react-icons/tfi';
 import { Subscription } from '@hilla/frontend';
 import { PostController } from 'Frontend/generated/endpoints';
 
-import News from 'Frontend/generated/com/example/application/model/News';
+import News from 'Frontend/generated/com/example/application/model/News/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';
 
 import Dropzone, { DropzoneRef } from 'react-dropzone';
@@ -219,7 +219,7 @@ export default function ForumView() {
   }, []);
 
   return (
-    <div className='min-h-screen flex relative'>
+    <div className='min-h-screen flex relative z-10 bg-white'>
       <CreatePost
         openModal={openModal}
         setOpenModal={setOpenModal}

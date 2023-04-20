@@ -60,6 +60,7 @@
     "react-toastify": "^9.1.1",
     "sort-by": "^1.2.0",
     "styled-components": "^5.3.8",
+    "tailwind-scrollbar-hide": "^1.1.7",
     "vite-plugin-compression": "^0.5.1"
   },
   "devDependencies": {
@@ -144,7 +145,8 @@
     "@radix-ui/react-select": "$@radix-ui/react-select",
     "@radix-ui/react-tabs": "$@radix-ui/react-tabs",
     "react-dropzone": "$react-dropzone",
-    "date-fns": "$date-fns"
+    "date-fns": "$date-fns",
+    "tailwind-scrollbar-hide": "$tailwind-scrollbar-hide"
   },
   "vaadin": {
     "dependencies": {
@@ -192,6 +194,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "61f0c2e314281b6c34c7ddd041cffe0700b13a3e9e97d3b8f653c4e8260d88e0"
+    "hash": "d99d2f8b7ead819e803305005867777b05ec526b48991ce392cc5fdac13dc127"
   }
 }

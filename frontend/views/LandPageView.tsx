@@ -4,6 +4,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { BsArrowDownShort } from 'react-icons/bs';
 import { IoMdArrowBack } from 'react-icons/io';
 import styled from 'styled-components';
+import bgShape from 'Frontend/assets/svgs/bgShape.svg';
+
+const Hero = styled.main`
+  background-image: url('${bgShape}');
+  background-size: cover;
+  background-position: center;
+`;
 
 const AnimatedTitleGroup = styled.div`
   #t-01 {
@@ -41,91 +48,86 @@ const AnimatedTitleGroup = styled.div`
 
 export default function LandPageView() {
   return (
-    <div className='flex flex-col gap-36 h-fit'>
+    <div className='flex flex-col gap-36 h-fit z-10 bg-white'>
       <div className='flex flex-col items-center min-h-screen w-full h-fit'>
-        <MainBackground>
-          <main className='w-full relative h-fit py-44'>
-            <div className='sm:max-w-5xl w-full sm:w-36 m-auto pb-32 px-8'>
-              <h1 className=' text-2xl sm:!text-5xl font-semibold  text-zinc-800 text-center sm:!text-start dark:text-white'>
-                Gerir a tua equipa nunca
-                <br /> foi tão <span>fácil</span>
-              </h1>
-              <div className='flex gap-4 items-center flex-col sm:!flex-row'>
+        <Hero className='w-full relative h-fit py-44'>
+          <div className='sm:max-w-5xl w-full sm:w-36 m-auto pb-32 px-8'>
+            <h1 className=' text-2xl sm:!text-5xl font-semibold  text-zinc-800 text-center sm:!text-start dark:text-white'>
+              Gerir a tua equipa nunca
+              <br /> foi tão <span>fácil</span>
+            </h1>
+            <div className='flex gap-4 items-center flex-col sm:!flex-row'>
+              <MainButton href='/login' className='dark:!outline-yellow-500'>
+                Começa já
+              </MainButton>
+              <a
+                href='/login'
+                className='w-fit text-zinc-800 flex items-center gap-1 font-semibold hover:no-underline dark:text-gray-300'
+              >
+                Ver funcionalidades
+                <span className=''>
+                  <BsArrowDownShort />
+                </span>
+              </a>
+            </div>
+          </div>
+          <div className='w-full h-[35rem] relative flex flex-wrap shadow-lg shadow-yellow-600/50 dark:text-white'>
+            <div className='h-full lg:!w-1/2 w-full outline outline-1 outline-zinc-800 flex flex-col items-end justify-center dark:text-white dark:outline-gray-200'>
+              <div className='h-full flex flex-col justify-center items-center gap-8 px-10'>
+                <AnimatedTitleGroup className='flex flex-col gap-0 cursor-default'>
+                  <h2
+                    id='t-01'
+                    className='text-center font-extralight  my-0 sm:text-2xl lg:!text-5xl dark:text-white'
+                  >
+                    Encontre boleias.
+                  </h2>
+                  <h2
+                    id='t-02'
+                    className='text-center font-normal sm:text-2xl lg:!text-5xl my-1 dark:text-white'
+                  >
+                    Encontre estatísticas.
+                  </h2>
+                  <h2
+                    id='t-03'
+                    className='text-center font-semibold sm:text-2xl lg:!text-5xl my-0 dark:text-white'
+                  >
+                    Faça uma gestão dos treinos.
+                  </h2>
+                </AnimatedTitleGroup>
+                <p className='w-full lg:w-1/2 text-center text-lg'>
+                  Com nossa app, encontre facilmente boleias para eventos,
+                  trabalho, viagens e muito mais
+                </p>
                 <MainButton href='/login' className='dark:!outline-yellow-500'>
                   Começa já
                 </MainButton>
-                <a
-                  href='/login'
-                  className='w-fit text-zinc-800 flex items-center gap-1 font-semibold hover:no-underline dark:text-gray-300'
-                >
-                  Ver funcionalidades
-                  <span className=''>
-                    <BsArrowDownShort />
-                  </span>
-                </a>
               </div>
             </div>
-            <div className='w-full h-[35rem] relative flex flex-wrap shadow-lg shadow-yellow-600/50 dark:text-white'>
-              <div className='h-full lg:!w-1/2 w-full outline outline-1 outline-zinc-800 flex flex-col items-end justify-center dark:text-white dark:outline-gray-200'>
-                <div className='h-full flex flex-col justify-center items-center gap-8 px-10'>
-                  <AnimatedTitleGroup className='flex flex-col gap-0 cursor-default'>
-                    <h2
-                      id='t-01'
-                      className='text-center font-extralight  my-0 sm:text-2xl lg:!text-5xl dark:text-white'
-                    >
-                      Encontre boleias.
-                    </h2>
-                    <h2
-                      id='t-02'
-                      className='text-center font-normal sm:text-2xl lg:!text-5xl my-1 dark:text-white'
-                    >
-                      Encontre estatísticas.
-                    </h2>
-                    <h2
-                      id='t-03'
-                      className='text-center font-semibold sm:text-2xl lg:!text-5xl my-0 dark:text-white'
-                    >
-                      Faça uma gestão dos treinos.
-                    </h2>
-                  </AnimatedTitleGroup>
-                  <p className='w-full lg:w-1/2 text-center text-lg'>
-                    Com nossa app, encontre facilmente boleias para eventos,
-                    trabalho, viagens e muito mais
-                  </p>
-                  <MainButton
-                    href='/login'
-                    className='dark:!outline-yellow-500'
-                  >
-                    Começa já
-                  </MainButton>
-                </div>
+            <div className='lg:!flex hidden relative h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl items-center dark:outline-gray-100'>
+              <div className='w-fit h-[125%] rounded-lg shadow-lg shadow-gray-800/10 p-3 backdrop-blur-lg outline outline-2 outline-gray-800/40 dark:outline-gray-100/20'>
+                <img
+                  className='rounded-lg object-cover h-full'
+                  src='../assets/images/Screenshot_20230111_094919.png'
+                  alt=''
+                />
               </div>
-              <div className='lg:!flex hidden relative h-full w-1/2 outline outline-1 outline-zinc-800 shadow-xl items-center dark:outline-gray-100'>
-                <div className='w-fit h-[125%] rounded-lg shadow-lg shadow-gray-800/10 p-3 backdrop-blur-lg outline outline-2 outline-gray-800/40 dark:outline-gray-100/20'>
-                  <img
-                    className='rounded-lg object-cover h-full'
-                    src='../assets/images/Screenshot_20230111_094919.png'
-                    alt=''
-                  />
-                </div>
-                <div className='w-1/2 flex items-center justify-start px-4 '>
-                  <IoMdArrowBack size={50} className='animate-bounce' />
-                  <div>
-                    <h3 className='m-0 italic font-bold text-4xl dark:text-white'>
-                      Simples
-                    </h3>
-                    <h3 className='m-0 italic font-bold text-4xl dark:text-white'>
-                      e fácil
-                    </h3>
-                    <h3 className='m-0 italic font-bold text-4xl dark:text-white'>
-                      de usar!
-                    </h3>
-                  </div>
+              <div className='w-1/2 flex items-center justify-start px-4 '>
+                <IoMdArrowBack size={50} className='animate-bounce' />
+                <div>
+                  <h3 className='m-0 italic font-bold text-4xl dark:text-white'>
+                    Simples
+                  </h3>
+                  <h3 className='m-0 italic font-bold text-4xl dark:text-white'>
+                    e fácil
+                  </h3>
+                  <h3 className='m-0 italic font-bold text-4xl dark:text-white'>
+                    de usar!
+                  </h3>
                 </div>
               </div>
             </div>
-          </main>
-        </MainBackground>
+          </div>
+        </Hero>
       </div>
     </div>
   );

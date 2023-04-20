@@ -1,9 +1,14 @@
-import News from 'Frontend/generated/com/example/application/model/News';
+import News from 'Frontend/generated/com/example/application/model/News/News';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { AiOutlineLike, AiTwotoneLike } from 'react-icons/ai';
 import { BsBookmark } from 'react-icons/bs';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 
 export function NewsPost({ post, type }: { post?: News; type?: string }) {
+  const [likes, setLikes] = useState<number>(0);
+  const [userLiked, setUserLiked] = useState<boolean>(false);
   return (
     <motion.div
       key={post?.id}
@@ -41,15 +46,24 @@ export function NewsPost({ post, type }: { post?: News; type?: string }) {
         alt='imagem do post'
       />
       <div className='h-10 w-full bg-gradient-to-t from-zinc-800 absolute bottom-10'></div>
-      <div className='px-4 h-10 w-full bg-zinc-800 absolute bottom-0 flex items-center'>
-        {!type && (
-          <BsBookmark
+      <div
+        className='px-4 h-10 w-full bg-zinc-800 absolute bottom-0 flex items-center gap-2 cursor-pointer'
+        onClick={() => {
+          setUserLiked(!userLiked);
+          setLikes(userLiked ? likes - 1 : likes + 1);
+        }}
+      >
+        {likes}
+        {userLiked ? (
+          <MdFavorite color='yellow' size={20}></MdFavorite>
+        ) : (
+          <MdFavoriteBorder
             aria-label='save'
             onClick={() => {
               //savePost(1);
             }}
             size={20}
-          ></BsBookmark>
+          ></MdFavoriteBorder>
         )}
       </div>
     </motion.div>

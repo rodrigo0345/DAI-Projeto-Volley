@@ -104,6 +104,21 @@ public class PostController {
         return mixPosts(newsAux, ridesAux, cmp);
     }
 
+    // getPost
+    public PostType getPost(String postType, Long id) throws Exception {
+        PostType post = new PostType();
+        if (postType.toLowerCase().trim().equals("news")) {
+            News news = newsRepository.findById(id);
+            post.news = news;
+        } else if (postType.toLowerCase().trim().equals("ride")) {
+            Ride ride = ridesRepository.findById(id);
+            post.ride = ride;
+        } else {
+            throw new Exception("Not Found");
+        }
+        return post;
+    }
+
     public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) throws Exception {
         // PRIORITY
         if (postType.toLowerCase().trim().equals("news")) {
@@ -159,13 +174,13 @@ public class PostController {
         String type = post.getType();
         News news;
         Ride ride;
-        if (post == null) return;
+        if (post == null)
+            return;
         if (type == "news") {
             news = post.news;
             news.setClicks(news.getClicks() + 1);
             newsRepository.save(news);
-        }
-        else {
+        } else {
             ride = post.ride;
             ride.setClicks(ride.getClicks() + 1);
             ridesRepository.save(ride);

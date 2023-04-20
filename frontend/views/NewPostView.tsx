@@ -16,7 +16,7 @@ export default function NewPostView() {
   }
 
   return (
-    <div className='min-h-screen flex relative items-center justify-center'>
+    <div className='min-h-screen flex relative items-center justify-center z-10 bg-white'>
       <Tabs.Root
         className='flex flex-col w-[300px] shadow-[0_2px_10px] shadow-blackA4'
         defaultValue='tab1'

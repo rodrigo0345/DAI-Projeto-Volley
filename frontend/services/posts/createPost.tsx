@@ -31,6 +31,7 @@ export async function criarNoticia(
         content: descricao,
         createdAt: '',
         id: 0,
+        likes: 0,
       },
     });
   } catch (e: any) {
