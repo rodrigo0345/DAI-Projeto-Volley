@@ -1,4 +1,4 @@
-package com.example.application.controller.ResponseType;
+package com.example.application.controller.Wrapper;
 
 
 // Just a wrapper to make the response more readable

@@ -6,6 +6,7 @@ import { BsBookmark } from 'react-icons/bs';
 export function NewsPost({ post, type }: { post?: News; type?: string }) {
   return (
     <motion.div
+      key={post?.id}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

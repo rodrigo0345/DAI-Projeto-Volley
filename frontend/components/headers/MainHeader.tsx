@@ -22,13 +22,7 @@ export default function mainHeader() {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   function switchTheme(e: any) {
-    if (!enabledDarkMode) {
-      theme?.enableDarkMode();
-    } else {
-      theme?.enableLightMode();
-    }
-
-    setEnabledDarkMode((prev) => !prev);
+    // empty bc of changes
   }
 
   function toggleModal(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -36,10 +30,10 @@ export default function mainHeader() {
   }
 
   return (
-    <div className='header z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6 backdrop-blur-sm'>
+    <div className='header z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6'>
       <div className='flex items-center bg-transparent w-full px-4 gap-4'>
         <div className='h-10 flex'>
-          <a href='/'>
+          <a href='/dashboard'>
             <img src={logo} alt='' className='h-11 w-11' />
           </a>
         </div>

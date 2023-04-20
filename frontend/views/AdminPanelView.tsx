@@ -54,7 +54,7 @@ export default function AdminPanelView() {
       ];
     }
     return result.map((mappedUser) => {
-      return <UserCard user={mappedUser} key={mappedUser?.id} />;
+      return <UserCard userSubject={mappedUser} key={mappedUser?.id} />;
     });
   }
 
@@ -210,7 +210,7 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Administradores</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
+                <div className='flex flex-row gap-4 max-w-full h-72 overflow-x-auto'>
                   {filterUsersBy('ADMIN')}
                 </div>
               </div>
@@ -218,7 +218,7 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Treinadores</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
                   {filterUsersBy('MANAGER')}
                 </div>
               </div>
@@ -226,16 +226,16 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Atletas</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
                   {filterUsersBy('USERS')}
                 </div>
               </div>
               <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
                 <div className='flex justify-between items-center'>
-                  <h2 className='text-1xl font-bold'>Rece</h2>
+                  <h2 className='text-1xl font-bold'>Seccionista</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
-                  {filterUsersBy('')}
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
+                  {filterUsersBy('SECCIONISTA')}
                 </div>
               </div>
             </div>
@@ -336,6 +336,7 @@ export default function AdminPanelView() {
                       <option>Treinador</option>
                       <option>Atleta</option>
                       <option>Encarregado</option>
+                      <option>Seccionista</option>
                     </select>
                     {isEncarregadoSelected && (
                       <select

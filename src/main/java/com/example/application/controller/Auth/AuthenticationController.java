@@ -3,7 +3,7 @@ package com.example.application.controller.Auth;
 import com.example.application.controller.Auth.Wrappers.AuthenticationRequest;
 import com.example.application.controller.Auth.Wrappers.AuthenticationResponse;
 import com.example.application.controller.Auth.Wrappers.RegisterRequest;
-import com.example.application.controller.ResponseType.ResponseType;
+import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.User.Roles;
 //import com.example.application.security.CryptWithMD5;
 import com.example.application.security.CryptWithMD5;
