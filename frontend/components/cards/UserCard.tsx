@@ -12,6 +12,8 @@ import { toast } from 'react-toastify';
 const Card = styled.div`
   position: relative;
   overflow: hidden;
+  width: fit-content;
+  min-width: fit-content;
   .symbol {
     transition: transform 0.5s ease;
   }

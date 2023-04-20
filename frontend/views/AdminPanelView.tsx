@@ -210,7 +210,7 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Administradores</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
+                <div className='flex flex-row gap-4 max-w-full h-72 overflow-x-auto'>
                   {filterUsersBy('ADMIN')}
                 </div>
               </div>
@@ -218,7 +218,7 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Treinadores</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
                   {filterUsersBy('MANAGER')}
                 </div>
               </div>
@@ -226,7 +226,7 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Atletas</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
                   {filterUsersBy('USERS')}
                 </div>
               </div>
@@ -234,7 +234,7 @@ export default function AdminPanelView() {
                 <div className='flex justify-between items-center'>
                   <h2 className='text-1xl font-bold'>Seccionista</h2>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-scroll'>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
                   {filterUsersBy('SECCIONISTA')}
                 </div>
               </div>
