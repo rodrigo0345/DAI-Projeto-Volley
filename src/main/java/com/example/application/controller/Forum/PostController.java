@@ -1,10 +1,10 @@
 package com.example.application.controller.Forum;
 
-import com.example.application.controller.ResponseType.ResponseType;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
+import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.News;
 import com.example.application.model.Ride;
 
@@ -58,7 +58,7 @@ public class PostController {
             Integer p1Value = p1Type.equals("news") ? p1.news.getClicks() : p1.ride.getClicks();
             Integer p2Value = p2Type.equals("news") ? p2.news.getClicks() : p2.ride.getClicks();
 
-            return p1Value.compareTo(p2Value);
+            return p2Value.compareTo(p1Value);
         };
         return mixPosts(newsAux, ridesAux, cmp);
     }
@@ -161,11 +161,9 @@ public class PostController {
             newsRepository.save(news);
         }
         else {
-
             ride = post.ride;
             ride.setClicks(ride.getClicks() + 1);
             ridesRepository.save(ride);
         }
     }
-
 }

@@ -198,7 +198,7 @@ export default function DashboardView() {
                   Treinos
                 </h2>
                 <p className='text-gray-50'>
-                  Comunicar entre todos nunca foi <br /> tão fácil
+                  Confere os treinos marcados <br /> da tua equipa
                 </p>
                 <GiWeightLiftingUp
                   size={180}

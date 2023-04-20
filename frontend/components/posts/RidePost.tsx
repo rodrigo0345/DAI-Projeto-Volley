@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { BsBookmark } from 'react-icons/bs';
 
-export function NewsPost({ post, type }: { post?: Ride; type?: string }) {
+export function RidePost({ post, type }: { post?: Ride; type?: string }) {
   const [driver, setDriver] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -19,12 +19,18 @@ export function NewsPost({ post, type }: { post?: Ride; type?: string }) {
     <>
       {isBefore(Date.parse(post?.startDate ?? ''), Date.now()) && (
         <motion.div
+          key={post?.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className='relative bg-zinc-800 w-full min-h-[15em] rounded-lg shadow-lg overflow-hidden outline outline-1 outline-gray-300 py-4 cursor-pointer max-h-[20em] shadow-gray-400 max-w-[60em] text-white'
+          className='relative bg-zinc-800 w-full min-h-[15em] rounded-lg shadow-lg overflow-hidden outline outline-1 outline-gray-300 py-4 max-h-[20em] shadow-gray-400 max-w-[60em] text-white'
         >
-          <div className='flex items-start px-4 justify-between'>
+          <div
+            className='flex items-start px-4 justify-between cursor-pointer'
+            onClick={() => {
+              window.location.href = '/post/ride' + post?.id;
+            }}
+          >
             <h3 className='font-bold text-center m-0 text-lg text-white'>
               {post?.destination}{' '}
               <span className='text-sm font-normal italic'>

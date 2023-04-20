@@ -20,6 +20,6 @@ public interface RideRepository extends CrudRepository<Ride, Integer> {
 
     // Optional<Ride> findByDriver(User driver);
 
-    // Ride findById(Long id);
+    public Ride findById(Long id);
 
 }
