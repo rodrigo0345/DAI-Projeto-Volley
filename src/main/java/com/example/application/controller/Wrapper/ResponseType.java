@@ -1,9 +1,8 @@
-package com.example.application.controller.ResponseType;
+package com.example.application.controller.Wrapper;
 
-import org.springframework.http.ResponseEntity;
 
-import java.util.ResourceBundle;
-
+// Just a wrapper to make the response more readable
+// on the front-end
 public class ResponseType<T> {
 
     public String error = null;

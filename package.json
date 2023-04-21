@@ -42,7 +42,9 @@
     "@vaadin/vaadin-material-styles": "23.3.7",
     "@vaadin/vaadin-themable-mixin": "23.3.7",
     "construct-style-sheets-polyfill": "3.1.0",
+    "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
+    "dhtmlx-scheduler": "^6.0.3",
     "flowbite": "^1.6.4",
     "framer-motion": "^10.0.1",
     "kute.js": "^2.2.4",
@@ -53,11 +55,14 @@
     "radix-ui": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.8.2",
     "react-toastify": "^9.1.1",
     "sort-by": "^1.2.0",
-    "styled-components": "^5.3.8"
+    "styled-components": "^5.3.8",
+    "tailwind-scrollbar-hide": "^1.1.7",
+    "vite-plugin-compression": "^0.5.1"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "3.1.0",
@@ -126,6 +131,7 @@
     "match-sorter": "$match-sorter",
     "sort-by": "$sort-by",
     "react-toastify": "$react-toastify",
+    "vite-plugin-compression": "$vite-plugin-compression",
     "@headlessui/react": "$@headlessui/react",
     "@mantine/dates": "$@mantine/dates",
     "dayjs": "$dayjs",
@@ -138,7 +144,11 @@
     "@radix-ui/react-hover-card": "$@radix-ui/react-hover-card",
     "@radix-ui/react-icons": "$@radix-ui/react-icons",
     "@radix-ui/react-select": "$@radix-ui/react-select",
-    "@radix-ui/react-tabs": "$@radix-ui/react-tabs"
+    "@radix-ui/react-tabs": "$@radix-ui/react-tabs",
+    "react-dropzone": "$react-dropzone",
+    "date-fns": "$date-fns",
+    "tailwind-scrollbar-hide": "$tailwind-scrollbar-hide",
+    "dhtmlx-scheduler": "$dhtmlx-scheduler"
   },
   "vaadin": {
     "dependencies": {
@@ -186,6 +196,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "9810b54f5362362cf492538272db0dd2468da42af9245a13b9c92ac13087b9f7"
+    "hash": "d4ed412814dc5b36670104a2f198e40aca83f466947a28d4a7d6c171b1f50903"
   }
 }

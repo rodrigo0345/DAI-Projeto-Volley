@@ -1,7 +1,6 @@
-package com.example.application.controller.Auth;
+package com.example.application.controller.Auth.Tests;
 
 import java.util.Date;
-import java.util.Optional;
 
 
 import com.example.application.model.User.User;
@@ -12,6 +11,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
+import com.example.application.controller.Auth.AuthenticationController;
+import com.example.application.controller.Auth.Wrappers.AuthenticationRequest;
+import com.example.application.controller.Auth.Wrappers.AuthenticationResponse;
+import com.example.application.controller.Auth.Wrappers.RegisterRequest;
 import com.example.application.model.User.Roles;
 
 import org.junit.Before;
@@ -23,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 public class AuthControllerTest {
     @Mock

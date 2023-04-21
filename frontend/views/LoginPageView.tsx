@@ -3,8 +3,8 @@ import {
   authenticate,
   register,
 } from 'Frontend/generated/AuthenticationController';
-import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
-import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
+import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/AuthenticationRequest';
+import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/RegisterRequest';
 import { findAll } from 'Frontend/generated/UserController';
 import background from 'Frontend/assets/images/vitoria_ground.png';
 import { login as loginServer } from 'Frontend/generated/AuthenticationController';
@@ -90,86 +90,84 @@ export default function LoginPageView(): JSX.Element {
   }, [emailError, passwordError]);
 
   return (
-    <div className='relative w-full flex'>
-      <MainBackground>
-        <div className='relative w-full flex'>
-          <div className='md:!w-1/2 w-full'>
-            <form
-              action='#'
-              onSubmit={(e) => {
-                setLoading(true);
-                handleSubmit(e);
-              }}
-            >
-              <div className='flex flex-col items-center justify-center h-screen'>
-                <div className='flex flex-col items-start justify-center gap-8'>
-                  <div className='flex flex-col items-start justify-start gap-2'>
-                    <h1 className='text-4xl font-bold m-0 dark:text-white'>
-                      Login
-                    </h1>
+    <div className='relative w-full flex z-10 bg-white'>
+      <div className='relative w-full flex'>
+        <div className='md:!w-1/2 w-full'>
+          <form
+            action='#'
+            onSubmit={(e) => {
+              setLoading(true);
+              handleSubmit(e);
+            }}
+          >
+            <div className='flex flex-col items-center justify-center h-screen'>
+              <div className='flex flex-col items-start justify-center gap-8'>
+                <div className='flex flex-col items-start justify-start gap-2'>
+                  <h1 className='text-4xl font-bold m-0 dark:text-white'>
+                    Login
+                  </h1>
+                </div>
+                <div className='flex flex-col items-center justify-center gap-4'>
+                  <div className='flex flex-col items-start justify-center gap-4'>
+                    <label htmlFor='email' className='dark:text-white'>
+                      Email{' '}
+                      {emailError && (
+                        <span className='text-red-500 text-xs before:content-["*"]'>
+                          {emailError}
+                        </span>
+                      )}
+                    </label>
+                    <input
+                      max={60}
+                      ref={email}
+                      type='text'
+                      name='Email'
+                      id='email'
+                      placeholder='Email'
+                      className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-transparent focus:border-yellow-400'
+                    />
                   </div>
-                  <div className='flex flex-col items-center justify-center gap-4'>
-                    <div className='flex flex-col items-start justify-center gap-4'>
-                      <label htmlFor='email' className='dark:text-white'>
-                        Email{' '}
-                        {emailError && (
-                          <span className='text-red-500 text-xs before:content-["*"]'>
-                            {emailError}
-                          </span>
-                        )}
-                      </label>
-                      <input
-                        max={60}
-                        ref={email}
-                        type='text'
-                        name='Email'
-                        id='email'
-                        placeholder='Email'
-                        className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500'
-                      />
-                    </div>
-                    <div className='flex flex-col items-start justify-center gap-4'>
-                      <label htmlFor='password' className='dark:text-white'>
-                        Password{' '}
-                        {passwordError && (
-                          <span className='text-red-500 text-xs before:content-["*"]'>
-                            {passwordError}
-                          </span>
-                        )}
-                      </label>
-                      <input
-                        max={100}
-                        ref={password}
-                        type='password'
-                        name='password'
-                        id='password'
-                        placeholder='Password'
-                        className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500'
-                      />
-                    </div>
-                  </div>
-                  <div className='flex flex-col items-center justify-center gap-4'>
-                    <button
-                      type='submit'
-                      className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-500 hover:bg-gray-300 disabled:bg-gray-200/30 dark:text-white'
-                      disabled={loading}
-                    >
-                      Login
-                    </button>
+                  <div className='flex flex-col items-start justify-center gap-4'>
+                    <label htmlFor='password' className='dark:text-white'>
+                      Password{' '}
+                      {passwordError && (
+                        <span className='text-red-500 text-xs before:content-["*"]'>
+                          {passwordError}
+                        </span>
+                      )}
+                    </label>
+                    <input
+                      max={100}
+                      ref={password}
+                      type='password'
+                      name='password'
+                      id='password'
+                      placeholder='Password'
+                      className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:ring-transparent focus:border-yellow-400'
+                    />
                   </div>
                 </div>
+                <div className='flex flex-col items-center justify-center gap-4'>
+                  <button
+                    type='submit'
+                    className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-400 hover:bg-gray-300 disabled:bg-gray-200/30 dark:text-white'
+                    disabled={loading}
+                  >
+                    Login
+                  </button>
+                </div>
               </div>
-            </form>
-          </div>
-          <div className='hidden md:!block w-1/2 bg-black min-h-screen'>
-            <img
-              className='h-full -z-10 w-screen object-cover'
-              src={background}
-              alt=''
-            />
-          </div>
+            </div>
+          </form>
         </div>
-      </MainBackground>
+        <div className='hidden md:!block w-1/2 bg-black min-h-screen'>
+          <img
+            className='h-full -z-10 w-screen object-cover'
+            src={background}
+            alt=''
+          />
+        </div>
+      </div>
     </div>
   );
 }

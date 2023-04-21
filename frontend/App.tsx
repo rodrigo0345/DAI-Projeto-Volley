@@ -51,7 +51,7 @@ const router = createBrowserRouter([
           },
           { path: '/forum', element: <ForumView /> },
           { path: '/new-post', element: <NewPostView /> },
-          { path: '/post/:id', element: <PostView /> },
+          { path: '/post/:type/:id', element: <PostView /> },
         ],
       },
       {

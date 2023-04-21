@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useContext, useRef } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
+import { UserContext } from 'Frontend/contexts/UserContext';
 
 export default function NewPostView() {
+  const { user } = useContext(UserContext);
+  const name = useRef<HTMLInputElement>(null);
+  const username = useRef<HTMLInputElement>(null);
+
+  async function handleSubmit(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    e.preventDefault();
+    console.log(name.current?.value);
+    console.log(username.current?.value);
+  }
+
   return (
-    <div className='min-h-screen flex relative items-center justify-center'>
+    <div className='min-h-screen flex relative items-center justify-center z-10 bg-white'>
       <Tabs.Root
         className='flex flex-col w-[300px] shadow-[0_2px_10px] shadow-blackA4'
         defaultValue='tab1'
@@ -43,6 +56,7 @@ export default function NewPostView() {
               className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-violet11 shadow-[0_0_0_1px] shadow-violet7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-violet8 outline-none'
               id='name'
               defaultValue='Pedro Duarte'
+              ref={name}
             />
           </fieldset>
           <fieldset className='mb-[15px] w-full flex flex-col justify-start'>
@@ -56,10 +70,14 @@ export default function NewPostView() {
               className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-violet11 shadow-[0_0_0_1px] shadow-violet7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-violet8 outline-none'
               id='username'
               defaultValue='@peduarte'
+              ref={username}
             />
           </fieldset>
           <div className='flex justify-end mt-5'>
-            <button className='inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none cursor-default'>
+            <button
+              className='inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none cursor-default'
+              onClick={handleSubmit}
+            >
               Save changes
             </button>
           </div>

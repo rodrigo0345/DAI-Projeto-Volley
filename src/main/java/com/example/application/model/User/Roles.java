@@ -2,7 +2,8 @@ package com.example.application.model.User;
 
 public enum Roles {
 
-    USER,
-    ADMIN,
-    MANAGER
+  USER,
+  ADMIN,
+  MANAGER,
+  SECCTIONIST
 }

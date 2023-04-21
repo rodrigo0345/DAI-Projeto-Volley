@@ -8,9 +8,9 @@ import {
   useState,
 } from 'react';
 import { redirect } from 'react-router-dom';
-import { validateToken } from 'Frontend/generated/AuthenticationController';
-import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/AuthenticationRequest';
+import AuthenticationRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers//AuthenticationRequest';
 import { toast } from 'react-toastify';
+import { validateToken } from 'Frontend/generated/AuthenticationController';
 
 export const UserContext = createContext<{
   user: LoginUser | undefined;
@@ -66,9 +66,9 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
   }
 
   function logout() {
-    window.location.href = '/login';
     setUser(undefined);
     saveUserToStorage(null);
+    window.location.href = '/login';
   }
 
   function login(user: LoginUser) {

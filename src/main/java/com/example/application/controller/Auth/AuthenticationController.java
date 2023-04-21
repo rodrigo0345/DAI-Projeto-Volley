@@ -1,9 +1,14 @@
 package com.example.application.controller.Auth;
 
-import com.example.application.controller.ResponseType.ResponseType;
+import com.example.application.controller.Auth.Wrappers.AuthenticationRequest;
+import com.example.application.controller.Auth.Wrappers.AuthenticationResponse;
+import com.example.application.controller.Auth.Wrappers.RegisterRequest;
+import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.User.Roles;
 //import com.example.application.security.CryptWithMD5;
 import com.example.application.security.CryptWithMD5;
+import com.example.application.service.TokenService;
+import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -42,8 +47,9 @@ public class AuthenticationController {
     public ResponseEntity<ResponseType<LoginUser>> signup(
             @RequestBody LoginUser currentUser,
             @RequestBody RegisterRequest request) throws Exception {
+
         // verificar se currentUser é admin
-        var isValidToken = this.validateToken(currentUser, currentUser.getStringToken()).getBody();
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
             var response = new ResponseType<LoginUser>();
             response.error("Token inválida");
@@ -95,9 +101,8 @@ public class AuthenticationController {
         // }
 
         // encriptar palavra pass
-        CryptWithMD5 cript = new CryptWithMD5();
-        user.setPassword(cript.cryptWithMD5(request.getPassword()));
-        //registar na base de dados
+        user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
+        // registar na base de dados
 
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
@@ -110,11 +115,11 @@ public class AuthenticationController {
         }
 
         // falta encriptar
-        //user.setPassword(request.getPassword());
+        // user.setPassword(request.getPassword());
         users.save(user);
 
         // criar token e returnar o utilizador check
-        return this.login(user.getEmail(), user.getPassword());
+        return this.login(user.getEmail(), request.getPassword());
     }
 
     public ResponseEntity<ResponseType<LoginUser>> login(String email, String password) throws Exception {
@@ -131,10 +136,8 @@ public class AuthenticationController {
             response.error("Utilizador não existe");
             return ResponseEntity.badRequest().body(response);
         }
-        if(!password.equals("rrr")) {
-            CryptWithMD5 crypt = new CryptWithMD5();
-            password = crypt.cryptWithMD5(password);
-        }
+
+        password = CryptWithMD5.cryptWithMD5(password);
 
         if (!password.equals(user.getPassword())) {
             var response = new ResponseType<LoginUser>();
@@ -173,7 +176,37 @@ public class AuthenticationController {
 
     @AnonymousAllowed
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
-        return ResponseEntity.ok(service.isTokenValid(token, user.getEmail()));
+        return ResponseEntity.ok(TokenService.validateToken(user, token, service).getBody());
+    }
+
+    public ResponseEntity<ResponseType<LoginUser>> editUser(
+            @RequestBody LoginUser currentUser,
+            @RequestBody LoginUser user) throws Exception {
+        TokenService serviceToken = new TokenService();
+        var isValidToken = serviceToken.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+        if (!isValidToken) {
+            var response = new ResponseType<LoginUser>();
+            response.error("Token inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (user == null) {
+            var response = new ResponseType<LoginUser>();
+            response.error("Utilizador não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (!currentUser.getRole().toString().equals("ADMIN")) {
+            var response = new ResponseType<LoginUser>();
+            response.error("Você não tem permissão para editar o utilizador");
+            return ResponseEntity.badRequest().body(response);
+        }
+        User aux = users.findById(user.getId()).get();
+        aux.setFirstname(user.getFirstname());
+        aux.setLastname(user.getLastname());
+        aux.setEmail(user.getEmail());
+
+        users.save(aux);
+
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -1,9 +1,9 @@
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { signup } from 'Frontend/generated/AuthenticationController';
-import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/RegisterRequest';
+import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/RegisterRequest';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { IoIosLogOut, IoMdSettings } from 'react-icons/io';
-import { RiUserSettingsFill } from 'react-icons/ri';
+import { RiAddFill, RiUserSettingsFill } from 'react-icons/ri';
 import { FaSearch } from 'react-icons/fa';
 import UserCard from 'Frontend/components/cards/UserCard';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
@@ -15,11 +15,29 @@ import { RadioGroup } from '@headlessui/react';
 import { toast } from 'react-toastify';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';
+import SearchUsers from 'Frontend/components/search/SearchUsers';
+import styled from 'styled-components';
 
 enum Menu {
   USERS = 'USERS',
   CHAT = 'CHAT',
 }
+
+const CustomScrollbar = styled.div`
+  '&::-webkit-scrollbar': {
+    width: '0.5rem',
+    background: '#fff',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#f1f1f1',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#888',
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    background: '#555',
+  },
+`;
 
 export default function AdminPanelView() {
   const { user, logout } = useContext(UserContext);
@@ -39,6 +57,23 @@ export default function AdminPanelView() {
   const role = useRef<HTMLSelectElement>(null);
   const educandos = useRef<HTMLSelectElement>(null);
   const form = useRef<HTMLFormElement>(null);
+
+  function filterUsersBy(role: string): JSX.Element[] {
+    const result = [...users].filter((mappedUser) => {
+      return mappedUser?.role === role;
+    });
+
+    if (result.length === 0) {
+      return [
+        <p className='text-center text-gray-500'>
+          Nenhum utilizador encontrado
+        </p>,
+      ];
+    }
+    return result.map((mappedUser) => {
+      return <UserCard userSubject={mappedUser} key={mappedUser?.id} />;
+    });
+  }
 
   async function onSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     setIsLoading(true);
@@ -93,7 +128,7 @@ export default function AdminPanelView() {
       resultSignup = await signup(user, register);
       console.log({ resultSignup });
     } catch (error) {
-      toast.error('Erro interno do servidor');
+      toast.error('Erro interno do servidor, por favor tente mais tarde.');
       console.log(error);
       setIsLoading(false);
       return;
@@ -105,8 +140,17 @@ export default function AdminPanelView() {
       return;
     }
 
+    if (resultSignup.body.error !== undefined) {
+      toast.error(resultSignup.body.error);
+      setIsLoading(false);
+      return;
+    }
+
     if (resultSignup) toast.success('Utilizador criado com sucesso');
-    setUsers((prev) => prev.add(resultSignup?.body as LoginUser));
+    setUsers((prev) => {
+      // provavelmente extramamente ineficiente
+      return new Set([...prev, resultSignup?.body.success as LoginUser]);
+    });
     form.current?.reset();
     setAddUser(false);
     setIsLoading(false);
@@ -125,7 +169,7 @@ export default function AdminPanelView() {
   }, []);
 
   return (
-    <main className='min-h-screen w-full relative flex'>
+    <main className='min-h-screen max-w-screen relative flex z-10 bg-white '>
       <SidePanel
         key={user?.id}
         user={user}
@@ -163,72 +207,52 @@ export default function AdminPanelView() {
           },
         ]}
       ></SidePanel>
-      <div id='content' className='flex flex-1 pr-28 relative'>
+      <div id='content' className='flex flex-1 pr-28 '>
         {menu === Menu.USERS && (
-          <div className='flex-1 relative'>
-            {' '}
-            <header className='sticky pt-40 flex items-start justify-between'>
-              <div className='flex flex-col justify-start'>
-                <h1 className='text-3xl font-bold mb-4 mt-0'>Utilizadores</h1>
-                <h3 className='m-0 text-gray-400 font-normal'>
-                  Informação dos utilizadores
-                </h3>
-              </div>
-              <div className='flex  justify-center gap-4 h-full'>
-                <button className=' p-2 rounded-sm outline-gray-300/70 outline outline-1 w-10 h-10 flex items-center justify-center hover:bg-gray-100'>
-                  <FaSearch />
-                </button>
+          <div className='flex-1  m-auto relative !max-w-[45em] lg:max-w-[50em] overflow-x-hidden'>
+            <div className='flex flex-col gap-4 relative w-full'>
+              <header className='flex justify-between items-center pt-28'>
+                <h1 className='text-4xl font-bold'>Utilizadores</h1>
                 <button
-                  className=' p-2 rounded-md outline-gray-300/70 outline outline-1 h-10 flex items-center justify-center hover:bg-yellow-600 px-4 bg-yellow-500'
+                  className='flex items-center gap-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-100 px-4 py-2 rounded-md shadow-md hover:shadow-lg transition duration-200'
                   onClick={() => {
                     setAddUser(true);
                   }}
                 >
-                  <h4 className='m-0 text-white'>Adicionar</h4>
+                  <RiAddFill />
+                  <span>Adicionar</span>
                 </button>
+              </header>
+              <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
+                <div className='flex justify-between items-center'>
+                  <h2 className='text-1xl font-bold'>Administradores</h2>
+                </div>
+                <CustomScrollbar className='flex flex-row gap-4 max-w-full h-72 overflow-x-auto'>
+                  {filterUsersBy('ADMIN')}
+                </CustomScrollbar>
               </div>
-            </header>
-            <div className='flex-1 pt-10 gap-10 flex-wrap flex flex-col pb-8 relative w-full'>
-              <div>
-                <h3>Administradores</h3>
-                <div className='flex gap-4 max-w-98'>
-                  {[...users]
-                    .filter((mappedUser) => {
-                      return mappedUser?.role === 'ADMIN';
-                    })
-                    .map((mappedUser) => {
-                      return (
-                        <UserCard user={mappedUser} key={mappedUser?.id} />
-                      );
-                    })}
+              <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
+                <div className='flex justify-between items-center'>
+                  <h2 className='text-1xl font-bold'>Treinadores</h2>
+                </div>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
+                  {filterUsersBy('MANAGER')}
                 </div>
               </div>
-              <div>
-                <h3>Treinadores</h3>
-                <div className='flex gap-4'>
-                  {[...users]
-                    .filter((mappedUser) => {
-                      return mappedUser?.role === 'MANAGER';
-                    })
-                    .map((mappedUser) => {
-                      return (
-                        <UserCard user={mappedUser} key={mappedUser?.id} />
-                      );
-                    })}
+              <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
+                <div className='flex justify-between items-center'>
+                  <h2 className='text-1xl font-bold'>Atletas</h2>
+                </div>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
+                  {filterUsersBy('USERS')}
                 </div>
               </div>
-              <div>
-                <h3>Atletas</h3>
-                <div className='flex gap-4'>
-                  {[...users]
-                    .filter((mappedUser) => {
-                      return mappedUser?.role === 'USER';
-                    })
-                    .map((mappedUser) => {
-                      return (
-                        <UserCard user={mappedUser} key={mappedUser?.id} />
-                      );
-                    })}
+              <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
+                <div className='flex justify-between items-center'>
+                  <h2 className='text-1xl font-bold'>Seccionista</h2>
+                </div>
+                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
+                  {filterUsersBy('SECCIONISTA')}
                 </div>
               </div>
             </div>
@@ -253,9 +277,6 @@ export default function AdminPanelView() {
             ></div>
             <motion.form
               onSubmit={onSubmit}
-              onClick={(e) => {
-                e.stopPropagation;
-              }}
               className='!fixed flex flex-col bg-zinc-100 dark:bg-zinc-700 opacity-100 z-20 p-4 w-[30em] h-[30em] left-1/2 !-translate-x-1/2 top-1/2 -translate-y-1/2 rounded-md gap-4 justify-between px-8 pt-6'
               initial={{ x: 500 }}
               animate={{ x: 0 }}
@@ -279,7 +300,6 @@ export default function AdminPanelView() {
                       type='text'
                       placeholder='Último nome'
                       name=''
-                      id=''
                       ref={lastname}
                     />
                   </div>
@@ -292,7 +312,6 @@ export default function AdminPanelView() {
                       type='email'
                       name=''
                       placeholder='Email'
-                      id=''
                       ref={email}
                     />
                   </div>
@@ -305,7 +324,6 @@ export default function AdminPanelView() {
                       type='password'
                       placeholder='Password'
                       name=''
-                      id=''
                       ref={password}
                     />
                     <input
@@ -313,7 +331,6 @@ export default function AdminPanelView() {
                       type='password'
                       placeholder='Confirmar password'
                       name=''
-                      id=''
                       ref={passwordConfirm}
                     />
                   </div>
@@ -336,6 +353,7 @@ export default function AdminPanelView() {
                       <option>Treinador</option>
                       <option>Atleta</option>
                       <option>Encarregado</option>
+                      <option>Seccionista</option>
                     </select>
                     {isEncarregadoSelected && (
                       <select

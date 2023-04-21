@@ -22,13 +22,7 @@ export default function mainHeader() {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   function switchTheme(e: any) {
-    if (!enabledDarkMode) {
-      theme?.enableDarkMode();
-    } else {
-      theme?.enableLightMode();
-    }
-
-    setEnabledDarkMode((prev) => !prev);
+    // empty bc of changes
   }
 
   function toggleModal(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -36,11 +30,11 @@ export default function mainHeader() {
   }
 
   return (
-    <div className='header z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6 backdrop-blur-sm'>
+    <div className='header z-50 flex  items-center justify-around bg-transparent w-full h-24 fixed px-6'>
       <div className='flex items-center bg-transparent w-full px-4 gap-4'>
         <div className='h-10 flex'>
-          <a href='/'>
-            <img src={logo} alt='' className='h-full' />
+          <a href='/dashboard'>
+            <img src={logo} alt='' className='h-11 w-11' />
           </a>
         </div>
         <div className='hidden sm:!block'>
@@ -68,15 +62,13 @@ export default function mainHeader() {
           </ul>
         </div>
       </div>
-      <aside className='relative px-4 flex-row-reverse items-center gap-4 h-12 flex'>
+      <aside className='relative px-4 sm:flex-row-reverse items-center gap-4 h-12 flex'>
         {user ? (
           <HoverCard.Root>
             <HoverCard.Trigger asChild>
               <a
                 className='cursor-pointer flex items-center gap-2 justify-center bg-gradient-to-r from-yellow-400 to-yellow-300/90 rounded-lg shadow-lg px-4 py-0 no-underline hover:no-underline h-10'
                 href={'profiles/' + user?.id}
-                target='_blank'
-                rel='noreferrer noopener'
               >
                 <h2 className='text-lg text-gray-100 m-0 font-semibold decoration-none p-0 '>
                   {user.firstname}
@@ -119,26 +111,11 @@ export default function mainHeader() {
             Começa já
           </MainButton>
         )}
-
-        <div className='relative items-center hidden sm:!flex'>
-          <button
-            className={`flex items-center justify-center cursor-pointer transition-all bg-transparen dark:text-gray-100 text-gray-800 font-bold rounded-md hover:no-underline text-l h-full w-12 after:content-['Tema'] after:absolute after:top-0 after:left-0 after:transform after:text-base after:font-normal after:text-gray-800 after:dark:text-gray-100 after:transition-all after:duration-300 after:-z-10 hover:after:-translate-x-full hover:after:opacity-100 after:opacity-0`}
-            onClick={switchTheme}
-            aria-label='Switch theme'
-          >
-            {enabledDarkMode ? (
-              <MdOutlineNightsStay size={20} />
-            ) : (
-              <WiDaySunny size={25} />
-            )}
-          </button>
-        </div>
-
         <div
           onClick={toggleModal}
           className='h-full flex items-center sm:hidden dark:text-white'
         >
-          <RxHamburgerMenu size={25}></RxHamburgerMenu>
+          <RxHamburgerMenu size={25} color='black'></RxHamburgerMenu>
         </div>
       </aside>
 
