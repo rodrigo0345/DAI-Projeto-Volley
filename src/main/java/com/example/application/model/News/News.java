@@ -1,12 +1,12 @@
 package com.example.application.model.News;
 
-
 //import com.mysql.cj.jdbc.Blob;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.*;
 
@@ -30,10 +30,11 @@ public class News {
     // private Blob image; Later
     // @ManyToOne
     // @JoinColumn(name = "user_id", nullable = false)
+    @NonNull
     private Long authorID;
     public LocalDateTime createdAt;
     private int clicks;
     @Builder.Default
     private int likes = 0;
-    
+
 }

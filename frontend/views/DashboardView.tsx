@@ -18,6 +18,8 @@ import { BiFootball } from 'react-icons/bi';
 import { GrDocumentText } from 'react-icons/gr';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
+import Scheduler from 'Frontend/components/scheduler/Scheduler';
+import { SegmentedControl } from '@mantine/core';
 
 export const Box = styled.article`
   & {
@@ -41,6 +43,7 @@ enum Menu {
 export default function DashboardView() {
   const { user, logout } = useContext(UserContext);
   const [menu, setMenu] = useState<Menu>(Menu.DASHBOARD);
+  const [calendarType, setCalendarType] = useState<string>('geral');
 
   const content: AsideContent<Menu>[] = [
     {
@@ -228,7 +231,16 @@ export default function DashboardView() {
         {menu === Menu.CALENDAR && (
           <div className='flex flex-col gap-4 pt-28 relative w-full'>
             <h1 className='text-3xl font-bold'>Calendário</h1>
-            <CalendarView></CalendarView>
+            <SegmentedControl
+              onChange={(value) => {
+                setCalendarType(value);
+              }}
+              data={[
+                { label: 'Geral', value: 'geral' },
+                { label: 'Pessoal', value: 'pessoal' },
+              ]}
+            />
+            <Scheduler type={calendarType}></Scheduler>
           </div>
         )}
       </div>

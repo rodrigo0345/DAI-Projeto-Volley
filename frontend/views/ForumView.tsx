@@ -45,11 +45,13 @@ import { criarNoticia } from 'Frontend/services/posts/createPost';
 import FilterContent from 'Frontend/components/filterContent/FilterContent';
 import { RidePost } from 'Frontend/components/posts/RidePost';
 import CreatePost from 'Frontend/components/posts/CreatePost';
+import { CgProfile } from 'react-icons/cg';
 
 enum Menu {
   ALL = 'ALL',
   NEWS = 'NEWS',
   RIDES = 'RIDES',
+  MINE = 'MINE',
 }
 
 export default function ForumView() {
@@ -126,6 +128,22 @@ export default function ForumView() {
       targetState: Menu.NEWS,
       link: '/calendar',
     },
+    {
+      id: 3,
+      text: 'Minhas publicações',
+      icon: (
+        <CgProfile
+          color={menu === Menu.MINE ? 'white' : 'black'}
+          size={20}
+        ></CgProfile>
+      ),
+      activator: {
+        setter: setMenu,
+        state: menu,
+      },
+      targetState: Menu.MINE,
+      link: '/calendar',
+    },
     // adicionar novos menus é aqui
   ];
 
@@ -134,10 +152,18 @@ export default function ForumView() {
     setCurrIndex(0);
     (async () => {
       const posts = await fetchPopularPosts(0, setLoading, setPosts);
+      console.log(posts);
       const filteredPosts = posts?.filter((post) => {
+        console.log(post?.news?.authorID);
         if (menu === Menu.ALL) return true;
         if (menu === Menu.NEWS && post?.news) return true;
         if (menu === Menu.RIDES && post?.ride) return true;
+        if (
+          menu === Menu.MINE &&
+          (post?.news?.authorID === user?.id ||
+            post?.ride?.driverID === user?.id)
+        )
+          return true;
         return false;
       });
       setPosts(filteredPosts ?? []);
@@ -155,6 +181,12 @@ export default function ForumView() {
           if (menu === Menu.ALL) return true;
           if (menu === Menu.NEWS && post?.news) return true;
           if (menu === Menu.RIDES && post?.ride) return true;
+          if (
+            menu === Menu.MINE &&
+            (post?.news?.authorID === user?.id ||
+              post?.ride?.driverID === user?.id)
+          )
+            return true;
           return false;
         });
         console.log({ name: 'popular', filteredPosts });
@@ -165,6 +197,12 @@ export default function ForumView() {
           if (menu === Menu.ALL) return true;
           if (menu === Menu.NEWS && post?.news) return true;
           if (menu === Menu.RIDES && post?.ride) return true;
+          if (
+            menu === Menu.MINE &&
+            (post?.news?.authorID === user?.id ||
+              post?.ride?.driverID === user?.id)
+          )
+            return true;
           return false;
         });
         console.log({ name: 'recent', filteredPosts });
@@ -175,6 +213,12 @@ export default function ForumView() {
           if (menu === Menu.ALL) return true;
           if (menu === Menu.NEWS && post?.news) return true;
           if (menu === Menu.RIDES && post?.ride) return true;
+          if (
+            menu === Menu.MINE &&
+            (post?.news?.authorID === user?.id ||
+              post?.ride?.driverID === user?.id)
+          )
+            return true;
           return false;
         });
         console.log({ name: 'oldest', filteredPosts });
@@ -226,6 +270,16 @@ export default function ForumView() {
         boleia={boleia}
         noticia={noticia}
         setImagem={setImagem}
+        user={
+          user ?? {
+            id: 1,
+            email: 'rodrigo@gmail.com',
+            lastname: 'Santos',
+            role: 'admin',
+            stringToken: 'stringToken',
+            firstname: 'Rodrigo',
+          }
+        }
       ></CreatePost>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
       <main className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10'>

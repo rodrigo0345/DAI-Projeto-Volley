@@ -10,7 +10,7 @@ export async function criarNoticia(
     imagem: React.MutableRefObject<HTMLInputElement | null>;
   },
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
-  user?: LoginUser
+  user: LoginUser
 ) {
   const titulo = noticia.titulo.current?.value;
   const descricao = noticia.descricao.current?.value;
@@ -27,7 +27,7 @@ export async function criarNoticia(
       news: {
         title: titulo,
         clicks: 0,
-        authorID: user?.id,
+        authorID: user.id ?? 0,
         content: descricao,
         createdAt: '',
         id: 0,

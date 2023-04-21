@@ -30,7 +30,7 @@ export default function CreatePost({
     imagem: React.MutableRefObject<HTMLInputElement | null>;
   };
   setImagem: React.Dispatch<React.SetStateAction<any>>;
-  user?: LoginUser;
+  user: LoginUser;
 }) {
   return (
     <ModalBox openModal={openModal} setOpenModal={setOpenModal}>

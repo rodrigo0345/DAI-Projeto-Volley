@@ -44,6 +44,7 @@
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
+    "dhtmlx-scheduler": "^6.0.3",
     "flowbite": "^1.6.4",
     "framer-motion": "^10.0.1",
     "kute.js": "^2.2.4",
@@ -146,7 +147,8 @@
     "@radix-ui/react-tabs": "$@radix-ui/react-tabs",
     "react-dropzone": "$react-dropzone",
     "date-fns": "$date-fns",
-    "tailwind-scrollbar-hide": "$tailwind-scrollbar-hide"
+    "tailwind-scrollbar-hide": "$tailwind-scrollbar-hide",
+    "dhtmlx-scheduler": "$dhtmlx-scheduler"
   },
   "vaadin": {
     "dependencies": {
@@ -194,6 +196,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "d99d2f8b7ead819e803305005867777b05ec526b48991ce392cc5fdac13dc127"
+    "hash": "d4ed412814dc5b36670104a2f198e40aca83f466947a28d4a7d6c171b1f50903"
   }
 }
