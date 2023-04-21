@@ -100,6 +100,31 @@ public class NewsController {
         return news;
     }
 
+    public Integer getLikes(Long id) throws Exception {
+        News news = newsRepository.findById(id);
+        if (news == null)
+            return null;
+        return news.getLikes();
+    }
+
+    public void addLike(Long id) throws Exception {
+        News news = newsRepository.findById(id);
+        if (news == null)
+            return;
+        news.setLikes(news.getLikes() + 1);
+        // there is stuff missing here
+        newsRepository.save(news);
+    }
+
+    public void removeLike(Long id) throws Exception {
+        News news = newsRepository.findById(id);
+        if (news == null)
+            return;
+        news.setLikes(news.getLikes() - 1);
+        // there is stuff missing here
+        newsRepository.save(news);
+    }
+
     /*
      * public void addClick(Long id) throws Exception {
      * News news = newsRepository.findById(id);
