@@ -1,3 +1,4 @@
+import { createPost } from 'Frontend/generated/PostController';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { PostController } from 'Frontend/generated/endpoints';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
@@ -44,6 +45,48 @@ export async function criarNoticia(
     return;
   }
   toast.success('Notícia criada com sucesso');
+
+  setOpenModal(false);
+}
+
+export async function criarBoleia(
+  boleia: {
+    destino: React.RefObject<HTMLInputElement>;
+    dataPartida: React.RefObject<HTMLInputElement>;
+    lugaresDisp: React.RefObject<HTMLInputElement>;
+    descricao: React.RefObject<HTMLTextAreaElement>;
+    telefone: React.RefObject<HTMLInputElement>;
+    localPartida: React.RefObject<HTMLInputElement>;
+  },
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
+  user: LoginUser
+) {
+  const result = await createPost('ride', {
+    ride: {
+      destination: boleia.destino.current?.value ?? '',
+      clicks: 0,
+      freeSeats: Number(boleia.lugaresDisp.current?.value) ?? '',
+      seats: Number(boleia.lugaresDisp.current?.value) ?? '',
+      createdAt: '',
+      id: 0,
+      description: boleia.descricao.current?.value ?? '',
+      driverContact: boleia.telefone.current?.value ?? '',
+      driverID: user.id ?? 0,
+      location: boleia.localPartida.current?.value ?? '',
+      origin: boleia.localPartida.current?.value ?? '',
+      passengers: undefined,
+      startDate: boleia.dataPartida.current?.value ?? '',
+    },
+  });
+
+  if (result?.body.error) {
+    toast.error(result?.body.error);
+    return;
+  }
+
+  if (result?.body.success) {
+    toast.success(result?.body.success);
+  }
 
   setOpenModal(false);
 }
