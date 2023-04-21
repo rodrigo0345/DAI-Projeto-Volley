@@ -19,6 +19,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.example.application.model.Token.Token;
+import com.example.application.model.User.LoginUser;
+import com.example.application.model.User.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,6 +49,9 @@ public class CalendarEvent {
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    @OneToMany
+    private List<User> invited;
 
     private String linkToPost;
 }
