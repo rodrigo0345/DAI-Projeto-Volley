@@ -20,10 +20,10 @@ public class PostType implements Comparable<PostType> {
         return null;
     }
 
-    public <T> T returnType(T thing) {
-        if (thing instanceof News) {
+    public <T> T returnType() {
+        if (news != null) {
             return (T) news;
-        } else if (thing instanceof Ride) {
+        } else if (ride != null) {
             return (T) ride;
         }
         return null;
