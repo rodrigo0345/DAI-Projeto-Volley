@@ -7,10 +7,8 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 public class TokenService {
 
-    private AuthenticationService service;
-
     @AnonymousAllowed
-    public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
+    public static ResponseEntity<Boolean> validateToken(LoginUser user, String token, AuthenticationService service) {
         return ResponseEntity.ok(service.isTokenValid(token, user.getEmail()));
     }
 }

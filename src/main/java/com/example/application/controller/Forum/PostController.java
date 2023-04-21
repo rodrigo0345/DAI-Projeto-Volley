@@ -2,11 +2,13 @@ package com.example.application.controller.Forum;
 
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
+import com.example.application.repository.UserRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
-import com.example.application.model.News;
 import com.example.application.model.Ride;
+import com.example.application.model.News.News;
+import com.example.application.model.User.User;
 
 import dev.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,6 +32,8 @@ public class PostController {
     private final RideRepository ridesRepository;
 
     private final NewsRepository newsRepository;
+
+    private final UserRepository usersRepository;
 
     private List<PostType> mixPosts(List<News> news, List<Ride> rides, Comparator<? super PostType> cmp) {
         List<PostType> posts = new ArrayList<>();
@@ -99,6 +104,21 @@ public class PostController {
         return mixPosts(newsAux, ridesAux, cmp);
     }
 
+    // getPost
+    public PostType getPost(String postType, Long id) throws Exception {
+        PostType post = new PostType();
+        if (postType.toLowerCase().trim().equals("news")) {
+            News news = newsRepository.findById(id);
+            post.news = news;
+        } else if (postType.toLowerCase().trim().equals("ride")) {
+            Ride ride = ridesRepository.findById(id);
+            post.ride = ride;
+        } else {
+            throw new Exception("Not Found");
+        }
+        return post;
+    }
+
     public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) throws Exception {
         // PRIORITY
         if (postType.toLowerCase().trim().equals("news")) {
@@ -150,30 +170,26 @@ public class PostController {
     public void editPost(String postType, PostType post) {
     }
 
-    private News getNews(Long id) {
-        News news = newsRepository.findById(id);
-        news.setClicks(news.getClicks() + 1);
-        newsRepository.save(news);
-        return news;
-    }
-
-    private Ride getRide(Long id) {
-        Ride ride = ridesRepository.findById(id);
-        ride.setClicks(ride.getClicks() + 1);
-        ridesRepository.save(ride);
-        return ride;
-    }
-
-    public PostType getPost(String postType, Long id) {
-        // add +1 on the click because it means it was clicked
-        PostType post = new PostType();
-        if (postType.toLowerCase().trim().equals("news")) {
-            post.news = getNews(id);
-            return post;
-        } else if (postType.toLowerCase().trim().equals("ride")) {
-            post.ride = getRide(id);
-            return post;
+    public void addClick(PostType post) throws Exception {
+        String type = post.getType();
+        News news;
+        Ride ride;
+        if (post == null)
+            return;
+        if (type == "news") {
+            news = post.news;
+            news.setClicks(news.getClicks() + 1);
+            newsRepository.save(news);
+        } else {
+            ride = post.ride;
+            ride.setClicks(ride.getClicks() + 1);
+            ridesRepository.save(ride);
         }
-        return null;
     }
+
+    public void reactNews(Long userId) {
+        Optional<User> user = usersRepository.findById(userId);
+
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.example.application.controller.Forum;
 
-import com.example.application.model.News;
+import com.example.application.model.News.News;
 import com.example.application.repository.NewsRepository;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
@@ -31,7 +31,8 @@ public class NewsController {
                             n.getContent(),
                             n.getAuthorID(),
                             n.getCreatedAt(),
-                            n.getClicks()));
+                            n.getClicks(),
+                            n.getLikes()));
         }
         return newsList;
     }
@@ -46,7 +47,8 @@ public class NewsController {
                 newsAux.getContent(),
                 newsAux.getAuthorID(),
                 newsAux.getCreatedAt(),
-                newsAux.getClicks());
+                newsAux.getClicks(),
+                newsAux.getLikes());
     }
 
     /*
@@ -96,6 +98,31 @@ public class NewsController {
             return null;
         newsRepository.delete(news);
         return news;
+    }
+
+    public Integer getLikes(Long id) throws Exception {
+        News news = newsRepository.findById(id);
+        if (news == null)
+            return null;
+        return news.getLikes();
+    }
+
+    public void addLike(Long id) throws Exception {
+        News news = newsRepository.findById(id);
+        if (news == null)
+            return;
+        news.setLikes(news.getLikes() + 1);
+        // there is stuff missing here
+        newsRepository.save(news);
+    }
+
+    public void removeLike(Long id) throws Exception {
+        News news = newsRepository.findById(id);
+        if (news == null)
+            return;
+        news.setLikes(news.getLikes() - 1);
+        // there is stuff missing here
+        newsRepository.save(news);
     }
 
     /*

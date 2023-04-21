@@ -1,6 +1,6 @@
 package com.example.application.repository;
 
-import com.example.application.model.News;
+import com.example.application.model.News.News;
 import com.example.application.model.User.User;
 
 import org.springframework.data.domain.Pageable;

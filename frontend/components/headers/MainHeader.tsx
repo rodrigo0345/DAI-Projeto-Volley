@@ -111,21 +111,6 @@ export default function mainHeader() {
             Começa já
           </MainButton>
         )}
-
-        <div className='relative items-center hidden sm:!flex'>
-          <button
-            className={`flex items-center justify-center cursor-pointer transition-all bg-transparen dark:text-gray-100 text-gray-800 font-bold rounded-md hover:no-underline text-l h-full w-12 after:content-['Tema'] after:absolute after:top-0 after:left-0 after:transform after:text-base after:font-normal after:text-gray-800 after:dark:text-gray-100 after:transition-all after:duration-300 after:-z-10 hover:after:-translate-x-full hover:after:opacity-100 after:opacity-0`}
-            onClick={switchTheme}
-            aria-label='Switch theme'
-          >
-            {enabledDarkMode ? (
-              <MdOutlineNightsStay size={20} />
-            ) : (
-              <WiDaySunny size={25} />
-            )}
-          </button>
-        </div>
-
         <div
           onClick={toggleModal}
           className='h-full flex items-center sm:hidden dark:text-white'

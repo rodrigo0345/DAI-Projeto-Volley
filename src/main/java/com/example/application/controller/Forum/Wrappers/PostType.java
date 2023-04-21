@@ -1,7 +1,7 @@
 package com.example.application.controller.Forum.Wrappers;
 
-import com.example.application.model.News;
 import com.example.application.model.Ride;
+import com.example.application.model.News.News;
 
 public class PostType implements Comparable<PostType> {
 

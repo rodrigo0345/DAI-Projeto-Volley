@@ -79,7 +79,7 @@ export async function loadMore(
       posts
     );
     setPosts([...(posts ?? []), ...(nextPosts ?? [])]);
-  } else if ((Order.NEWEST as string) === order) {
+  } else if ((Order.NEWEST.toUpperCase() as string) === order) {
     const nextPosts = await fetchPostsByMostRecent(
       newIndex,
       setLoading,
@@ -87,7 +87,7 @@ export async function loadMore(
       posts
     );
     setPosts([...(posts ?? []), ...(nextPosts ?? [])]);
-  } else if ((Order.OLDEST as string) === order) {
+  } else if ((Order.OLDEST.toUpperCase() as string) === order) {
     const nextPosts = await fetchPostsByOldest(
       newIndex,
       setLoading,
