@@ -59,6 +59,7 @@ export default function ProfilesView() {
       lastname: lastName,
       email: email,
       role: role,
+      id: user?.id,
     });
 
     console.log({ result });
