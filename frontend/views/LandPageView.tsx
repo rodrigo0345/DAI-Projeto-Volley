@@ -5,6 +5,8 @@ import { BsArrowDownShort } from 'react-icons/bs';
 import { IoMdArrowBack } from 'react-icons/io';
 import styled from 'styled-components';
 import landBg from 'Frontend/assets/svgs/landBg.svg';
+import { Box } from './DashboardView';
+import { RiTeamLine } from 'react-icons/ri';
 
 const Hero = styled.main`
   background-image: url('${landBg}');
@@ -81,6 +83,46 @@ export default function LandPageView() {
               </a>
             </motion.div>
           </Hero>
+          <div id='funcionalidades'>
+            <h2>Funcionalidades</h2>
+            <div className='flex gap-8 flex-wrap items-center justify-center'>
+              <Box className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Gerir treinos
+                </h2>
+                <RiTeamLine
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></RiTeamLine>
+              </Box>
+
+              <Box className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Gerir jogos
+                </h2>
+                <RiTeamLine
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></RiTeamLine>
+              </Box>
+
+              <Box className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <h2 className='text-gray-50 font-semibold text-2xl z-20'>
+                  Gerir atletas
+                </h2>
+                <RiTeamLine
+                  size={180}
+                  color='#e5e7eb'
+                  className='icon absolute -right-10 -bottom-10 '
+                ></RiTeamLine>
+              </Box>
+            </div>
+          </div>
+          <div id='sobrenos'>
+            <h2>A Equipa</h2>
+          </div>
         </main>
       </div>
     </div>

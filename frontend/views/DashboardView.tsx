@@ -19,7 +19,7 @@ import { GrDocumentText } from 'react-icons/gr';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 
-const Box = styled.article`
+export const Box = styled.article`
   & {
     cursor: pointer;
   }
