@@ -200,6 +200,10 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body(response);
         }
         User aux = users.findById(user.getId()).get();
+        aux.setFirstname(user.getFirstname());
+        aux.setLastname(user.getLastname());
+        aux.setEmail(user.getEmail());
+
         users.save(aux);
 
         return ResponseEntity.ok().build();
