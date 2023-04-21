@@ -189,9 +189,14 @@ public class AuthenticationController {
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
-        if (currentUser.getRole() != "ADMIN") {
+        if (user == null) {
             var response = new ResponseType<LoginUser>();
-            response.error("Não tem permissão para editar o utilizador");
+            response.error("Utilizador não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (!currentUser.getRole().toString().equals("ADMIN")) {
+            var response = new ResponseType<LoginUser>();
+            response.error("Você não tem permissão para editar o utilizador");
             return ResponseEntity.badRequest().body(response);
         }
         User aux = users.findById(user.getId()).get();
