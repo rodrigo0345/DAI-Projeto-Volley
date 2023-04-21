@@ -1,6 +1,7 @@
 import {
   addLike,
   getLikes,
+  remove,
   removeLike,
 } from 'Frontend/generated/NewsController';
 import News from 'Frontend/generated/com/example/application/model/News/News';
@@ -88,25 +89,35 @@ export function NewsPost({
         alt='imagem do post'
       />
       <div className='h-10 w-full bg-gradient-to-t from-zinc-800 absolute bottom-10'></div>
-      <div
-        className='px-4 h-10 w-full bg-zinc-800 absolute bottom-0 flex items-center gap-2 cursor-pointer'
-        onClick={() => {
-          setUserLiked(!userLiked);
-        }}
-      >
-        {likes}
-        {userLiked ? (
-          <MdFavorite color='yellow' size={20}></MdFavorite>
-        ) : (
-          <MdFavoriteBorder
-            aria-label='save'
+      <div className='px-4 h-10 w-full bg-zinc-800 absolute bottom-0 flex items-center gap-2 justify-between'>
+        <div
+          className='flex gap-1 items-center cursor-pointer'
+          onClick={() => {
+            setUserLiked(!userLiked);
+          }}
+        >
+          {likes}
+          {userLiked ? (
+            <MdFavorite color='yellow' size={20}></MdFavorite>
+          ) : (
+            <MdFavoriteBorder aria-label='save' size={20}></MdFavoriteBorder>
+          )}
+        </div>
+        {currentUserID === post?.authorID && (
+          <button
             onClick={() => {
-              //savePost(1);
+              (async () => {
+                await remove(post);
+                // refresh
+                window.location.reload();
+              })();
             }}
-            size={20}
-          ></MdFavoriteBorder>
+            className='bg-red-500 p-1 rounded-md hover:bg-red-600'
+            title='Eliminar Post'
+          >
+            Eliminar
+          </button>
         )}
-        {currentUserID === post?.authorID && <button>Delete</button>}
       </div>
     </motion.div>
   );
