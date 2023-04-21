@@ -11,7 +11,15 @@ import { AiOutlineLike, AiTwotoneLike } from 'react-icons/ai';
 import { BsBookmark } from 'react-icons/bs';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 
-export function NewsPost({ post, type }: { post?: News; type?: string }) {
+export function NewsPost({
+  post,
+  type,
+  currentUserID,
+}: {
+  post?: News;
+  type?: string;
+  currentUserID?: number;
+}) {
   const [likes, setLikes] = useState<number>(0);
   const [userLiked, setUserLiked] = useState<boolean>(false);
   const [justMounted, setJustMounted] = useState<boolean>(true);
@@ -98,6 +106,7 @@ export function NewsPost({ post, type }: { post?: News; type?: string }) {
             size={20}
           ></MdFavoriteBorder>
         )}
+        {currentUserID === post?.authorID && <button>Delete</button>}
       </div>
     </motion.div>
   );

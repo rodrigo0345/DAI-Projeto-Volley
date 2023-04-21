@@ -312,7 +312,11 @@ export default function ForumView() {
               posts.map((post) => {
                 if (post?.news) {
                   return (
-                    <NewsPost key={post?.news.id} post={post.news}></NewsPost>
+                    <NewsPost
+                      key={post?.news.id}
+                      post={post.news}
+                      currentUserID={user?.id}
+                    ></NewsPost>
                   );
                 }
                 return (
