@@ -180,16 +180,16 @@ public class AuthenticationController {
     }
 
     public ResponseEntity<ResponseType<LoginUser>> editUser(
-            @RequestBody LoginUser currentuser,
+            @RequestBody LoginUser currentUser,
             @RequestBody LoginUser user) throws Exception {
         TokenService serviceToken = new TokenService();
-        var isValidToken = serviceToken.validateToken(currentuser, currentuser.getStringToken()).getBody();
+        var isValidToken = serviceToken.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
             var response = new ResponseType<LoginUser>();
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
-        if (currentuser.getRole() != "ADMIN") {
+        if (currentUser.getRole() != "ADMIN") {
             var response = new ResponseType<LoginUser>();
             response.error("Não tem permissão para editar o utilizador");
             return ResponseEntity.badRequest().body(response);
