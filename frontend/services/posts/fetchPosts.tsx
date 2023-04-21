@@ -69,9 +69,7 @@ export async function loadMore(
   const newIndex = currIndex + 1;
   setCurrIndex(newIndex);
 
-  console.log(order, Order.POPULAR as string);
-
-  if ((Order.POPULAR as string) === order) {
+  if ((Order.POPULAR.toUpperCase() as string) === order) {
     const nextPosts = await fetchPopularPosts(
       newIndex,
       setLoading,

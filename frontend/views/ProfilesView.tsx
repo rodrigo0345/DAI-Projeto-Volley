@@ -1,10 +1,13 @@
 import { UserContext } from 'Frontend/contexts/UserContext';
+import { editUser } from 'Frontend/generated/AuthenticationController';
+import { editPost } from 'Frontend/generated/PostController';
 import { findById } from 'Frontend/generated/UserController';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { useEffect, useState, startTransition, useContext } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { redirect, useActionData, useLoaderData } from 'react-router-dom';
 import { useMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function ProfilesView() {
   let { user } = useContext(UserContext);
@@ -46,10 +49,30 @@ export default function ProfilesView() {
     });
   }, [user]);
 
-  function submitChanges(
+  async function submitChanges(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void {
-    throw new Error('Function not implemented.');
+  ) {
+    event.preventDefault();
+
+    const result = await editUser(user, {
+      firstname: firstName,
+      lastname: lastName,
+      email: email,
+      role: role,
+    });
+
+    console.log({ result });
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    if (result?.body.success) {
+      toast.success('Profile updated');
+      setUserProfile(result?.body.success);
+      return;
+    }
   }
 
   return (
