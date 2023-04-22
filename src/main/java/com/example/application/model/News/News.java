@@ -37,4 +37,7 @@ public class News {
     @Builder.Default
     private int likes = 0;
 
+    @Lob
+    byte[] image;
+
 }

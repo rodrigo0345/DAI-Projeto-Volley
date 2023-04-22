@@ -11,6 +11,7 @@ export default function CreatePost({
   setOpenModal,
   boleia,
   noticia,
+  imagem,
   setImagem,
   user,
 }: {
@@ -29,6 +30,7 @@ export default function CreatePost({
     descricao: React.MutableRefObject<HTMLTextAreaElement | null>;
     imagem: React.MutableRefObject<HTMLInputElement | null>;
   };
+  imagem: File | undefined;
   setImagem: React.Dispatch<React.SetStateAction<any>>;
   user: LoginUser;
 }) {
@@ -217,7 +219,15 @@ export default function CreatePost({
             <button
               className='inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none hover:bg-yellow-300 cursor-pointer'
               onClick={() => {
-                criarNoticia(noticia, setOpenModal, user);
+                criarNoticia(
+                  {
+                    titulo: noticia.titulo,
+                    descricao: noticia.descricao,
+                    imagem,
+                  },
+                  setOpenModal,
+                  user
+                );
               }}
             >
               Publicar

@@ -3,6 +3,7 @@ package com.example.application.controller.Forum;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
+import com.example.application.service.ImageService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 @Endpoint
 @AnonymousAllowed
@@ -119,7 +121,8 @@ public class PostController {
         return post;
     }
 
-    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) throws Exception {
+    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post)
+            throws Exception {
         // PRIORITY
         if (postType.toLowerCase().trim().equals("news")) {
             if (post.news == null) {

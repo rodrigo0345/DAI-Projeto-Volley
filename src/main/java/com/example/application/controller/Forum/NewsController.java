@@ -32,7 +32,8 @@ public class NewsController {
                             n.getAuthorID(),
                             n.getCreatedAt(),
                             n.getClicks(),
-                            n.getLikes()));
+                            n.getLikes(),
+                            n.getImage()));
         }
         return newsList;
     }
@@ -48,7 +49,8 @@ public class NewsController {
                 newsAux.getAuthorID(),
                 newsAux.getCreatedAt(),
                 newsAux.getClicks(),
-                newsAux.getLikes());
+                newsAux.getLikes(),
+                newsAux.getImage());
     }
 
     /*
