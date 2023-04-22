@@ -84,7 +84,7 @@ export default function CreatePost({
               Local de partida
             </label>
             <input
-              ref={boleia.dataPartida}
+              ref={boleia.localPartida}
               type='text'
               className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
               id='username'
