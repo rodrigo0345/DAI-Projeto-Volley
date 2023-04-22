@@ -179,4 +179,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(TokenService.validateToken(user, token, service).getBody());
     }
 
+    // alteração
+
 }

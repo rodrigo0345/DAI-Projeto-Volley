@@ -1,10 +1,11 @@
 import { findById } from 'Frontend/generated/UserController';
 import News from 'Frontend/generated/com/example/application/model/News/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';
-import { formatDistanceToNow, isBefore } from 'date-fns';
+import { format, formatDistanceToNow, isBefore } from 'date-fns';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { BsBookmark } from 'react-icons/bs';
+import World from 'Frontend/assets/svgs/world.svg';
 
 export function RidePost({ post, type }: { post?: Ride; type?: string }) {
   const [driver, setDriver] = useState<string | undefined>(undefined);
@@ -12,7 +13,7 @@ export function RidePost({ post, type }: { post?: Ride; type?: string }) {
   useEffect(() => {
     (async () => {
       const driver = await findById(post?.driverID);
-      setDriver(driver?.firstname);
+      setDriver(driver?.firstname + ' ' + driver?.lastname);
     })();
   });
   return (
@@ -28,13 +29,13 @@ export function RidePost({ post, type }: { post?: Ride; type?: string }) {
           <div
             className='flex items-start px-4 justify-between cursor-pointer'
             onClick={() => {
-              window.location.href = '/post/ride' + post?.id;
+              window.location.href = '/post/ride/' + post?.id;
             }}
           >
             <h3 className='font-bold text-center m-0 text-lg text-white'>
               {post?.destination}{' '}
               <span className='text-sm font-normal italic'>
-                {' @' + 'Notícia'}
+                {' @' + 'Boleia'}
               </span>
               <span className='font-normal text-sm italic block text-left'>
                 {formatDistanceToNow(Date.parse(post?.startDate ?? ''), {
@@ -42,15 +43,17 @@ export function RidePost({ post, type }: { post?: Ride; type?: string }) {
                 })}
               </span>
             </h3>
-            <p className=' text-gray-300 font-semibold text-sm '>12/02/2022</p>
+            <p className=' text-gray-300 font-semibold text-sm '>
+              {format(Date.parse(post?.createdAt ?? ''), 'dd/MM/yyyy')}
+            </p>
           </div>
           <div className='px-4 pb-2 text-gray-200'>
-            <p>{driver}</p>
+            <p>Condutor: {driver}</p>
           </div>
           <img
             width={300}
             className='w-full'
-            src='https://cdn.record.pt/images/2019-08/img_920x518$2019_08_21_09_09_07_1591075.jpg'
+            src={World}
             alt='imagem do post'
           />
           <div className='h-10 w-full bg-gradient-to-t from-zinc-800 absolute bottom-10'></div>
