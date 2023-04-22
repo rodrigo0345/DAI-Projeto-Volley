@@ -1,6 +1,5 @@
 package com.example.application.controller.Wrapper;
 
-
 // Just a wrapper to make the response more readable
 // on the front-end
 public class ResponseType<T> {

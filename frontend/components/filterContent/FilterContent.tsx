@@ -24,7 +24,7 @@ export default function FilterContent({
           onValueChange={(e) => {
             setOrder(e as Order);
           }}
-          defaultValue={order[0] as string}
+          defaultValue={Object.keys(order)[0]}
         >
           <Select.Trigger
             className='inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-transparent shadow-black/10 data-[placeholder]:text-white focus:outline-none aria-selected:outline-none text-white font-semibold'
@@ -45,6 +45,7 @@ export default function FilterContent({
                   {
                     // read all the keys of the enum
                     Object.keys(order).map((key) => {
+                      console.log(key);
                       return (
                         <SelectItem
                           key={key}

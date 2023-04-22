@@ -179,34 +179,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(TokenService.validateToken(user, token, service).getBody());
     }
 
-    public ResponseEntity<ResponseType<LoginUser>> editUser(
-            @RequestBody LoginUser currentUser,
-            @RequestBody LoginUser user) throws Exception {
-        TokenService serviceToken = new TokenService();
-        var isValidToken = serviceToken.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
-        if (!isValidToken) {
-            var response = new ResponseType<LoginUser>();
-            response.error("Token inválida");
-            return ResponseEntity.badRequest().body(response);
-        }
-        if (user == null) {
-            var response = new ResponseType<LoginUser>();
-            response.error("Utilizador não existe");
-            return ResponseEntity.badRequest().body(response);
-        }
-        if (!currentUser.getRole().toString().equals("ADMIN")) {
-            var response = new ResponseType<LoginUser>();
-            response.error("Você não tem permissão para editar o utilizador");
-            return ResponseEntity.badRequest().body(response);
-        }
-        User aux = users.findById(user.getId()).get();
-        aux.setFirstname(user.getFirstname());
-        aux.setLastname(user.getLastname());
-        aux.setEmail(user.getEmail());
-
-        users.save(aux);
-
-        return ResponseEntity.ok().build();
-    }
-
 }
