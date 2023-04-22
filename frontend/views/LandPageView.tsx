@@ -57,22 +57,22 @@ export default function LandPageView() {
             <div className='grid items-center grid-cols-1 gap-12 lg:grid-cols-2'>
               <div>
                 <p className='text-base font-semibold tracking-wider text-blue-600 uppercase'>
-                  A social media for learners
+                  Nunca foi tão fácil gerir a tua equipa
                 </p>
                 <h1 className='mt-4 text-4xl font-bold text-black lg:mt-8 sm:text-6xl xl:text-8xl'>
-                  Connect & learn from the experts
+                  Gere e acompanha o progresso da tua equipa
                 </h1>
                 <p className='mt-4 text-base text-black lg:mt-8 sm:text-xl'>
-                  Grow your career fast with right mentor.
+                  Fala com o teu clube antes de entrar.
                 </p>
 
                 <a
-                  href='#'
+                  href='/login'
                   title=''
                   className='inline-flex items-center px-6 py-4 mt-8 font-semibold text-black transition-all duration-200 bg-yellow-300 rounded-full lg:mt-16 hover:bg-yellow-400 focus:bg-yellow-400'
                   role='button'
                 >
-                  Join for free
+                  Começa já
                   <svg
                     className='w-6 h-6 ml-8 -mr-2'
                     xmlns='http://www.w3.org/2000/svg'
@@ -88,17 +88,6 @@ export default function LandPageView() {
                     />
                   </svg>
                 </a>
-
-                <p className='mt-5 text-gray-600'>
-                  Already joined us?{' '}
-                  <a
-                    href='#'
-                    title=''
-                    className='text-black transition-all duration-200 hover:underline'
-                  >
-                    Log in
-                  </a>
-                </p>
               </div>
 
               <div>

@@ -102,7 +102,6 @@ export default function CreatePost({
               type='datetime-local'
               className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
               id='username'
-              defaultValue='@peduarte'
             />
           </fieldset>
           <fieldset className='mb-[15px] w-full flex flex-col justify-start'>
