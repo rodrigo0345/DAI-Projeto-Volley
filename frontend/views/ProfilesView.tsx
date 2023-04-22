@@ -62,7 +62,7 @@ export default function ProfilesView() {
       id: user?.id,
     });
 
-    console.log( result?.body );
+    console.log(result?.body);
 
     if (result?.body.error) {
       toast.error(result?.body.error);
@@ -74,7 +74,7 @@ export default function ProfilesView() {
   }
 
   return (
-    <div className='min-h-screen flex items-center justify-center z-10 bg-white'>
+    <div className='min-h-screen flex items-center justify-center z-10 bg-white relative'>
       <div className='bg-zinc-100 w-fit h-fit flex flex-col p-6 rounded-md shadow-lg gap-4'>
         <div className='flex justify-center gap-4'>
           <h1 className='text-2xl font-bold my-4'>
