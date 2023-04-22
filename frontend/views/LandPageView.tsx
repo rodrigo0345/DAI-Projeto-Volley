@@ -60,7 +60,7 @@ export default function LandPageView() {
                   Nunca foi tão fácil gerir a tua equipa
                 </p>
                 <h1 className='mt-4 text-4xl font-bold text-black lg:mt-8 sm:text-6xl xl:text-8xl'>
-                  Gere e acompanha o progresso da tua equipa
+                  Gere e acompanha a tua equipa
                 </h1>
                 <p className='mt-4 text-base text-black lg:mt-8 sm:text-xl'>
                   Fala com o teu clube antes de entrar.
