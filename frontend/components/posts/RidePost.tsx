@@ -1,7 +1,7 @@
 import { findById } from 'Frontend/generated/UserController';
 import News from 'Frontend/generated/com/example/application/model/News/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';
-import { format, formatDistanceToNow, isBefore } from 'date-fns';
+import { format, formatDistanceToNow, isAfter, isBefore } from 'date-fns';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { BsBookmark } from 'react-icons/bs';
@@ -18,7 +18,7 @@ export function RidePost({ post, type }: { post?: Ride; type?: string }) {
   });
   return (
     <>
-      {isBefore(Date.parse(post?.startDate ?? ''), Date.now()) && (
+      {isAfter(Date.parse(post?.startDate ?? ''), Date.now()) && (
         <motion.div
           key={post?.id}
           initial={{ opacity: 0 }}
@@ -33,7 +33,9 @@ export function RidePost({ post, type }: { post?: Ride; type?: string }) {
             }}
           >
             <h3 className='font-bold text-center m-0 text-lg text-white'>
-              {post?.destination}{' '}
+              De {post?.origin}
+              {' a '}
+              {post?.destination}
               <span className='text-sm font-normal italic'>
                 {' @' + 'Boleia'}
               </span>
