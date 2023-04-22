@@ -1,7 +1,7 @@
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { editUser } from 'Frontend/generated/AuthenticationController';
+
 import { editPost } from 'Frontend/generated/PostController';
-import { findById } from 'Frontend/generated/UserController';
+import { editUser, findById } from 'Frontend/generated/UserController';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { useEffect, useState, startTransition, useContext } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
@@ -62,18 +62,15 @@ export default function ProfilesView() {
       id: user?.id,
     });
 
-    console.log({ result });
+    console.log( result?.body );
 
     if (result?.body.error) {
       toast.error(result?.body.error);
       return;
     }
 
-    if (result?.body.success) {
-      toast.success('Profile updated');
-      setUserProfile(result?.body.success);
-      return;
-    }
+    toast.success('Profile updated');
+    return;
   }
 
   return (
