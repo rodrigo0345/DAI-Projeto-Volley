@@ -21,12 +21,10 @@ import org.springframework.http.ResponseEntity;
 public class UserController {
   private final UserRepository users;
   private final AuthenticationService service;
-  private final TokenService serviceToken;
 
-  public UserController(UserRepository users, AuthenticationService service, TokenService serviceToken) {
+  public UserController(UserRepository users, AuthenticationService service) {
     this.users = users;
     this.service = service;
-    this.serviceToken = serviceToken;
   }
 
   public @Nonnull Iterable<LoginUser> findAll() throws Exception {
@@ -66,7 +64,7 @@ public class UserController {
       LoginUser currentUser,
       LoginUser user) throws Exception {
 
-    var isValidToken = serviceToken.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+    var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
     if (!isValidToken) {
       var response = new ResponseType<LoginUser>();
       response.error("Token inválida");
@@ -90,7 +88,9 @@ public class UserController {
 
     users.save(aux);
 
-    return ResponseEntity.ok().build();
+    var response = new ResponseType<LoginUser>();
+    response.success(user);
+    return ResponseEntity.ok().body(response);
   }
 
 }
