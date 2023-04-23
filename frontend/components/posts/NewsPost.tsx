@@ -59,7 +59,12 @@ export function NewsPost({
   }, [userLiked]);
 
   return (
-    <div className='w-full flex justify-center'>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      layout
+      className='w-full flex items-center justify-center'
+    >
       <div className='flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100'>
         <div
           className='flex space-x-4 cursor-pointer'
@@ -83,6 +88,7 @@ export function NewsPost({
         </div>
         <div>
           <img
+            width={300}
             src={news}
             alt=''
             className='object-contain w-full mb-4 h-60 sm:h-96 bg-amber-50'
@@ -156,6 +162,6 @@ export function NewsPost({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

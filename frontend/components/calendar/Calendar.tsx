@@ -83,9 +83,14 @@ export default function CalendarView() {
       <div className='flex-1 px-2 relative'>
         <h1 className='m-0 text-lg text-center'>Detalhes</h1>
         <div className='mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow'>
-          <ul className='divide-y divide-gray-100 py-2 px-4'>
+          <ul className='divide-y divide-gray-100 py-2 px-4 cursor-pointer'>
             {showEvent?.map((event) => (
-              <li className='flex py-4'>
+              <li
+                className='flex py-4'
+                onClick={() => {
+                  window.location.href = event.linkToPost ?? '#';
+                }}
+              >
                 <div className='mr-4 flex-1'>
                   <h4 className='text-lg font-medium text-gray-900'>
                     {event?.title}

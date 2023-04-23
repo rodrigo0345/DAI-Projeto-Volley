@@ -32,7 +32,12 @@ export function RidePost({
 
   //isAfter(Date.parse(post?.startDate ?? ''), Date.now())
   return (
-    <div className='w-full flex justify-center'>
+    <motion.div
+      layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className='w-full flex justify-center'
+    >
       <div className='flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100'>
         <div className='flex space-x-4'>
           <div className='flex flex-col space-y-1'>
@@ -56,6 +61,7 @@ export function RidePost({
           }}
         >
           <img
+            width={300}
             src={ride}
             alt=''
             className='object-contain w-full mb-4 h-60 sm:h-96 !bg-amber-50'
@@ -126,6 +132,6 @@ export function RidePost({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
