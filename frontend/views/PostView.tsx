@@ -61,9 +61,9 @@ export default function PostView() {
   //
   return (
     <div className='h-screen z-10 bg-white relative shadow-lg'>
-      <article className='max-w-2xl px-6 py-24 mx-auto space-y-16 dark:bg-gray-800 dark:text-gray-50'>
+      <article className='max-w-2xl px-6 py-24 mx-auto space-y-8 dark:bg-gray-800 dark:text-gray-50'>
         <div className='w-full mx-auto space-y-4'>
-          <div className='flex items-center justify-between my-8 gap-4'>
+          <div className='flex items-center justify-between my-8 gap-2'>
             <input
               className={`text-5xl font-bold leading-none m-0 bg-white outline outline-1  border-none rounded-md focus:ring-transparent p-0 ${
                 editable
@@ -109,6 +109,47 @@ export default function PostView() {
             </time>
           </p>
         </div>
+        {rides && (
+          <div className='flex gap-4 flex-col py-0 m-0 pt-0'>
+            <div className='flex items-center'>
+              <p className='m-0 pr-2 text-sm'> Lugares disponíveis: </p>
+              <input
+                className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold text-sm ${
+                  editable
+                    ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
+                    : 'outline-none focus:outline-none focus:border-none'
+                }`}
+                type='number'
+                value={rides.seats}
+              />
+            </div>
+            <div className='flex items-center'>
+              <p className='m-0 pr-2 text-sm'> Lugares ocupados: </p>
+              <input
+                className={`outline outline-1  border-none rounded-md focus:ring-transparent font-semibold p-0 text-sm ${
+                  editable
+                    ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
+                    : 'outline-none focus:outline-none focus:border-none'
+                }`}
+                type='number'
+                value={rides.seats - rides.freeSeats}
+              />
+            </div>
+            <div className='flex items-center text-sm'>
+              <p className='m-0 pr-2 text-sm'> Hora e dia: </p>
+              <input
+                className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold text-sm ${
+                  editable
+                    ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
+                    : 'outline-none focus:outline-none focus:border-none'
+                }`}
+                type='datetime-local'
+                value={rides.startDate}
+              />
+            </div>
+          </div>
+        )}
+        <hr />
         <div className='dark:text-gray-100'>
           <textarea
             className={`outline outline-1 w-full border-none rounded-md focus:ring-transparent p-0 font-semibold text-ellipsis ${
@@ -122,47 +163,6 @@ export default function PostView() {
               setContentState(e.target.value);
             }}
           />
-          {rides && (
-            <div className='flex gap-4 flex-col py-8'>
-              <hr />
-              <div className='flex items-center'>
-                <p className='m-0 pr-2'> Lugares disponíveis: </p>
-                <input
-                  className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold ${
-                    editable
-                      ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
-                      : 'outline-none focus:outline-none focus:border-none'
-                  }`}
-                  type='number'
-                  value={rides.seats}
-                />
-              </div>
-              <div className='flex items-center'>
-                <p className='m-0 pr-2'> Lugares ocupados: </p>
-                <input
-                  className={`outline outline-1  border-none rounded-md focus:ring-transparent font-semibold p-0 ${
-                    editable
-                      ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
-                      : 'outline-none focus:outline-none focus:border-none'
-                  }`}
-                  type='number'
-                  value={rides.seats - rides.freeSeats}
-                />
-              </div>
-              <div className='flex items-center'>
-                <p className='m-0 pr-2'> Hora e dia: </p>
-                <input
-                  className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold ${
-                    editable
-                      ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
-                      : 'outline-none focus:outline-none focus:border-none'
-                  }`}
-                  type='datetime-local'
-                  value={rides.startDate}
-                />
-              </div>
-            </div>
-          )}
         </div>
         {editable && (
           <button
