@@ -4,6 +4,7 @@ import { Calendar } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { getAllEvents } from 'Frontend/generated/CalendarController';
 import CalendarEvent from 'Frontend/generated/com/example/application/model/CalendarEvent';
+import { format } from 'date-fns';
 
 export default function CalendarView() {
   const [events, setEvents] = useState<
@@ -13,6 +14,11 @@ export default function CalendarView() {
     undefined
   );
   const [selected, setSelected] = useState<Date[]>([]);
+  const randomImages = [
+    'https://images.unsplash.com/photo-1631016800696-5ea8801b3c2a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80',
+    'https://images.unsplash.com/photo-1631016800696-5ea8801b3c2a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=927&q=80',
+    'https://images.unsplash.com/photo-1587614380862-0294308ae58b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80',
+  ];
 
   const handleSelect = (date: Date) => {
     setSelected([date]);
@@ -43,9 +49,9 @@ export default function CalendarView() {
   }, []);
 
   return (
-    <div className='flex justify-between'>
+    <div className='flex flex-col justify-between flex-wrap gap-8 pb-8'>
       <Calendar
-        className='w-fit'
+        className='w-fit self-center justify-self-center p-2'
         sx={{
           '&': {
             width: '100px',
@@ -76,27 +82,36 @@ export default function CalendarView() {
       />
       <div className='flex-1 px-2 relative'>
         <h1 className='m-0 text-lg text-center'>Detalhes</h1>
-        <div className='flex w-full justify-center p-2'>
-          {showEvent ? (
-            showEvent?.map((event) => {
-              return (
-                <div
-                  key={event?.id}
-                  className='outline outline-offset-2 outline-1 outline-black rounded-md w-64 py-2 px-2 overflow-hidden h-16 text-ellipsis shadow-lg cursor-pointer'
-                  onClick={() => {
-                    window.location.href = event.linkToPost ?? '#';
-                  }}
-                >
-                  <h1 className='m-0 text-lg text-ellipsis'>{event?.title}</h1>
-                  <p className='m-0 text-base font-light'>
-                    {event?.description}
-                  </p>
+        <div className='mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow'>
+          <ul className='divide-y divide-gray-100 py-2 px-4'>
+            {showEvent?.map((event) => (
+              <li className='flex py-4'>
+                <div className='mr-4 flex-1'>
+                  <h4 className='text-lg font-medium text-gray-900'>
+                    {event?.title}
+                  </h4>
+                  <div className='mt-1 text-sm text-gray-400'>
+                    <span>{event?.description}</span> •{' '}
+                    <time>
+                      {format(new Date(event?.startDate ?? ''), 'dd/mm/yyyy') ??
+                        ''}
+                    </time>
+                  </div>
                 </div>
-              );
-            })
-          ) : (
-            <p> Sem detalhes </p>
-          )}
+                <div>
+                  <img
+                    src={
+                      randomImages[
+                        Math.floor(Math.random() * randomImages.length)
+                      ]
+                    }
+                    className='h-20 w-20 rounded-lg object-cover'
+                    alt=''
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
