@@ -204,9 +204,4 @@ public class PostController {
         }
     }
 
-    public void reactNews(Long userId) {
-        Optional<User> user = usersRepository.findById(userId);
-
-    }
-
 }

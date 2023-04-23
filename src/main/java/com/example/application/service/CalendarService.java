@@ -1,5 +1,7 @@
 package com.example.application.service;
 
+import java.util.List;
+
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.CalendarEvent;
 import com.example.application.model.Ride;
@@ -108,5 +110,9 @@ public class CalendarService {
         }
 
         return true;
+    }
+
+    public static List<CalendarEvent> getAllEvents(CalendarRepository calendarRepository) {
+        return calendarRepository.findAll();
     }
 }
