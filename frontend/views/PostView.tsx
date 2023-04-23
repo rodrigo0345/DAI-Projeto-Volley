@@ -109,6 +109,7 @@ export default function PostView() {
             a{' '}
             <time>
               {news && format(new Date(news.createdAt ?? ''), 'dd MMMM yyyy')}
+              {rides && format(new Date(rides.createdAt ?? ''), 'dd MMMM yyyy')}
             </time>
           </p>
         </div>
