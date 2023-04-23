@@ -263,7 +263,7 @@ export default function ForumView() {
   }, []);
 
   return (
-    <div className='min-h-screen flex relative z-10 bg-white'>
+    <div className='min-h-screen flex relative z-10 bg-white shadow-lg'>
       <CreatePost
         openModal={openModal}
         setOpenModal={setOpenModal}

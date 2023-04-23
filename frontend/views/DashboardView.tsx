@@ -82,7 +82,7 @@ export default function DashboardView() {
   ];
 
   return (
-    <main className='min-h-screen flex flex-col md:!flex-row relative z-10 bg-white'>
+    <main className='min-h-screen flex flex-col md:!flex-row relative z-10 bg-white shadow-lg'>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
       <div className='relative flex-1'>
         <img

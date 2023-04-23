@@ -1,8 +1,10 @@
 package com.example.application.controller.Forum;
 
+import com.example.application.repository.CalendarRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
+import com.example.application.service.CalendarService;
 import com.example.application.service.ImageService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
@@ -36,6 +38,8 @@ public class PostController {
     private final NewsRepository newsRepository;
 
     private final UserRepository usersRepository;
+
+    private final CalendarRepository calendarRepository;
 
     private List<PostType> mixPosts(List<News> news, List<Ride> rides, Comparator<? super PostType> cmp) {
         List<PostType> posts = new ArrayList<>();
@@ -152,8 +156,18 @@ public class PostController {
             Ride ride = post.ride;
             ride.setCreatedAt(LocalDateTime.now());
 
+            Long rideId = null;
             try {
-                ridesRepository.save(ride);
+                rideId = ridesRepository.save(ride).getId();
+            } catch (Exception e) {
+                var response = new ResponseType<PostType>();
+                response.error(e.getMessage());
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            try {
+                post.ride.setId(rideId);
+                CalendarService.createEvent(calendarRepository, post);
             } catch (Exception e) {
                 var response = new ResponseType<PostType>();
                 response.error(e.getMessage());
