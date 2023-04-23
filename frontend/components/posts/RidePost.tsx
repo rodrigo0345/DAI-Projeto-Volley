@@ -10,6 +10,7 @@ import { AiFillCar, AiOutlineCar, AiOutlineDelete } from 'react-icons/ai';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { remove } from 'Frontend/generated/RideController';
 import ride from 'Frontend/assets/svgs/ride.svg';
+import AlertDialogs from '../alertDialog/AlertDialog';
 
 export function RidePost({
   post,
@@ -87,19 +88,21 @@ export function RidePost({
               </svg>
             </button>
             {user?.id === post?.driverID && (
-              <button
-                onClick={() => {
-                  (async () => {
-                    await remove(post);
-                    // refresh
-                    window.location.reload();
-                  })();
+              <AlertDialogs
+                customMessage='Apagar um post é uma ação irreversível, tem a certeza de que deseja continuar?'
+                customFunction={async () => {
+                  await remove(post);
+                  // refresh
+                  window.location.reload();
                 }}
-                className=' rounded-md text-gray-400 hover:text-red-400'
-                title='Eliminar Post'
               >
-                <AiOutlineDelete size={20}></AiOutlineDelete>
-              </button>
+                <button
+                  className=' rounded-md text-gray-400 hover:text-red-400'
+                  title='Eliminar Post'
+                >
+                  <AiOutlineDelete size={20}></AiOutlineDelete>
+                </button>
+              </AlertDialogs>
             )}
           </div>
           <div className='flex space-x-2 text-sm text-gray-400'>
