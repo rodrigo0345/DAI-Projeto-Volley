@@ -19,7 +19,7 @@ public class CalendarService {
             // default duration is 2 hours (No idea why)
             event.setEndDate(ride.startDate.plusHours(2));
             event.setLinkToPost("/post/ride/" + ride.getId());
-            event.setTitle("Boleia para" + ride.getDestination());
+            event.setTitle("Boleia para " + ride.getDestination());
             event.setDescription(ride.getDescription());
             event.setDescription(ride.getDescription());
 

@@ -1,8 +1,12 @@
 package com.example.application.controller.Forum;
 
+import com.example.application.model.User.LoginUser;
+import com.example.application.repository.CalendarRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
+import com.example.application.service.CalendarService;
+import com.mysql.cj.log.Log;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
@@ -34,6 +38,8 @@ public class PostController {
     private final NewsRepository newsRepository;
 
     private final UserRepository usersRepository;
+
+    private final CalendarRepository calendarRepository;
 
     private List<PostType> mixPosts(List<News> news, List<Ride> rides, Comparator<? super PostType> cmp) {
         List<PostType> posts = new ArrayList<>();
@@ -157,6 +163,8 @@ public class PostController {
                 return ResponseEntity.badRequest().body(response);
             }
 
+            CalendarService.createEvent(calendarRepository,post); //possivel causa de problemas pq o id é sempre 0
+
         } else {
             var response = new ResponseType<PostType>();
             response.error("O tipo do post está incorreto");
@@ -167,8 +175,71 @@ public class PostController {
         return ResponseEntity.ok().body(response);
     }
 
-    public void editPost(String postType, PostType post) {
+    public void editPost(String postType, PostType post, LoginUser loginUser) {
+
+        if(VerifyOnwer(postType,post,loginUser)){
+            if(postType.toLowerCase().trim().equals("ride")) {
+                Ride ride = post.ride;
+                try {
+                    ridesRepository.save(ride);
+                } catch (Exception e) {
+                    var response = new ResponseType<PostType>();
+                    response.error(e.getMessage());
+                    return;
+                }
+            }
+            else if(postType.toLowerCase().trim().equals("news")) {
+                News news = post.news;
+                try {
+                    newsRepository.save(news);
+                } catch (Exception e) {
+                    var response = new ResponseType<PostType>();
+                    response.error(e.getMessage());
+                    return;
+                }
+            }
+         }
+
+        return;
+
+
     }
+        public boolean VerifyOnwer(String postType, PostType post, LoginUser loginUser) {
+
+            if (postType.toLowerCase().trim().equals("ride")) {
+                Ride ride = post.ride;
+                if (!(ride.getDriverID() == loginUser.getId())) {
+                    var response = new ResponseType<PostType>();
+                    response.error("Não é o dono do post");
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            if (postType.toLowerCase().trim().equals("news")) {
+                News news = post.news;
+                if (!(news.getAuthorID().equals(loginUser.getId()))) {
+                    var response = new ResponseType<PostType>();
+                    response.error("Não é o dono do post");
+                    return false;
+                } else {
+                    return true;
+                }
+
+            }
+            return false;
+        }
+        public void Removepost(String postType, PostType post, LoginUser loginUser){
+            if(VerifyOnwer(postType,post,loginUser)) {
+                if(postType.toLowerCase().trim().equals("ride")){
+                    Ride ride = post.ride;
+                    ridesRepository.delete(ride);
+                }
+            }
+
+        }
+        
 
     public void addClick(PostType post) throws Exception {
         String type = post.getType();

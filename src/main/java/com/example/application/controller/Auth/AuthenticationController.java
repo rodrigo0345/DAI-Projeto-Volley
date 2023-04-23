@@ -114,8 +114,7 @@ public class AuthenticationController {
             user.setRole(Roles.USER);
         }
 
-        // falta encriptar
-        // user.setPassword(request.getPassword());
+
         users.save(user);
 
         // criar token e returnar o utilizador check
