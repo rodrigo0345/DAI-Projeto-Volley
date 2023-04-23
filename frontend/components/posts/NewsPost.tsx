@@ -66,12 +66,7 @@ export function NewsPost({
       className='w-full flex items-center justify-center'
     >
       <div className='flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100'>
-        <div
-          className='flex space-x-4 cursor-pointer'
-          onClick={() => {
-            window.location.href = '/post/news/' + post?.id;
-          }}
-        >
+        <div className='flex space-x-4'>
           <div className='flex flex-col space-y-1'>
             <a
               href={'/profiles/' + post?.authorID}
@@ -86,7 +81,12 @@ export function NewsPost({
             </span>
           </div>
         </div>
-        <div>
+        <div
+          className='cursor-pointer'
+          onClick={() => {
+            window.location.href = '/post/news/' + post?.id;
+          }}
+        >
           <img
             width={300}
             src={news}
