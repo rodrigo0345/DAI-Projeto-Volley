@@ -1,12 +1,19 @@
 package com.example.application.controller.Forum;
 
+
 import com.example.application.model.User.LoginUser;
+
+
 import com.example.application.repository.CalendarRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.CalendarService;
+
 import com.mysql.cj.log.Log;
+
+import com.example.application.service.ImageService;
+
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
@@ -27,6 +34,7 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 @Endpoint
 @AnonymousAllowed
@@ -125,7 +133,8 @@ public class PostController {
         return post;
     }
 
-    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post) throws Exception {
+    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post)
+            throws Exception {
         // PRIORITY
         if (postType.toLowerCase().trim().equals("news")) {
             if (post.news == null) {
@@ -155,8 +164,18 @@ public class PostController {
             Ride ride = post.ride;
             ride.setCreatedAt(LocalDateTime.now());
 
+            Long rideId = null;
             try {
-                ridesRepository.save(ride);
+                rideId = ridesRepository.save(ride).getId();
+            } catch (Exception e) {
+                var response = new ResponseType<PostType>();
+                response.error(e.getMessage());
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            try {
+                post.ride.setId(rideId);
+                CalendarService.createEvent(calendarRepository, post);
             } catch (Exception e) {
                 var response = new ResponseType<PostType>();
                 response.error(e.getMessage());
@@ -177,7 +196,7 @@ public class PostController {
 
     public void editPost(String postType, PostType post, LoginUser loginUser) {
 
-        if(VerifyOnwer(postType,post,loginUser)){
+        if(VerifyOwner(postType,post,loginUser)){
             if(postType.toLowerCase().trim().equals("ride")) {
                 Ride ride = post.ride;
                 try {
@@ -202,9 +221,8 @@ public class PostController {
 
         return;
 
-
     }
-        public boolean VerifyOnwer(String postType, PostType post, LoginUser loginUser) {
+        private boolean VerifyOwner(String postType, PostType post, LoginUser loginUser) {
 
             if (postType.toLowerCase().trim().equals("ride")) {
                 Ride ride = post.ride;
@@ -231,7 +249,7 @@ public class PostController {
             return false;
         }
         public void Removepost(String postType, PostType post, LoginUser loginUser){
-            if(VerifyOnwer(postType,post,loginUser)) {
+            if(VerifyOwner(postType,post,loginUser)) {
                 if(postType.toLowerCase().trim().equals("ride")){
                     Ride ride = post.ride;
                     ridesRepository.delete(ride);
@@ -256,11 +274,6 @@ public class PostController {
             ride.setClicks(ride.getClicks() + 1);
             ridesRepository.save(ride);
         }
-    }
-
-    public void reactNews(Long userId) {
-        Optional<User> user = usersRepository.findById(userId);
-
     }
 
 }

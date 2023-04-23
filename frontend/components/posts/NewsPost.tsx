@@ -85,7 +85,9 @@ export function NewsPost({
       <img
         width={300}
         className='w-full'
-        src='https://cdn.record.pt/images/2019-08/img_920x518$2019_08_21_09_09_07_1591075.jpg'
+        src={
+          'https://cdn.record.pt/images/2019-08/img_920x518$2019_08_21_09_09_07_1591075.jpg'
+        }
         alt='imagem do post'
       />
       <div className='h-10 w-full bg-gradient-to-t from-zinc-800 absolute bottom-10'></div>

@@ -19,7 +19,7 @@ export default function PostView() {
   }, []);
 
   return (
-    <div className='h-screen z-10 bg-white'>
+    <div className='h-screen z-10 bg-white relative'>
       <article className='pt-20'>
         <h1>{news?.title ?? rides?.destination}</h1>
         <h3>{news ? 'News' : 'Ride'}</h3>

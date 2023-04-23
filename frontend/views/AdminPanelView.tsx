@@ -169,7 +169,7 @@ export default function AdminPanelView() {
   }, []);
 
   return (
-    <main className='min-h-screen max-w-screen relative flex z-10 bg-white '>
+    <main className='min-h-screen max-w-screen relative flex z-10 bg-white shadow-lg'>
       <SidePanel
         key={user?.id}
         user={user}
