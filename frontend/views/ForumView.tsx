@@ -321,7 +321,11 @@ export default function ForumView() {
                   );
                 }
                 return (
-                  <RidePost key={post?.ride?.id} post={post?.ride}></RidePost>
+                  <RidePost
+                    key={post?.ride?.id}
+                    post={post?.ride}
+                    user={user}
+                  ></RidePost>
                 );
               })
             ) : (
