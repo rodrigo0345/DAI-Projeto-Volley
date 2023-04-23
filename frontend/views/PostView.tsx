@@ -110,13 +110,12 @@ export default function PostView() {
           </p>
         </div>
         <div className='dark:text-gray-100'>
-          <input
-            className={`outline outline-1 w-full border-none rounded-md focus:ring-transparent p-0 h-fit ${
+          <textarea
+            className={`outline outline-1 w-full border-none rounded-md focus:ring-transparent p-0 font-semibold text-ellipsis ${
               editable
                 ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                 : 'outline-none focus:outline-none focus:border-none'
             }`}
-            type='text'
             value={contentState}
             {...(editable ? { disabled: false } : { disabled: true })}
             onChange={(e) => {
@@ -125,10 +124,11 @@ export default function PostView() {
           />
           {rides && (
             <div className='flex gap-4 flex-col py-8'>
+              <hr />
               <div className='flex items-center'>
                 <p className='m-0 pr-2'> Lugares disponíveis: </p>
                 <input
-                  className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 ${
+                  className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold ${
                     editable
                       ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                       : 'outline-none focus:outline-none focus:border-none'
@@ -140,7 +140,7 @@ export default function PostView() {
               <div className='flex items-center'>
                 <p className='m-0 pr-2'> Lugares ocupados: </p>
                 <input
-                  className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 ${
+                  className={`outline outline-1  border-none rounded-md focus:ring-transparent font-semibold p-0 ${
                     editable
                       ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                       : 'outline-none focus:outline-none focus:border-none'
@@ -152,7 +152,7 @@ export default function PostView() {
               <div className='flex items-center'>
                 <p className='m-0 pr-2'> Hora e dia: </p>
                 <input
-                  className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 ${
+                  className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold ${
                     editable
                       ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                       : 'outline-none focus:outline-none focus:border-none'
