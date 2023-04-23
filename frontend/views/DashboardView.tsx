@@ -1,5 +1,5 @@
 import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/RegisterRequest';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import SidePanel, {
   AsideContent,
 } from 'Frontend/components/sidePanel/SidePanel';
@@ -240,7 +240,7 @@ export default function DashboardView() {
                 { label: 'Pessoal', value: 'pessoal' },
               ]}
             />
-            <Scheduler type={calendarType}></Scheduler>
+            <CalendarView></CalendarView>
           </div>
         )}
       </div>
