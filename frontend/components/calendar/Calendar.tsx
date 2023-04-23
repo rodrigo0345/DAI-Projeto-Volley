@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { getAllEvents } from 'Frontend/generated/CalendarController';
 import CalendarEvent from 'Frontend/generated/com/example/application/model/CalendarEvent';
 import { format } from 'date-fns';
+import { motion } from 'framer-motion';
 
 export default function CalendarView() {
   const [events, setEvents] = useState<
@@ -49,7 +50,7 @@ export default function CalendarView() {
   }, []);
 
   return (
-    <div className='flex flex-col justify-between flex-wrap gap-8 pb-8'>
+    <motion.div className='flex flex-col justify-between flex-wrap gap-8 pb-8'>
       <Calendar
         className='w-fit self-center justify-self-center p-2'
         sx={{
@@ -80,45 +81,50 @@ export default function CalendarView() {
           onClick: () => handleSelect(date),
         })}
       />
-      <div className='flex-1 px-2 relative'>
-        <h1 className='m-0 text-lg text-center'>Detalhes</h1>
-        <div className='mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow'>
-          <ul className='divide-y divide-gray-100 py-2 px-4 cursor-pointer'>
-            {showEvent?.map((event) => (
-              <li
-                className='flex py-4'
-                onClick={() => {
-                  window.location.href = event.linkToPost ?? '#';
-                }}
-              >
-                <div className='mr-4 flex-1'>
-                  <h4 className='text-lg font-medium text-gray-900'>
-                    {event?.title}
-                  </h4>
-                  <div className='mt-1 text-sm text-gray-400'>
-                    <span>{event?.description}</span> •{' '}
-                    <time>
-                      {format(new Date(event?.startDate ?? ''), 'dd/mm/yyyy') ??
-                        ''}
-                    </time>
+      {showEvent && (
+        <div className='flex-1 px-2 relative'>
+          <h1 className='m-0 text-lg text-center'>Detalhes</h1>
+          <div className='mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow'>
+            <ul className='divide-y divide-gray-100 py-2 px-4 cursor-pointer'>
+              {showEvent?.map((event) => (
+                <motion.li
+                  layout
+                  className='flex py-4'
+                  onClick={() => {
+                    window.location.href = event.linkToPost ?? '#';
+                  }}
+                >
+                  <div className='mr-4 flex-1'>
+                    <h4 className='text-lg font-medium text-gray-900'>
+                      {event?.title}
+                    </h4>
+                    <div className='mt-1 text-sm text-gray-400'>
+                      <span>{event?.description}</span> •{' '}
+                      <time>
+                        {format(
+                          new Date(event?.startDate ?? ''),
+                          'dd/mm/yyyy'
+                        ) ?? ''}
+                      </time>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <img
-                    src={
-                      randomImages[
-                        Math.floor(Math.random() * randomImages.length)
-                      ]
-                    }
-                    className='h-20 w-20 rounded-lg object-cover'
-                    alt=''
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+                  <div>
+                    <img
+                      src={
+                        randomImages[
+                          Math.floor(Math.random() * randomImages.length)
+                        ]
+                      }
+                      className='h-20 w-20 rounded-lg object-cover'
+                      alt=''
+                    />
+                  </div>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </motion.div>
   );
 }
