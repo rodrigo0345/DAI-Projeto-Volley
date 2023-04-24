@@ -131,8 +131,11 @@ public class PostController {
         return post;
     }
 
-    public ResponseEntity<ResponseType<PostType>> createPost(String postType, PostType post)
+    public ResponseEntity<ResponseType<PostType>> createPost(PostType post)
             throws Exception {
+
+        String postType = post.getType();
+
         // PRIORITY
         if (postType.toLowerCase().trim().equals("news")) {
             if (post.news == null) {
@@ -190,9 +193,10 @@ public class PostController {
         return ResponseEntity.ok().body(response);
     }
 
-    public void editPost(String postType, PostType post, LoginUser loginUser) {
+    public void editPost(PostType post, LoginUser loginUser) {
 
-        if (VerifyOwner(postType, post, loginUser)) {
+        String postType = post.getType();
+        if (VerifyOwner(post, loginUser)) {
             if (postType.toLowerCase().trim().equals("ride")) {
                 Ride ride = post.ride;
                 try {
@@ -205,6 +209,7 @@ public class PostController {
             } else if (postType.toLowerCase().trim().equals("news")) {
                 News news = post.news;
                 try {
+                    removePost(post, loginUser);
                     newsRepository.save(news);
                 } catch (Exception e) {
                     var response = new ResponseType<PostType>();
@@ -218,11 +223,13 @@ public class PostController {
 
     }
 
-    private boolean VerifyOwner(String postType, PostType post, LoginUser loginUser) {
+    private boolean VerifyOwner(PostType post, LoginUser loginUser) {
 
+        String postType = post.getType();
         if (postType.toLowerCase().trim().equals("ride")) {
             Ride ride = post.ride;
-            if (!(ride.getDriverID() == loginUser.getId())) {
+            Long id = Long.valueOf(loginUser.getId());
+            if (!(ride.getDriverID().equals(id))) {
                 var response = new ResponseType<PostType>();
                 response.error("Não é o dono do post");
                 return false;
@@ -233,7 +240,8 @@ public class PostController {
 
         if (postType.toLowerCase().trim().equals("news")) {
             News news = post.news;
-            if (!(news.getAuthorID().equals(loginUser.getId()))) {
+            Long id = Long.valueOf(loginUser.getId());
+            if (!(news.getAuthorID().equals(id))) {
                 var response = new ResponseType<PostType>();
                 response.error("Não é o dono do post");
                 return false;
@@ -245,8 +253,9 @@ public class PostController {
         return false;
     }
 
-    public void Removepost(String postType, PostType post, LoginUser loginUser) {
-        if (VerifyOwner(postType, post, loginUser)) {
+    public void removePost(PostType post, LoginUser loginUser) {
+        String postType = post.getType();
+        if (VerifyOwner(post, loginUser)) {
             if (postType.toLowerCase().trim().equals("ride")) {
                 Ride ride = post.ride;
                 ridesRepository.delete(ride);
