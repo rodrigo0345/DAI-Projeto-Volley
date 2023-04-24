@@ -1,12 +1,12 @@
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { getPost } from 'Frontend/generated/PostController';
+import { editPost, getPost } from 'Frontend/generated/PostController';
 import { findById } from 'Frontend/generated/UserController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
 import News from 'Frontend/generated/com/example/application/model/News/News';
 import Ride from 'Frontend/generated/com/example/application/model/Ride';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { format } from 'date-fns';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -23,6 +23,55 @@ export default function PostView() {
     undefined
   );
   const [myPost, setMyPost] = useState(false);
+
+  const noticia = {
+    titulo: useRef<HTMLInputElement>(null),
+    descricao: useRef<HTMLTextAreaElement>(null),
+    imagem: useRef<HTMLInputElement>(null),
+  };
+
+  const boleia = {
+    destino: useRef<HTMLInputElement>(null),
+    dataPartida: useRef<HTMLInputElement>(null),
+    lugaresDisp: useRef<HTMLInputElement>(null),
+    descricao: useRef<HTMLTextAreaElement>(null),
+    telefone: useRef<HTMLInputElement>(null),
+    localPartida: useRef<HTMLInputElement>(null),
+  };
+
+  async function submitChanges(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    event.preventDefault();
+    console.log(type);
+    const postType: PostType = {};
+    if (type === 'news') {
+      postType.news = {
+        title: noticia?.titulo?.current?.value,
+        content: noticia?.descricao?.current?.value,
+        authorID: news?.authorID ?? 0,
+        id: news?.id,
+        clicks: news?.clicks ?? 0,
+        image: undefined,
+        likes: news?.likes ?? 0,
+      };
+      const result = await editPost('news', postType, user);
+    } else if (type === 'ride') {
+      postType.ride = {
+        origin: boleia?.localPartida?.current?.value,
+        destination: boleia?.destino?.current?.value,
+        startDate: boleia?.dataPartida?.current?.value,
+        description: boleia?.descricao?.current?.value,
+        driverID: rides?.driverID ?? 0,
+        id: rides?.id,
+        freeSeats: rides?.freeSeats ?? 0,
+        driverContact: boleia?.telefone?.current?.value,
+        seats: Number.parseInt(boleia?.lugaresDisp?.current?.value ?? '0'),
+        clicks: rides?.clicks ?? 0,
+      };
+      const result = await editPost('ride', postType, user);
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -42,6 +91,7 @@ export default function PostView() {
         setContentState(content);
         setTitleState(title);
 
+        console.log('Here');
         const author = await findById(post?.news?.authorID ?? 0);
         setAuthor(author);
       } else if (type === 'ride') {
@@ -66,11 +116,13 @@ export default function PostView() {
           <div className='flex items-center justify-between my-8'>
             {
               <input
+                ref={(news && noticia.titulo) || (rides && boleia.destino)}
                 className={`text-5xl font-bold leading-none m-0 h-fit bg-white outline outline-1  border-none rounded-md focus:ring-transparent p-0 ${
                   editable
                     ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                     : 'outline-none focus:outline-none focus:border-none'
                 }`}
+                onChange={(e) => setTitleState(e.target.value)}
                 value={titleState}
                 {...(editable ? { disabled: false } : { disabled: true })}
               ></input>
@@ -156,6 +208,7 @@ export default function PostView() {
         <hr />
         <div className='dark:text-gray-100 h-fit' contentEditable={true}>
           <textarea
+            ref={(news && noticia.descricao) ?? (rides && boleia.descricao)}
             className={`resize-none outline outline-1 w-full overflow-visible border-none rounded-md focus:ring-transparent p-0 font-semibold text-ellipsis h-[20em] ${
               editable
                 ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
@@ -172,6 +225,7 @@ export default function PostView() {
           <button
             className='bg-green-400 text-white font-bold py-1 px-3 rounded-md shadow-lg hover:bg-green-500'
             title='Guardar alterações'
+            onClick={submitChanges}
           >
             Guardar
           </button>

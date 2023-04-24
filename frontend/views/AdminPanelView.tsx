@@ -102,11 +102,15 @@ export default function AdminPanelView() {
 
     let roleString: string | undefined;
     if (roleValue === 'Administrador') {
-      roleString = 'ADMIN';
+      roleString = 'admin';
+    } else if (roleValue === 'Treinador') {
+      roleString = 'treinador';
     } else if (roleValue === 'Encarregado') {
-      roleString = 'MANAGER';
-    } else if (roleValue === 'Educando') {
-      roleString = 'USER';
+      roleString = 'encarregado';
+    } else if (roleValue === 'Atleta') {
+      roleString = 'atleta';
+    } else if (roleValue === 'Seccionista') {
+      roleString = 'seccionista';
     }
 
     const register: RegisterRequest = {
