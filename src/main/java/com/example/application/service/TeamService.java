@@ -55,7 +55,22 @@ public class TeamService {
         // façam isto
     }
 
-    public static void removerEquipa(TeamRepository teamRepository) {
+    public static ResponseType<Team> removerEquipa(TeamRepository teamRepository, LoginUser loginUser, Team team) {
+
+        User user = users.findById(loginUser.getId()).get();
+
+
+        if(!(user.getId() == team.getManager().getId() || user.getRole().equals("ADMIN"))){
+            var response  = new ResponseType<Team>();
+            response.error = ("Não tem permissoes para remover equipas");
+            return response;
+        }
+
+            teamRepository.delete(team);
+            var response = new ResponseType<Team>();
+
+           response.success(team);
+           return response;
 
     }
 
