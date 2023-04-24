@@ -1,7 +1,9 @@
 package com.example.application.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,7 +40,22 @@ public class Ride {
     private String location;
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
-    private User passengers;
+    @ElementCollection
+    //@JoinColumn(name = "user_id", nullable = true)
+    private List<Integer> passengers;
+
+    public void addPassenger(Integer userID) {
+        passengers.add(userID);
+    }
+    
+    public void removePassenger(Integer userID) {
+        passengers.remove(userID);
+    }
+
+    public static boolean containsPassenger(List<Integer> passengers, User user) {
+        if (passengers.contains(user.getId()) == true) return true;
+        return false;
+    }
+
 }
+

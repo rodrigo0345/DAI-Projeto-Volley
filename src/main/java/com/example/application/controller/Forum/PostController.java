@@ -11,6 +11,7 @@ import com.example.application.service.CalendarService;
 import com.mysql.cj.log.Log;
 
 import com.example.application.service.ImageService;
+import com.example.application.service.RideService;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
@@ -279,6 +280,26 @@ public class PostController {
             ride.setClicks(ride.getClicks() + 1);
             ridesRepository.save(ride);
         }
+    }
+
+    public int addPassenger(PostType post, User user) {
+        String type = post.getType();
+        if (post == null || type == "ride") return 0;
+        Ride ride = post.ride;
+        if (RideService.verifyPassengerInRide(ride, user)) return 0;
+        ride.addPassenger(user.getId());
+        ridesRepository.save(ride);
+        return 1;
+    }
+
+    public int removePassenger(PostType post, User user) {
+        String type = post.getType();
+        if (post == null || type == "ride") return 0;
+        Ride ride = post.ride;
+        if (!RideService.verifyPassengerInRide(ride, user)) return 0;
+        ride.removePassenger(user.getId());
+        ridesRepository.save(ride);
+        return 1;
     }
 
 }
