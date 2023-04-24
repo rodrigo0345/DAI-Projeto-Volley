@@ -31,7 +31,7 @@ export async function criarNoticia(
 
   let serverResult: ResponseEntity | undefined;
   try {
-    serverResult = await PostController.createPost('news', {
+    serverResult = await PostController.createPost({
       news: {
         title: titulo,
         clicks: 0,
@@ -71,7 +71,7 @@ export async function criarBoleia(
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
   user: LoginUser
 ) {
-  const result = await createPost('ride', {
+  const result = await createPost({
     ride: {
       destination: boleia.destino.current?.value ?? '',
       clicks: 0,

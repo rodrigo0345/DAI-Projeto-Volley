@@ -49,7 +49,7 @@ export function RidePost({
               {user?.firstname + ' ' + user?.lastname}
             </a>
             <span className='text-xs text-gray-400'>
-              {formatDistanceToNow(Date.parse(post?.createdAt ?? ''), {
+              {formatDistanceToNow(Date.parse(post?.createdAt ?? '24/4/2023'), {
                 addSuffix: true,
               })}
             </span>

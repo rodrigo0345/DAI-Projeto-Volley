@@ -54,8 +54,10 @@ export default function PostView() {
         clicks: news?.clicks ?? 0,
         image: undefined,
         likes: news?.likes ?? 0,
+        createdAt: news?.createdAt ?? '',
       };
-      const result = await editPost('news', postType, user);
+
+      const result = await editPost(postType, user);
     } else if (type === 'ride') {
       postType.ride = {
         origin: boleia?.localPartida?.current?.value,
@@ -69,7 +71,7 @@ export default function PostView() {
         seats: Number.parseInt(boleia?.lugaresDisp?.current?.value ?? '0'),
         clicks: rides?.clicks ?? 0,
       };
-      const result = await editPost('ride', postType, user);
+      const result = await editPost(postType, user);
     }
   }
 
