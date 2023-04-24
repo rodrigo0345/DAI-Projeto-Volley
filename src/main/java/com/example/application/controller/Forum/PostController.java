@@ -1,8 +1,6 @@
 package com.example.application.controller.Forum;
 
-
 import com.example.application.model.User.LoginUser;
-
 
 import com.example.application.repository.CalendarRepository;
 import com.example.application.repository.NewsRepository;
@@ -180,9 +178,7 @@ public class PostController {
                 var response = new ResponseType<PostType>();
                 response.error(e.getMessage());
                 return ResponseEntity.badRequest().body(response);
-            }
-
-            CalendarService.createEvent(calendarRepository,post); //possivel causa de problemas pq o id é sempre 0
+            } // possivel causa de problemas pq o id é sempre 0
 
         } else {
             var response = new ResponseType<PostType>();
@@ -196,8 +192,8 @@ public class PostController {
 
     public void editPost(String postType, PostType post, LoginUser loginUser) {
 
-        if(VerifyOwner(postType,post,loginUser)){
-            if(postType.toLowerCase().trim().equals("ride")) {
+        if (VerifyOwner(postType, post, loginUser)) {
+            if (postType.toLowerCase().trim().equals("ride")) {
                 Ride ride = post.ride;
                 try {
                     ridesRepository.save(ride);
@@ -206,8 +202,7 @@ public class PostController {
                     response.error(e.getMessage());
                     return;
                 }
-            }
-            else if(postType.toLowerCase().trim().equals("news")) {
+            } else if (postType.toLowerCase().trim().equals("news")) {
                 News news = post.news;
                 try {
                     newsRepository.save(news);
@@ -217,47 +212,48 @@ public class PostController {
                     return;
                 }
             }
-         }
+        }
 
         return;
 
     }
-        private boolean VerifyOwner(String postType, PostType post, LoginUser loginUser) {
 
+    private boolean VerifyOwner(String postType, PostType post, LoginUser loginUser) {
+
+        if (postType.toLowerCase().trim().equals("ride")) {
+            Ride ride = post.ride;
+            if (!(ride.getDriverID() == loginUser.getId())) {
+                var response = new ResponseType<PostType>();
+                response.error("Não é o dono do post");
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        if (postType.toLowerCase().trim().equals("news")) {
+            News news = post.news;
+            if (!(news.getAuthorID().equals(loginUser.getId()))) {
+                var response = new ResponseType<PostType>();
+                response.error("Não é o dono do post");
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    public void Removepost(String postType, PostType post, LoginUser loginUser) {
+        if (VerifyOwner(postType, post, loginUser)) {
             if (postType.toLowerCase().trim().equals("ride")) {
                 Ride ride = post.ride;
-                if (!(ride.getDriverID() == loginUser.getId())) {
-                    var response = new ResponseType<PostType>();
-                    response.error("Não é o dono do post");
-                    return false;
-                } else {
-                    return true;
-                }
+                ridesRepository.delete(ride);
             }
-
-            if (postType.toLowerCase().trim().equals("news")) {
-                News news = post.news;
-                if (!(news.getAuthorID().equals(loginUser.getId()))) {
-                    var response = new ResponseType<PostType>();
-                    response.error("Não é o dono do post");
-                    return false;
-                } else {
-                    return true;
-                }
-
-            }
-            return false;
         }
-        public void Removepost(String postType, PostType post, LoginUser loginUser){
-            if(VerifyOwner(postType,post,loginUser)) {
-                if(postType.toLowerCase().trim().equals("ride")){
-                    Ride ride = post.ride;
-                    ridesRepository.delete(ride);
-                }
-            }
 
-        }
-        
+    }
 
     public void addClick(PostType post) throws Exception {
         String type = post.getType();
