@@ -15,7 +15,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
+const rowsExample = [
   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
@@ -31,6 +31,10 @@ export default function TeamView() {
   const { user } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
   const [opened, { open, close }] = useDisclosure(false);
+  const [filterByName, setFilterByName] = useState('');
+  const [rows, setRows] = useState(rowsExample);
+  const [usersSelected, setUsersSelected] = useState<number[]>([]);
+
   useEffect(() => {
     if (user?.role === 'admin' || user?.role === 'ADMIN') setIsAdmin(true);
   }, []);
@@ -43,10 +47,37 @@ export default function TeamView() {
         centered
         className=''
       >
+        <div className='mb-4 flex flex-col'>
+          <label htmlFor='' className='text-sm text-gray-500'>
+            Filtrar utilizadores
+          </label>
+          <input
+            type='text'
+            onChange={(e) => {
+              setFilterByName(e.target.value);
+            }}
+            className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+          />
+        </div>
         {/* Modal content */}
-        <DataGrid rows={rows} columns={columns} checkboxSelection />
+        <DataGrid
+          rows={rows.filter((value) => {
+            if (filterByName === '') return true;
+            return (
+              value.firstName?.includes(filterByName) ||
+              value.lastName?.includes(filterByName) ||
+              value.age?.toString().includes(filterByName)
+            );
+          })}
+          rowSelection={true}
+          columns={columns}
+          onRowSelectionModelChange={(e: any) => {
+            setUsersSelected(e);
+          }}
+          checkboxSelection
+        />
 
-        <button className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-2 rounded-md'>
+        <button className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'>
           Criar
         </button>
       </Modal>
