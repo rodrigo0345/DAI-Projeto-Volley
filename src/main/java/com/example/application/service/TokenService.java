@@ -1,5 +1,6 @@
 package com.example.application.service;
 
+import com.example.application.controller.Users.UserController;
 import org.springframework.http.ResponseEntity;
 
 import com.example.application.model.User.LoginUser;

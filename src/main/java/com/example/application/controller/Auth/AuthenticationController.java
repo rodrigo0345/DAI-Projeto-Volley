@@ -102,7 +102,6 @@ public class AuthenticationController {
 
         // encriptar palavra pass
         user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
-        // registar na base de dados
 
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
