@@ -95,7 +95,12 @@ export default function DashboardView() {
             <h1 className='text-3xl font-bold'>Dashboard</h1>
             <div className='w-full max-w-full grid md:!grid-cols-4 sm:!grid-cols-2 grid-cols-1 grid-rows-4 gap-x-4 gap-y-10 self-center'>
               {!(user?.role?.toUpperCase() === Roles.SECCTIONIST) && (
-                <Box className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/team';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Equipa
                   </h2>
