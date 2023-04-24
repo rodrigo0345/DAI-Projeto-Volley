@@ -15,35 +15,41 @@ import java.util.List;
 public class TeamService {
     private UserController userController;
 
-    private UserRepository users;
-    public static void criarEquipaTreinador(TeamRepository teamRepository, List<User> list , LoginUser loginUser, String escalao, String name) {
+    private static UserRepository users;
+    public static ResponseType<Team> criarEquipaTreinador(TeamRepository teamRepository, List<User> equipa , LoginUser loginUser, Escalao escalao, String name) {
 
-        User user = users.findById(loginUser.getId());
+        User user = users.findById(loginUser.getId()).get();
         if(!(user.getRole().equals("MANAGER"))){
-            var response = new ResponseType<>();
+            var response = new ResponseType<Team>();
             response.error("Não é treinador");
-            return;
+            return response;
         }
-        if(list == null){
-            var response = new ResponseType<>();
+        if(equipa == null){
+            var response = new ResponseType<Team>();
             response.error("Não existe jogadores");
+            return response;
         }
 
-        if(!(escalao == null)){
-            var role = Escalao.valueOf(escalao);
-
+        if(escalao == null){
+            var response = new ResponseType<Team>();
+            response.error("O escalão esta vazio");
+            return response;
         }
 
         Team team = new Team();
         team.setName(name);
-        team.setPlayers(list);
+        team.setPlayers(equipa);
         team.setManager(user);
         team.setEscalao(escalao);
 
-
-
+        var response = new ResponseType<Team>();
+        response.success(team);
+        return  response;
 
     }
+
+
+
 
     public static void editarEquipa(TeamRepository teamRepository) {
         // façam isto
