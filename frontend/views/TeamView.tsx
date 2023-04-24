@@ -33,6 +33,7 @@ export default function TeamView() {
   const [opened, { open, close }] = useDisclosure(false);
   const [filterByName, setFilterByName] = useState('');
   const [rows, setRows] = useState(rowsExample);
+  const [usersSelected, setUsersSelected] = useState<number[]>([]);
 
   useEffect(() => {
     if (user?.role === 'admin' || user?.role === 'ADMIN') setIsAdmin(true);
@@ -70,7 +71,9 @@ export default function TeamView() {
           })}
           rowSelection={true}
           columns={columns}
-          pageSizeOptions={[5, 10, 20]}
+          onRowSelectionModelChange={(e: any) => {
+            setUsersSelected(e);
+          }}
           checkboxSelection
         />
 
