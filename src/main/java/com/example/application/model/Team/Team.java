@@ -32,7 +32,7 @@ public class Team {
     private String name;
 
     @ManyToOne
-    private User managerID;
+    private User manager;
 
     @OneToMany(mappedBy = "id")
     private List<User> players;
