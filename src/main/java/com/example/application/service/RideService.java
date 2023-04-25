@@ -16,4 +16,9 @@ public class RideService {
         return false;
     }
 
+    public static boolean verifyIfUserIsDriver(Ride ride, LoginUser user) {
+        if(ride.getDriverID() == user.getId()) return true;
+        return false;
+    }
+
 }

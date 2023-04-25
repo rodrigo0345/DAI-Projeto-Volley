@@ -47,16 +47,16 @@ public class Ride {
 
     public void addPassenger(Integer userID) {
         passengers.add(userID);
-        freeSeats++;
+        freeSeats--;
     }
     
     public void removePassenger(Integer userID) {
         passengers.remove(userID);
-        freeSeats--;
+        freeSeats++;
     }
 
     public static boolean containsPassenger(List<Integer> passengers, LoginUser user) {
-        if (passengers.contains(user.getId()) == true) return true;
+        if (passengers.contains(user.getId())) return true;
         return false;
     }
 
