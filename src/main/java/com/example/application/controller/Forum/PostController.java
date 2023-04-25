@@ -282,9 +282,9 @@ public class PostController {
         }
     }
 
-    public int addPassenger(PostType post, User user) {
+    public int addPassenger(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return 0;
+        if (post == null || type == "news") return 0;
         Ride ride = post.ride;
         if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)) return 0;
         ride.addPassenger(user.getId());
@@ -292,14 +292,19 @@ public class PostController {
         return 1;
     }
 
-    public int removePassenger(PostType post, User user) {
+    public int removePassenger(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return 0;
+        if (post == null || type == "news") return 0;
         Ride ride = post.ride;
         if (!RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)) return 0;
         ride.removePassenger(user.getId());
         ridesRepository.save(ride);
         return 1;
+    }
+
+    public boolean checkPassengerInRide(Ride ride, LoginUser user) {
+        if (Ride.containsPassenger(ride.getPassengers(), user)) return true;
+        return false;
     }
 
 }

@@ -77,7 +77,7 @@ export default function ProfilesView() {
   return (
     <motion.div
       layout
-      className='min-h-screen flex items-center justify-center z-10 bg-white relative'
+      className='min-h-screen flex items-center justify-center z-10 bg-white relative shadow-lg'
     >
       <motion.div
         layout
