@@ -32,20 +32,23 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminPanelView from './AdminPanelView';
 import DashboardView from './DashboardView';
+import AnimatePages from 'Frontend/components/AnimatePages/AnimatePages';
 
 export default function MainLayout() {
   return (
     <Context>
       <ThemeProvider>
         <AppLayout
-          className='max-w-screen scrollbar-hide'
+          className='max-w-screen scrollbar-hide min-h-screen'
           primarySection='drawer'
         >
           <MainHeader></MainHeader>
           <Suspense fallback={<Placeholder />}>
-            <Outlet />
+            <AnimatePages>
+              <Outlet />
+              <MainFooter></MainFooter>
+            </AnimatePages>
           </Suspense>
-          <MainFooter></MainFooter>
         </AppLayout>
       </ThemeProvider>
       <ToastContainer />

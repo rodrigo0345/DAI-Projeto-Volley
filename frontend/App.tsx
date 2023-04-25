@@ -29,14 +29,11 @@ const router = createBrowserRouter([
   {
     errorElement: <NotFound />,
     element: (
-      <Suspense fallback={<MainLoadingScreen />}>
+      <Suspense >
         <MainLayout />
       </Suspense>
     ),
     children: [
-      {
-        errorElement: <NotFound />,
-      },
       {
         errorElement: <NotFound />,
         element: <GuestsRoute />,
