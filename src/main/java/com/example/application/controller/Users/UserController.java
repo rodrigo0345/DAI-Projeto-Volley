@@ -75,7 +75,7 @@ public class UserController {
       response.error("Utilizador não existe");
       return ResponseEntity.badRequest().body(response);
     }
-    if (!currentUser.getRole().toString().equals("ADMIN") | !currentUser.getId().equals(user.getId())) {
+    if (!currentUser.getRole().toString().equals("ADMIN") || !currentUser.getId().equals(user.getId())) {
       var response = new ResponseType<LoginUser>();
       response.error("Você não tem permissão para editar o utilizador");
       return ResponseEntity.badRequest().body(response);

@@ -19,6 +19,8 @@ public interface TeamRepository extends CrudRepository<Team, Integer> {
 
     public Team findById(Long id);
 
+    public Team findByName(String name);
+
     // public List<NewsLike> findAllfromUser(Pageable rq);
 
     // public List<NewsLike> findAllfromNews(Pageable rq);
