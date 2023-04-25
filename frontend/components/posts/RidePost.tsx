@@ -30,6 +30,7 @@ export function RidePost({
   const [driver, setDriver] = useState<string | undefined>(undefined);
   const [userJoined, setUserJoined] = useState<boolean>(false);
   const [freeSeats, setFreeSeats] = useState<number>(post?.freeSeats ?? 0);
+  const [author, setAuthor] = useState<LoginUser | undefined>();
 
   useEffect(() => {
     (async () => {
@@ -37,6 +38,8 @@ export function RidePost({
       setDriver(driver?.firstname + ' ' + driver?.lastname);
       const result = await checkPassengerInRide(post, user);
       setUserJoined(result);
+      const author = await findById(post?.driverID ?? 0);
+      setAuthor(author);
     })();
   }, []);
 
@@ -86,7 +89,7 @@ export function RidePost({
               href={'/profiles/' + post?.driverID}
               className='text-sm font-semibold text-yellow-400'
             >
-              {user?.firstname + ' ' + user?.lastname}
+              {author?.firstname + ' ' + author?.lastname}
             </a>
             <span className='text-xs text-gray-400'>
               {formatDistanceToNow(Date.parse(post?.createdAt ?? '24/4/2023'), {
