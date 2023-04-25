@@ -14,6 +14,7 @@ import AlertDialogs from '../alertDialog/AlertDialog';
 import {
   addPassenger,
   checkPassengerInRide,
+  removePassenger,
 } from 'Frontend/generated/PostController';
 import { toast } from 'react-toastify';
 
@@ -28,6 +29,7 @@ export function RidePost({
 }) {
   const [driver, setDriver] = useState<string | undefined>(undefined);
   const [userJoined, setUserJoined] = useState<boolean>(false);
+  const [freeSeats, setFreeSeats] = useState<number>(post?.freeSeats ?? 0);
 
   useEffect(() => {
     (async () => {
@@ -36,35 +38,36 @@ export function RidePost({
       const result = await checkPassengerInRide(post, user);
       setUserJoined(result);
     })();
-  });
+  }, []);
 
   useEffect(() => {}, [userJoined]);
 
   async function joinRide() {
-    const result = await addPassenger(
-      {
-        ride: {
-          clicks: post?.clicks ?? 0,
-          createdAt: post?.createdAt ?? '20/04/2000',
-          description: post?.description ?? '',
-          destination: post?.destination ?? '',
-          driverID: post?.driverID ?? 0,
-          id: post?.id ?? 0,
-          freeSeats: post?.freeSeats ?? 0,
-          origin: post?.origin ?? '',
-          passengers: post?.passengers ?? [],
-          seats: post?.seats ?? 0,
-          startDate: post?.startDate ?? '20/04/2000',
+    if (!userJoined) {
+      const result = await addPassenger(
+        {
+          ride: post,
         },
-      },
-      user
-    );
-    if (result === 1) {
-      toast.success('Joined ride');
-      setUserJoined(true);
-    } else if (result === 0) {
-      toast.error('You already joined this ride');
-      setUserJoined(false);
+        user
+      );
+      if (result === 1) {
+        toast.success('Entrou na boleia');
+        setUserJoined(true);
+        setFreeSeats(freeSeats - 1);
+      } else if (result === 0) {
+        toast.error('You already joined this ride');
+        setUserJoined(false);
+      }
+    } else if (userJoined) {
+      const result = await removePassenger({ ride: post }, user);
+      if (result === 1) {
+        toast.success('Left ride');
+        setUserJoined(false);
+        setFreeSeats(freeSeats + 1);
+      } else if (result === 0) {
+        toast.error('Erro ao sair da boleia');
+        setUserJoined(true);
+      }
     }
   }
 
@@ -167,7 +170,7 @@ export function RidePost({
               ) : (
                 <AiOutlineCar aria-label='save' size={20}></AiOutlineCar>
               )}
-              <span>{post?.freeSeats}</span>
+              <span>{freeSeats}</span>
             </button>
           </div>
         </div>
