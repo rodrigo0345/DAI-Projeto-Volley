@@ -302,4 +302,9 @@ public class PostController {
         return 1;
     }
 
+    public boolean checkPassengerInRide(Ride ride, LoginUser user) {
+        if (Ride.containsPassenger(ride.getPassengers(), user)) return true;
+        return false;
+    }
+
 }
