@@ -37,7 +37,9 @@ export default function TeamView() {
 
   useEffect(() => {
     if (user?.role === 'admin' || user?.role === 'ADMIN') setIsAdmin(true);
+    async () => {};
   }, []);
+
   return (
     <div className='min-h-screen flex items-center justify-center z-10 bg-white relative shadow-lg'>
       <Modal

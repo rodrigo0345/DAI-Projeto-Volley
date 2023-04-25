@@ -1,9 +1,3 @@
-import {
-  addLike,
-  getLikes,
-  remove,
-  removeLike,
-} from 'Frontend/generated/NewsController';
 import { findById } from 'Frontend/generated/UserController';
 import News from 'Frontend/generated/com/example/application/model/News/News';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
@@ -15,7 +9,7 @@ import { BsBookmark } from 'react-icons/bs';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import news from 'Frontend/assets/svgs/news.svg';
 import AlertDialogs from '../alertDialog/AlertDialog';
-import { checkUserHasLiked } from 'Frontend/generated/PostController';
+import { addLike, checkUserHasLiked, getLikes, remove, removeLike } from 'Frontend/generated/NewsController';
 
 export function NewsPost({
   post,
@@ -44,11 +38,11 @@ export function NewsPost({
 
   async function likePost() {
     if (!userLiked) {
-      await addLike(post?.id ?? 0);
+      await addLike({ news: post }, user);
       setLikes(likes + 1);
       setUserLiked(true);
     } else {
-      await removeLike(post?.id ?? 0);
+      await removeLike({ news: post }, user);
       setLikes(likes - 1);
       setUserLiked(false);
     }
