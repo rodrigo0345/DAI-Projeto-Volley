@@ -3,6 +3,7 @@ import { UserContext } from 'Frontend/contexts/UserContext';
 import { editPost } from 'Frontend/generated/PostController';
 import { editUser, findById } from 'Frontend/generated/UserController';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
+import { motion } from 'framer-motion';
 import { useEffect, useState, startTransition, useContext } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { redirect, useActionData, useLoaderData } from 'react-router-dom';
@@ -74,8 +75,14 @@ export default function ProfilesView() {
   }
 
   return (
-    <div className='min-h-screen flex items-center justify-center z-10 bg-white relative'>
-      <div className='bg-zinc-100 w-fit h-fit flex flex-col p-6 rounded-md shadow-lg gap-4'>
+    <motion.div
+      layout
+      className='min-h-screen flex items-center justify-center z-10 bg-white relative'
+    >
+      <motion.div
+        layout
+        className='bg-zinc-100 w-fit h-fit flex flex-col p-6 rounded-md shadow-lg gap-4'
+      >
         <div className='flex justify-center gap-4'>
           <h1 className='text-2xl font-bold my-4'>
             {userProfile?.firstname + ' ' + userProfile?.lastname}
@@ -90,7 +97,8 @@ export default function ProfilesView() {
             </button>
           )}
         </div>
-        <input
+        <motion.input
+          layout
           className={`outline outline-1  border-none rounded-md focus:ring-transparent ${
             editable
               ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none'
@@ -103,7 +111,8 @@ export default function ProfilesView() {
             setFirstName(e.target.value);
           }}
         />
-        <input
+        <motion.input
+          layout
           className={`outline outline-1 border-none rounded-md focus:ring-transparent ${
             editable
               ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none'
@@ -116,7 +125,8 @@ export default function ProfilesView() {
             setLastName(e.target.value);
           }}
         />
-        <input
+        <motion.input
+          layout
           className={`outline outline-1 border-none rounded-md focus:ring-transparent ${
             editable
               ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none'
@@ -130,7 +140,8 @@ export default function ProfilesView() {
           }}
         />
 
-        <input
+        <motion.input
+          layout
           className={`outline outline-1 border-none rounded-md focus:ring-transparent`}
           type='text'
           disabled
@@ -141,14 +152,15 @@ export default function ProfilesView() {
         />
 
         {editable && (
-          <button
+          <motion.button
+            layout
             className='bg-green-500 text-white font-semibold rounded-md py-2 hover:bg-green-400'
             onClick={submitChanges}
           >
             Guardar alterações
-          </button>
+          </motion.button>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
