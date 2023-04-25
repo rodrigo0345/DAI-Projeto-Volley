@@ -52,11 +52,7 @@ public class TeamService {
 
     }
 
-
-
-
     public static ResponseEntity<ResponseType<Team>> editarEquipa(TeamRepository teamRepository,
-                                                                  UserRepository users,
                                                                   AuthenticationService service,
                                                                   LoginUser currentUser,
                                                                   Team team)
@@ -115,7 +111,8 @@ public class TeamService {
 
     public static ResponseType<Team> removerEquipa(TeamRepository teamRepository,
                                                    LoginUser loginUser,
-                                                   Team team) {
+                                                   Team team)
+    {
 
         User user = users.findById(loginUser.getId()).get();
 
@@ -135,8 +132,30 @@ public class TeamService {
     }
 
     public static ResponseEntity<ResponseType<Team>> adicionarJogador(TeamRepository teamRepository,
-                                                                      Team team)
+                                                                      Team team,
+                                                                      LoginUser currentUser,
+                                                                      AuthenticationService service)
     {
+        //verificar se o token é válido
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+        if (!isValidToken) {
+            var response = new ResponseType<Team>();
+            response.error("Token inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+        //verificar se currentUser é admin ou treinador da equipa
+        if(!(currentUser.getRole().toString().equals("MANAGER") || currentUser.getRole().toString().equals("ADMIN"))){
+            var response =  new ResponseType<Team>();
+            response.error("Não tem permissoes para remover jogadores");
+            return ResponseEntity.badRequest().body(response);
+        }
+        //verificar se o jogador é valido
+        if (team.getPlayers() == null) {
+            var response = new ResponseType<Team>();
+            response.error("O jogador não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+        //verificar se o jogador já pertence a outra equipa
         Set<User> jogadoresEmEquipas = new HashSet<>();
         List<Team> todasEquipas = teamRepository.findAll();
 
@@ -162,17 +181,19 @@ public class TeamService {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseType<List<Long>> removerJogador(TeamRepository teamRepository, List<Long> atletas, LoginUser loginUser, Team team) {
+    public static ResponseType<List<Long>> removerJogador(TeamRepository teamRepository,
+                                                          List<Long> atletas,
+                                                          LoginUser loginUser,
+                                                          Team team)
+    {
 
         User user = users.findById(loginUser.getId()).get();
 
-
         if(!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))){
             var response =  new ResponseType<List<Long>>();
-            response.error("NÃ£o tem permissoes para remover jogadores");
-            return  response;
+            response.error("Não tem permissoes para remover jogadores");
+            return response;
         }
-
 
         if(team == null){
             var response = new ResponseType<List<Long>>();
@@ -194,16 +215,39 @@ public class TeamService {
         }
 
         team.getPlayers().remove(jogadores);
-
+        teamRepository.save(team);
 
         var response = new ResponseType<List<Long>>();
         response.success(atletas);
         return  response;
     }
 
-    public static void trocarTreinador(TeamRepository teamRepository) {
+    public static ResponseEntity<ResponseType<Team>> trocarTreinador(TeamRepository teamRepository,
+                                                                     AuthenticationService service,
+                                                                     LoginUser currentUser,
+                                                                     Team team)
+    {
+        //verificar se o token é válido
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+        if (!isValidToken) {
+            var response = new ResponseType<Team>();
+            response.error("Token inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+        //verificar se currentUser é admin
+        if (!currentUser.getRole().toString().equals("ADMIN")) {
+            var response = new ResponseType<Team>();
+            response.error("Você não tem permissão para editar a equipa");
+            return ResponseEntity.badRequest().body(response);
+        }
 
+        Team aux = teamRepository.findById(team.getId());
+        aux.setManager(team.getManager());
 
+        teamRepository.save(aux);
+
+        var response = new ResponseType<Team>();
+        response.success(team);
+        return ResponseEntity.ok().body(response);
     }
-
 }
