@@ -284,7 +284,7 @@ public class PostController {
 
     public int addPassenger(PostType post, User user) {
         String type = post.getType();
-        if (post == null || type == "ride") return 0;
+        if (post == null || type == "news") return 0;
         Ride ride = post.ride;
         if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)) return 0;
         ride.addPassenger(user.getId());
@@ -294,7 +294,7 @@ public class PostController {
 
     public int removePassenger(PostType post, User user) {
         String type = post.getType();
-        if (post == null || type == "ride") return 0;
+        if (post == null || type == "news") return 0;
         Ride ride = post.ride;
         if (!RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)) return 0;
         ride.removePassenger(user.getId());
