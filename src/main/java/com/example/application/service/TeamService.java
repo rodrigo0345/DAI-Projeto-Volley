@@ -165,8 +165,43 @@ public class TeamService {
         return ResponseEntity.ok().body(response);
     }
 
-    public static void removerJogador(TeamRepository teamRepository) {
+    public static ResponseType<List<Long>> removerJogador(TeamRepository teamRepository, List<Long> atletas, LoginUser loginUser, Team team) {
 
+        User user = users.findById(loginUser.getId()).get();
+
+
+        if(!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))){
+            var response =  new ResponseType<List<Long>>();
+            response.error("NÃ£o tem permissoes para remover jogadores");
+            return  response;
+        }
+
+
+        if(team == null){
+            var response = new ResponseType<List<Long>>();
+            response.error("Sem equipa selecionada");
+            return response;
+        }
+
+        List<User> jogadores = null;
+
+        for(Long elemento : atletas){
+            User atleta = users.findById(elemento).get();
+            jogadores.add(atleta);
+        }
+
+        if(!team.getPlayers().contains(atletas)){
+            var response = new ResponseType<List<Long>>();
+            response.error("Os atletaes nao pertecem a esta equipa");
+            return response;
+        }
+
+        team.getPlayers().remove(jogadores);
+
+
+        var response = new ResponseType<List<Long>>();
+        response.success(atletas);
+        return  response;
     }
 
     public static void trocarTreinador(TeamRepository teamRepository) {
