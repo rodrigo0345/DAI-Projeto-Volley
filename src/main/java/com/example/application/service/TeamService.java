@@ -1,7 +1,5 @@
 package com.example.application.service;
 
-import com.example.application.controller.Forum.Wrappers.PostType;
-import com.example.application.controller.Users.UserController;
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Team.Escalao;
 import com.example.application.model.Team.Team;
@@ -9,10 +7,8 @@ import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
-import com.example.application.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 
-import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -117,7 +113,9 @@ public class TeamService {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseType<Team> removerEquipa(TeamRepository teamRepository, LoginUser loginUser, Team team) {
+    public static ResponseType<Team> removerEquipa(TeamRepository teamRepository,
+                                                   LoginUser loginUser,
+                                                   Team team) {
 
         User user = users.findById(loginUser.getId()).get();
 
@@ -137,8 +135,7 @@ public class TeamService {
     }
 
     public static ResponseEntity<ResponseType<Team>> adicionarJogador(TeamRepository teamRepository,
-                                                                      Team team,
-                                                                      UserRepository users)
+                                                                      Team team)
     {
         Set<User> jogadoresEmEquipas = new HashSet<>();
         List<Team> todasEquipas = teamRepository.findAll();
