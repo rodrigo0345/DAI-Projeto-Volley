@@ -23,6 +23,7 @@ export default function PostView() {
     undefined
   );
   const [myPost, setMyPost] = useState(false);
+  const [passengers, setPassengers] = useState<LoginUser[]>([]);
 
   const noticia = {
     titulo: useRef<HTMLInputElement>(null),
@@ -99,6 +100,12 @@ export default function PostView() {
       } else if (type === 'ride') {
         setRides(post?.ride);
         setMyPost(user?.id === post?.ride?.driverID);
+
+        // fetch all passangers
+        post?.ride?.passengers?.forEach(async (passenger) => {
+          const passengerUser = await findById(passenger);
+          setPassengers((passengers) => [...passengers, passengerUser ?? {}]);
+        });
 
         const title = post?.ride?.origin + ' - ' + post?.ride?.destination;
         const content = post?.ride?.description;
@@ -204,6 +211,23 @@ export default function PostView() {
                 type='datetime-local'
                 value={rides.startDate}
               />
+            </div>
+            <div className='flex items-center text-sm'>
+              <p className='m-0 pr-2 text-sm'> Passageiros: </p>
+              {passengers.length !== 0 ? (
+                passengers.map((passenger) => (
+                  <a
+                    href={'/profiles/' + passenger.id}
+                    className='hover:underline mr-2'
+                  >
+                    <span className='m-0 pr-2 text-sm'>
+                      {passenger.firstname + ' ' + passenger.lastname}
+                    </span>
+                  </a>
+                ))
+              ) : (
+                <span className='m-0 pr-2 text-sm'>Sem passageiros</span>
+              )}
             </div>
           </div>
         )}
