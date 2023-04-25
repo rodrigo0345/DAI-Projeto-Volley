@@ -11,7 +11,10 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { remove } from 'Frontend/generated/RideController';
 import ride from 'Frontend/assets/svgs/ride.svg';
 import AlertDialogs from '../alertDialog/AlertDialog';
-import { addPassenger } from 'Frontend/generated/PostController';
+import {
+  addPassenger,
+  checkPassengerInRide,
+} from 'Frontend/generated/PostController';
 import { toast } from 'react-toastify';
 
 export function RidePost({
@@ -30,8 +33,12 @@ export function RidePost({
     (async () => {
       const driver = await findById(post?.driverID);
       setDriver(driver?.firstname + ' ' + driver?.lastname);
+      const result = await checkPassengerInRide(post, user);
+      setUserJoined(result);
     })();
   });
+
+  useEffect(() => {}, [userJoined]);
 
   async function joinRide() {
     const result = await addPassenger(
@@ -54,8 +61,10 @@ export function RidePost({
     );
     if (result === 1) {
       toast.success('Joined ride');
+      setUserJoined(true);
     } else if (result === 0) {
       toast.error('You already joined this ride');
+      setUserJoined(false);
     }
   }
 
@@ -150,7 +159,6 @@ export function RidePost({
               type='button'
               className='flex items-center p-1 space-x-1.5 hover:text-yellow-400'
               onClick={() => {
-                setUserJoined(!userJoined);
                 joinRide();
               }}
             >
