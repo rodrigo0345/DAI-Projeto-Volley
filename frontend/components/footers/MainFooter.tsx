@@ -9,8 +9,8 @@ export default function mainFooter() {
             <img className='w-auto h-9' src={Logo} alt='Vitória de Guimarães' />
 
             <p className='text-base leading-relaxed text-gray-600 mt-7'>
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint. Velit officia consequat duis enim velit mollit.
+              Aplicação desenvolvida no âmbito da unidade curricular de
+              Desenvolvimento de Aplicações Informáticas.
             </p>
 
             <ul className='flex items-center space-x-3 mt-9'>
