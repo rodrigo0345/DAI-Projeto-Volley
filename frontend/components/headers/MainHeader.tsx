@@ -43,7 +43,7 @@ export default function mainHeader() {
               <>
                 <li className='font-semibold  text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 focus:before:translate-y-2 cursor-pointer'>
                   <a
-                    href=''
+                    href='#funcionalidades'
                     className='dark:text-gray-100 text-gray-800 hover:no-underline'
                   >
                     Funcionalidades
@@ -51,7 +51,7 @@ export default function mainHeader() {
                 </li>
                 <li className='font-semibold text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 cursor-pointer'>
                   <a
-                    href=''
+                    href='#sobrenos'
                     className='dark:text-gray-100 text-gray-800 hover:no-underline'
                   >
                     Sobre nós

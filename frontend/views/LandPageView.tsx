@@ -50,58 +50,74 @@ const AnimatedTitleGroup = styled.div`
 
 export default function LandPageView() {
   return (
-    <section className='relative z-10'>
+    <section className='relative z-10 shadow-lg'>
       <div className='bg-white'>
-        <section className='bg-[#FCF8F1] bg-opacity-30 py-10 sm:py-16 lg:py-24 pt-40 sm:pt-52 md:pt-60'>
-          <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
-            <div className='grid items-center grid-cols-1 gap-12 lg:grid-cols-2'>
-              <div>
-                <p className='text-base font-semibold tracking-wider text-blue-600 uppercase'>
-                  Nunca foi tão fácil gerir a tua equipa
-                </p>
-                <h1 className='mt-4 text-4xl font-bold text-black lg:mt-8 sm:text-6xl xl:text-8xl'>
-                  Gere e acompanha a tua equipa
-                </h1>
-                <p className='mt-4 text-base text-black lg:mt-8 sm:text-xl'>
-                  Fala com o teu clube antes de entrar.
-                </p>
-
-                <a
-                  href='/login'
-                  title=''
-                  className='inline-flex items-center px-6 py-4 mt-8 font-semibold text-black transition-all duration-200 bg-yellow-300 rounded-full lg:mt-16 hover:bg-yellow-400 focus:bg-yellow-400'
-                  role='button'
-                >
-                  Começa já
-                  <svg
-                    className='w-6 h-6 ml-8 -mr-2'
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
-                      stroke-width='1.5'
-                      d='M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z'
-                    />
-                  </svg>
+        <div className='relative isolate px-6 pt-14 lg:px-8'>
+          <div
+            className='absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80'
+            aria-hidden='true'
+          >
+            <div
+              className='relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-yellow-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]'
+              style={{
+                clipPath:
+                  'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+              }}
+            ></div>
+          </div>
+          <div className='mx-auto max-w-2xl py-32 sm:py-48 lg:py-56'>
+            <div className='hidden sm:mb-8 sm:flex sm:justify-center'>
+              <div className='relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20'>
+                Vem exprimentar a aplicação.{' '}
+                <a href='/login' className='font-semibold text-yellow-400'>
+                  <span className='absolute inset-0' aria-hidden='true'></span>
+                  Começa já <span aria-hidden='true'>&rarr;</span>
                 </a>
               </div>
-
-              <div>
-                <img
-                  className='w-full'
-                  src='https://cdn.rareblocks.xyz/collection/celebration/images/hero/1/hero-img.png'
-                  alt=''
-                />
+            </div>
+            <div className='text-center'>
+              <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>
+                Gerir a tua equipa nunca foi tão fácil
+              </h1>
+              <p className='mt-6 text-lg leading-8 text-gray-600'>
+                Aqui consegues manter-te a par do que se passa na tua equipa.
+                Desde encontrar boleia para os jogos e treinos a gerir as
+                presenças dos jogadores.
+              </p>
+              <div className='mt-10 flex items-center justify-center gap-x-6'>
+                <a
+                  href='#'
+                  className='rounded-md bg-yellow-300 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400'
+                >
+                  Começa já
+                </a>
+                <a
+                  href='#funcionalidades'
+                  className='text-sm font-semibold leading-6 text-gray-900'
+                >
+                  Descobre mais <span aria-hidden='true'>→</span>
+                </a>
               </div>
             </div>
           </div>
-        </section>
+          <div
+            className='absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]'
+            aria-hidden='true'
+          >
+            <div
+              className='relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-yellow-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]'
+              style={{
+                clipPath:
+                  'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+              }}
+            ></div>
+          </div>
+        </div>
       </div>
-      <section className='py-10 bg-white sm:py-16 lg:py-24'>
+      <section
+        className='py-10 bg-white sm:py-16 lg:py-24'
+        id='funcionalidades'
+      >
         <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
           <div className='grid grid-cols-1 gap-12 text-center sm:grid-cols-2 md:grid-cols-3 lg:gap-y-16'>
             <div>
@@ -132,7 +148,7 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Secured Payments
+                Vê notícias
               </h3>
               <p className='mt-4 text-base text-gray-600'>
                 Amet minim mollit non deserunt ullamco est sit aliqua dolor do
@@ -168,7 +184,7 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Fast & Easy to Load
+                Oferece boleias
               </h3>
               <p className='mt-4 text-base text-gray-600'>
                 Amet minim mollit non deserunt ullamco est sit aliqua dolor do
@@ -204,7 +220,7 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Light & Dark Version
+                Marca convocatórias
               </h3>
               <p className='mt-4 text-base text-gray-600'>
                 Amet minim mollit non deserunt ullamco est sit aliqua dolor do
@@ -431,7 +447,7 @@ export default function LandPageView() {
           </div>
         </div>
       </section>
-      <section className='py-10 bg-gray-100 sm:py-16 lg:py-24'>
+      <section className='py-10 bg-gray-100 sm:py-16 lg:py-24' id='sobrenos'>
         <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
           <div className='max-w-2xl mx-auto text-center'>
             <h2 className='text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl'>
