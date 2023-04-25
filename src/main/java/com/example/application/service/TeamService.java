@@ -10,18 +10,24 @@ import com.example.application.model.User.User;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
-import com.mysql.cj.log.Log;
 import org.springframework.http.ResponseEntity;
 
+import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TeamService {
 
     private static UserRepository users;
-    public static ResponseType<Team> criarEquipaTreinador(TeamRepository teamRepository, List<User> equipa , LoginUser loginUser, Escalao escalao, String name) {
-
+    public static ResponseType<Team> criarEquipaTreinador(TeamRepository teamRepository,
+                                                          List<User> equipa,
+                                                          LoginUser loginUser,
+                                                          Escalao escalao,
+                                                          String name)
+    {
         User user = users.findById(loginUser.getId()).get();
-        if(!(user.getRole().equals("MANAGER"))){
+        if(!(user.getRole().toString().equals("MANAGER"))){
             var response = new ResponseType<Team>();
             response.error("Não é treinador");
             return response;
@@ -53,8 +59,12 @@ public class TeamService {
 
 
 
-    public static ResponseEntity<ResponseType<Team>> editarEquipa(TeamRepository teamRepository, UserRepository users, AuthenticationService service, LoginUser currentUser, Team team) {
-
+    public static ResponseEntity<ResponseType<Team>> editarEquipa(TeamRepository teamRepository,
+                                                                  UserRepository users,
+                                                                  AuthenticationService service,
+                                                                  LoginUser currentUser,
+                                                                  Team team)
+    {
         //verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
@@ -92,35 +102,6 @@ public class TeamService {
             response.error("O nome do treinador não pode ser vazio");
             return ResponseEntity.badRequest().body(response);
         }
-        //verificar se os jogadores na equipa nao estao noutra equipa
-        /* 1 TENTATIVA
-        for (User user : team.getPlayers()) {
-            List<Team> teams = teamRepository.findAll();
-            for (Team t : teams) {
-                if (!(t.getId().equals(team.getId())) && t.getPlayers().contains(user)) {
-                    var response = new ResponseType<Team>();
-                    response.error(user.getFirstname() + " " + user.getLastname() + " já pertence à equipa " + t.getName());
-                    return ResponseEntity.badRequest().body(response);
-                }
-            }
-        }*/
-        /*2 TENTATIVA
-        Set<User> jogadoresNaEquipa = new HashSet<>();
-
-        List<Team> allTeams = teamRepository.findAll();
-        for (Team t : allTeams) {
-            jogadoresNaEquipa.addAll(t.getPlayers());
-        }
-
-        for (User user : team.getPlayers()) {
-            if (usersInTeam.contains(user)) {
-                var response = new ResponseType<Team>();
-                response.error(user.getFirstname() + " " + user.getLastname() + " já pertence a outra equipa");
-                return ResponseEntity.badRequest().body(response);
-            }
-            usersInTeam.add(user);
-        }
-        */
 
         //fazer update da equipa
         Team aux = teamRepository.findById(team.getId());
@@ -155,8 +136,33 @@ public class TeamService {
 
     }
 
-    public static void adicionarJogador(TeamRepository teamRepository) {
+    public static ResponseEntity<ResponseType<Team>> adicionarJogador(TeamRepository teamRepository,
+                                                                      Team team,
+                                                                      UserRepository users)
+    {
+        Set<User> jogadoresEmEquipas = new HashSet<>();
+        List<Team> todasEquipas = teamRepository.findAll();
 
+        for (Team t : todasEquipas) {
+            jogadoresEmEquipas.addAll(t.getPlayers());
+        }
+
+        for (User user : team.getPlayers()) {
+            if (jogadoresEmEquipas.contains(user)) {
+                var response = new ResponseType<Team>();
+                response.error(user.getFirstname() + " " + user.getLastname() + " já pertence a outra equipa");
+                return ResponseEntity.badRequest().body(response);
+            }
+        }
+
+        Team aux = teamRepository.findById(team.getId());
+        aux.setPlayers(team.getPlayers());
+
+        teamRepository.save(aux);
+
+        var response = new ResponseType<Team>();
+        response.success(team);
+        return ResponseEntity.ok().body(response);
     }
 
     public static void removerJogador(TeamRepository teamRepository) {
