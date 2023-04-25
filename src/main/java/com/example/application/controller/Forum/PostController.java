@@ -335,8 +335,7 @@ public class PostController {
     }
 
     public boolean checkUserHasLiked(News news, LoginUser user) {
-        if (News.hasLiked(news.getLikesID(), user))
-            return true;
+        if (News.hasLiked(news.getLikesID(), user)) return true;
         return false;
     }
 
