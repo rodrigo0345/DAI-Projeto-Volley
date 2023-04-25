@@ -304,7 +304,7 @@ public class PostController {
             return false;
         ride.removePassenger(user.getId());
         ridesRepository.save(ride);
-        return false;
+        return true;
     }
 
     public boolean checkPassengerInRide(Ride ride, LoginUser user) {
