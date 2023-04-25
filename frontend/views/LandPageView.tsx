@@ -50,7 +50,7 @@ const AnimatedTitleGroup = styled.div`
 
 export default function LandPageView() {
   return (
-    <section className='relative z-10 shadow-lg'>
+    <section className='relative z-10 shadow-lg scroll-smooth'>
       <div className='bg-white'>
         <div className='relative isolate px-6 pt-14 lg:px-8'>
           <div
@@ -67,13 +67,18 @@ export default function LandPageView() {
           </div>
           <div className='mx-auto max-w-2xl py-32 sm:py-48 lg:py-56'>
             <div className='hidden sm:mb-8 sm:flex sm:justify-center'>
-              <div className='relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20'>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className='relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20'
+              >
                 Vem exprimentar a aplicação.{' '}
                 <a href='/login' className='font-semibold text-yellow-400'>
                   <span className='absolute inset-0' aria-hidden='true'></span>
                   Começa já <span aria-hidden='true'>&rarr;</span>
                 </a>
-              </div>
+              </motion.div>
             </div>
             <div className='text-center'>
               <h1 className='text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'>
@@ -86,7 +91,7 @@ export default function LandPageView() {
               </p>
               <div className='mt-10 flex items-center justify-center gap-x-6'>
                 <a
-                  href='#'
+                  href='/login'
                   className='rounded-md bg-yellow-300 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400'
                 >
                   Começa já
@@ -120,7 +125,11 @@ export default function LandPageView() {
       >
         <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
           <div className='grid grid-cols-1 gap-12 text-center sm:grid-cols-2 md:grid-cols-3 lg:gap-y-16'>
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-blue-100'
@@ -151,12 +160,16 @@ export default function LandPageView() {
                 Vê notícias
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                Treinadores e Administradores podem sempre publicar notícias
+                para que todos fiquem a par das novidades.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-orange-100'
@@ -187,12 +200,16 @@ export default function LandPageView() {
                 Oferece boleias
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                Planear uma viagem nunca foi tão fácil. Com a nossa plataforma
+                podes oferecer boleias aos teus colegas para os jogos e treinos.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-green-100'
@@ -223,12 +240,15 @@ export default function LandPageView() {
                 Marca convocatórias
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                Anota os jogadores que serão convocados para os jogos e treinos.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-purple-100'
@@ -256,15 +276,18 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Light & Dark Version
+                Cria equipas
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                Divide a secção em vários escalões e equipas.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-gray-100'
@@ -292,15 +315,19 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Fast & Easy to Load
+                Marca presenças
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                Faz o registro de quem veio aos treinos e jogos para que depois
+                possam ser obtidos dados estatísticos.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 1.4 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-yellow-100'
@@ -328,15 +355,19 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Secured Payments
+                Acede ao calendário
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                Sempre que planeares alguma coisa, o calendário está lá para ti.
+                Vê os dias em que tens treinos, jogos ou boleias agendadas.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 1.6 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-gray-100'
@@ -364,15 +395,19 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Light & Dark Version
+                Guarda estatísticas
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                No final do ano, repensa as tuas decisões com base nos dados
+                estatísticos.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 1.8 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-rose-100'
@@ -400,15 +435,18 @@ export default function LandPageView() {
                 </svg>
               </div>
               <h3 className='mt-8 text-lg font-semibold text-black'>
-                Secured Payments
+                Transmite jogos
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                amet sint. Velit officia consequat duis enim velit mollit.
+                Vê todos os jogos em direto.
               </p>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+            >
               <div className='relative flex items-center justify-center mx-auto'>
                 <svg
                   className='text-lime-100'
@@ -443,7 +481,7 @@ export default function LandPageView() {
                 Amet minim mollit non deserunt ullamco est sit aliqua dolor do
                 amet sint. Velit officia consequat duis enim velit mollit.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -451,24 +489,29 @@ export default function LandPageView() {
         <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
           <div className='max-w-2xl mx-auto text-center'>
             <h2 className='text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl'>
-              How do we create success
+              Mais sobre nós
             </h2>
             <p className='max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600'>
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint. Velit officia consequat duis.
+              Esta aplicação foi desenvolvida no âmbito da unidade curricular de
+              Desenvolvimento de Aplicações Informáticas e tem como objetivo
+              facilitar a gestão de boleias e membros da secção de voleibol do
+              <span className='font-bold'> Vitória de Guimarães</span>.
             </p>
           </div>
 
           <ul className='max-w-md mx-auto mt-16 space-y-12'>
             <li className='relative flex items-start'>
-              <div
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 1 }}
                 className='-ml-0.5 absolute mt-0.5 top-14 left-8 w-px border-l-4 border-dotted border-gray-300 h-full'
                 aria-hidden='true'
-              ></div>
+              ></motion.div>
 
               <div className='relative flex items-center justify-center flex-shrink-0 w-16 h-16 bg-white rounded-full shadow'>
                 <svg
-                  className='w-10 h-10 text-fuchsia-600'
+                  className='w-10 h-10 text-yellow-400'
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
@@ -482,26 +525,40 @@ export default function LandPageView() {
                   />
                 </svg>
               </div>
-              <div className='ml-6'>
+              <motion.div
+                initial={{ x: 100 }}
+                whileInView={{ x: 0 }}
+                transition={{ delay: 0.2 }}
+                className='ml-6'
+              >
                 <h3 className='text-lg font-semibold text-black'>
-                  Create a free account
+                  Registro de contas
                 </h3>
                 <p className='mt-4 text-base text-gray-600'>
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
+                  De modo a registrar novas contas, é necessário que contacte o
+                  administrador da aplicação. Só ele tem permissões para criar
+                  novas contas.
                 </p>
-              </div>
+              </motion.div>
             </li>
 
             <li className='relative flex items-start'>
-              <div
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 1 }}
                 className='-ml-0.5 absolute mt-0.5 top-14 left-8 w-px border-l-4 border-dotted border-gray-300 h-full'
                 aria-hidden='true'
-              ></div>
+              ></motion.div>
 
-              <div className='relative flex items-center justify-center flex-shrink-0 w-16 h-16 bg-white rounded-full shadow'>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.5 }}
+                className='relative flex items-center justify-center flex-shrink-0 w-16 h-16 bg-white rounded-full shadow'
+              >
                 <svg
-                  className='w-10 h-10 text-fuchsia-600'
+                  className='w-10 h-10 text-yellow-400'
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
@@ -514,22 +571,33 @@ export default function LandPageView() {
                     d='M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122'
                   />
                 </svg>
-              </div>
-              <div className='ml-6'>
+              </motion.div>
+              <motion.div
+                initial={{ x: 100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className='ml-6'
+              >
                 <h3 className='text-lg font-semibold text-black'>
-                  Build your website
+                  Funcionalidades
                 </h3>
                 <p className='mt-4 text-base text-gray-600'>
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
+                  Todas as funcionalidades aqui presentes têm como objetivo
+                  facilitar a gestão e organização da secção de voleibol do
+                  Vitória de Guimarães.
                 </p>
-              </div>
+              </motion.div>
             </li>
 
             <li className='relative flex items-start'>
-              <div className='relative flex items-center justify-center flex-shrink-0 w-16 h-16 bg-white rounded-full shadow'>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 1.2 }}
+                className='relative flex items-center justify-center flex-shrink-0 w-16 h-16 bg-white rounded-full shadow'
+              >
                 <svg
-                  className='w-10 h-10 text-fuchsia-600'
+                  className='w-10 h-10 text-yellow-400'
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
@@ -542,16 +610,22 @@ export default function LandPageView() {
                     d='M13 10V3L4 14h7v7l9-11h-7z'
                   />
                 </svg>
-              </div>
-              <div className='ml-6'>
+              </motion.div>
+              <motion.div
+                initial={{ x: 100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ delay: 1.7 }}
+                className='ml-6'
+              >
                 <h3 className='text-lg font-semibold text-black'>
-                  Release & launch
+                  Privacidade
                 </h3>
                 <p className='mt-4 text-base text-gray-600'>
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
+                  Todos os dados recolhidos são de uso exclusivo da secção de
+                  voleibol do Vitória de Guimarães e não serão partilhados com
+                  terceiros.
                 </p>
-              </div>
+              </motion.div>
             </li>
           </ul>
         </div>
