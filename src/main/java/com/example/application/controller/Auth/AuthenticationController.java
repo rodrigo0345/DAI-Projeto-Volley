@@ -107,12 +107,11 @@ public class AuthenticationController {
         user.setLastname(request.getLastName());
 
         if (!(request.getRoles() == null)) {
-            var role = Roles.valueOf(request.getRoles());
+            Roles role = Roles.valueOf(request.getRoles());
             user.setRole(role);
         } else {
             user.setRole(Roles.USER);
         }
-
 
         users.save(user);
 
