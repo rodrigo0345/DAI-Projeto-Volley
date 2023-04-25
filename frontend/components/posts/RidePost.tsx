@@ -50,21 +50,21 @@ export function RidePost({
         },
         user
       );
-      if (result === 1) {
+      if (result) {
         toast.success('Entrou na boleia');
         setUserJoined(true);
         setFreeSeats(freeSeats - 1);
-      } else if (result === 0) {
+      } else if (!result) {
         toast.error('You already joined this ride');
         setUserJoined(false);
       }
     } else if (userJoined) {
       const result = await removePassenger({ ride: post }, user);
-      if (result === 1) {
+      if (result) {
         toast.success('Left ride');
         setUserJoined(false);
         setFreeSeats(freeSeats + 1);
-      } else if (result === 0) {
+      } else if (!result) {
         toast.error('Erro ao sair da boleia');
         setUserJoined(true);
       }
