@@ -15,19 +15,19 @@ import { BsBookmark } from 'react-icons/bs';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import news from 'Frontend/assets/svgs/news.svg';
 import AlertDialogs from '../alertDialog/AlertDialog';
+import { checkUserHasLiked } from 'Frontend/generated/PostController';
 
 export function NewsPost({
   post,
   type,
-  currentUserID,
+  user,
 }: {
   post?: News;
   type?: string;
-  currentUserID?: number;
+  user?: LoginUser;
 }) {
   const [likes, setLikes] = useState<number>(0);
   const [userLiked, setUserLiked] = useState<boolean>(false);
-  const [justMounted, setJustMounted] = useState<boolean>(true);
   const [author, setAuthor] = useState<LoginUser | undefined>();
 
   useEffect(() => {
@@ -35,29 +35,24 @@ export function NewsPost({
     (async () => {
       const likes = await getLikes(post?.id ?? 0);
       setLikes(likes ?? 0);
+      const userLiked = await checkUserHasLiked(post, user);
+      setUserLiked(userLiked);
       const author = await findById(post?.authorID ?? 0);
       setAuthor(author);
     })();
-    setJustMounted(false);
   }, []);
 
-  useEffect(() => {
-    if (justMounted) return;
-    if (userLiked) {
-      console.log('user liked');
-      (async () => {
-        // send like to the server
-        await addLike(post?.id ?? 0);
-        setLikes(likes + 1);
-      })();
+  async function likePost() {
+    if (!userLiked) {
+      await addLike(post?.id ?? 0);
+      setLikes(likes + 1);
+      setUserLiked(true);
     } else {
-      (async () => {
-        // send like to the server
-        await removeLike(post?.id ?? 0);
-        setLikes(likes - 1);
-      })();
+      await removeLike(post?.id ?? 0);
+      setLikes(likes - 1);
+      setUserLiked(false);
     }
-  }, [userLiked]);
+  }
 
   return (
     <motion.div
@@ -114,7 +109,7 @@ export function NewsPost({
                 <path d='M404,344a75.9,75.9,0,0,0-60.208,29.7L179.869,280.664a75.693,75.693,0,0,0,0-49.328L343.792,138.3a75.937,75.937,0,1,0-13.776-28.976L163.3,203.946a76,76,0,1,0,0,104.108l166.717,94.623A75.991,75.991,0,1,0,404,344Zm0-296a44,44,0,1,1-44,44A44.049,44.049,0,0,1,404,48ZM108,300a44,44,0,1,1,44-44A44.049,44.049,0,0,1,108,300ZM404,464a44,44,0,1,1,44-44A44.049,44.049,0,0,1,404,464Z'></path>
               </svg>
             </button>
-            {currentUserID === post?.authorID && (
+            {user?.id === post?.authorID && (
               <AlertDialogs
                 customMessage='Apagar um post é uma ação irreversível, tem a certeza de que deseja continuar?'
                 customFunction={async () => {
@@ -149,7 +144,7 @@ export function NewsPost({
               type='button'
               className='flex items-center p-1 space-x-1.5 hover:text-yellow-400'
               onClick={() => {
-                setUserLiked(!userLiked);
+                likePost();
               }}
             >
               {userLiked ? (

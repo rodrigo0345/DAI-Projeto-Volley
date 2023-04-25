@@ -316,7 +316,7 @@ export default function ForumView() {
                     <NewsPost
                       key={post?.news.id}
                       post={post.news}
-                      currentUserID={user?.id}
+                      user={user}
                     ></NewsPost>
                   );
                 }
