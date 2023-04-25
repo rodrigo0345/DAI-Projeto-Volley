@@ -282,7 +282,7 @@ public class PostController {
         }
     }
 
-    public int addPassenger(PostType post, User user) {
+    public int addPassenger(PostType post, LoginUser user) {
         String type = post.getType();
         if (post == null || type == "news") return 0;
         Ride ride = post.ride;
@@ -292,7 +292,7 @@ public class PostController {
         return 1;
     }
 
-    public int removePassenger(PostType post, User user) {
+    public int removePassenger(PostType post, LoginUser user) {
         String type = post.getType();
         if (post == null || type == "news") return 0;
         Ride ride = post.ride;
