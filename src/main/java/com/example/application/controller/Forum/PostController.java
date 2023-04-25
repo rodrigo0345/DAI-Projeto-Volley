@@ -11,6 +11,7 @@ import com.example.application.service.CalendarService;
 import com.mysql.cj.log.Log;
 
 import com.example.application.service.ImageService;
+import com.example.application.service.NewsService;
 import com.example.application.service.RideService;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -313,6 +314,30 @@ public class PostController {
         return false;
     }
 
+    public boolean addLike(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type == "ride") return false;
+        News news = post.news;
+        if(NewsService.verifyUserHasLiked(news, user)) return false;
+        news.addLike(user.getId());
+        newsRepository.save(news);
+        return true;
+    }
 
+    public boolean removeLike(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type == "ride") return false;
+        News news = post.news;
+        if(!NewsService.verifyUserHasLiked(news, user)) return false;
+        news.removeLike(user.getId());
+        newsRepository.save(news);
+        return true;
+    }
+
+    public boolean checkUserHasLiked(News news, LoginUser user) {
+        if (News.hasLiked(news.getLikesID(), user))
+            return true;
+        return false;
+    }
 
 }

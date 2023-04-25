@@ -10,7 +10,10 @@ import lombok.NonNull;
 
 import javax.persistence.*;
 
+import com.example.application.model.User.LoginUser;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -36,8 +39,26 @@ public class News {
     private int clicks;
     @Builder.Default
     private int likes = 0;
+    @ElementCollection
+    private List<Integer> likesID;
 
     @Lob
     byte[] image;
+
+    public void addLike(Integer userID) {
+        likesID.add(userID);
+        likes++;
+    }
+    
+    public void removeLike(Integer userID) {
+        likesID.remove(userID);
+        likes--;
+    }
+
+    public static boolean hasLiked(List<Integer> likesID, LoginUser user) {
+        if (likesID.contains(user.getId())) return true;
+        return false;
+    }
+
 
 }

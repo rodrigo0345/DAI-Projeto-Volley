@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import org.springframework.data.repository.CrudRepository;
 
 import com.example.application.model.Convocatorias;
-import com.example.application.model.News.NewsLike;
 import com.example.application.model.Team.Team;
 
 @Table(name = "team")

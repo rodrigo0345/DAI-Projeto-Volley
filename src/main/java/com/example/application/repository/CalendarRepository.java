@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import org.springframework.data.repository.CrudRepository;
 
 import com.example.application.model.CalendarEvent;
-import com.example.application.model.News.NewsLike;
 
 @Table(name = "news_likes")
 public interface CalendarRepository extends CrudRepository<CalendarEvent, Integer> {
