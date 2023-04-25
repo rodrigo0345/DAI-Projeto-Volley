@@ -11,6 +11,8 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { remove } from 'Frontend/generated/RideController';
 import ride from 'Frontend/assets/svgs/ride.svg';
 import AlertDialogs from '../alertDialog/AlertDialog';
+import { addPassenger } from 'Frontend/generated/PostController';
+import { toast } from 'react-toastify';
 
 export function RidePost({
   post,
@@ -30,6 +32,32 @@ export function RidePost({
       setDriver(driver?.firstname + ' ' + driver?.lastname);
     })();
   });
+
+  async function joinRide() {
+    const result = await addPassenger(
+      {
+        ride: {
+          clicks: post?.clicks ?? 0,
+          createdAt: post?.createdAt ?? '20/04/2000',
+          description: post?.description ?? '',
+          destination: post?.destination ?? '',
+          driverID: post?.driverID ?? 0,
+          id: post?.id ?? 0,
+          freeSeats: post?.freeSeats ?? 0,
+          origin: post?.origin ?? '',
+          passengers: post?.passengers ?? [],
+          seats: post?.seats ?? 0,
+          startDate: post?.startDate ?? '20/04/2000',
+        },
+      },
+      user
+    );
+    if (result === 1) {
+      toast.success('Joined ride');
+    } else if (result === 0) {
+      toast.error('You already joined this ride');
+    }
+  }
 
   //isAfter(Date.parse(post?.startDate ?? ''), Date.now())
   return (
@@ -123,6 +151,7 @@ export function RidePost({
               className='flex items-center p-1 space-x-1.5 hover:text-yellow-400'
               onClick={() => {
                 setUserJoined(!userJoined);
+                joinRide();
               }}
             >
               {userJoined ? (
