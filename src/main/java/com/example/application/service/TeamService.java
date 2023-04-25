@@ -9,6 +9,7 @@ import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -156,7 +157,7 @@ public class TeamService {
             return ResponseEntity.badRequest().body(response);
         }
         //verificar se o jogador já pertence a outra equipa
-        Set<User> jogadoresEmEquipas = new HashSet<>();
+        Set<User> jogadoresEmEquipas = new HashSet<User>();
         List<Team> todasEquipas = teamRepository.findAll();
 
         for (Team t : todasEquipas) {
@@ -248,6 +249,82 @@ public class TeamService {
 
         var response = new ResponseType<Team>();
         response.success(team);
+        return ResponseEntity.ok().body(response);
+    }
+
+    public static ResponseEntity<ResponseType<Team>>  findPlayerTeam(TeamRepository teamRepository,
+                                                                     LoginUser currentUser,
+                                                                     Long id,
+                                                                     AuthenticationService service)
+    {
+        //verificar se o token é válido
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+        if (!isValidToken) {
+            var response = new ResponseType<Team>();
+            response.error("Token inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        User atleta = users.findById(id).get();
+        for(Team t : teamRepository.findAll()) {
+            if(t.getPlayers().contains(atleta)) {
+                var response = new ResponseType<Team>();
+                response.success(t);
+                return ResponseEntity.ok().body(response);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+    public static ResponseEntity<ResponseType<List<LoginUser>>> playersWithNoTeam(TeamRepository teamRepository,
+                                                                    UserRepository users,
+                                                                    LoginUser currentUser,
+                                                                    AuthenticationService service)
+    {
+        //verificar se o token é válido
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+        if (!isValidToken) {
+            var response = new ResponseType<List<LoginUser>>();
+            response.error("Token inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+        List<User> jogadoresEmEquipas = new ArrayList<User>();
+        List<Team> todasEquipas = teamRepository.findAll();
+        for (Team t : todasEquipas) {
+            jogadoresEmEquipas.addAll(t.getPlayers());
+        }
+        //suposto ser pra encontrar todos os atletas
+        List<User> todosJogadores = new ArrayList<User>();
+        for(User user : users.findAll()) {
+            if(user.getRole().toString().equals("User")) {
+                todosJogadores.add(user);
+            }
+        }
+        //verificar se users vazios
+        if(todosJogadores.isEmpty()){
+            var response = new ResponseType<List<LoginUser>>();
+            response.error("Não existem jogadores");
+            return ResponseEntity.badRequest().body(response);
+        }
+        todosJogadores.removeAll(jogadoresEmEquipas);
+        //verificar se jogadores em equipas está vazia
+        if(jogadoresEmEquipas.isEmpty()){
+            var response = new ResponseType<List<LoginUser>>();
+            response.error("Não existem jogadores sem equipa");
+            return ResponseEntity.badRequest().body(response);
+        }
+        //passe de user pra loginuser a um aux
+        List<LoginUser> aux = new ArrayList<LoginUser>();
+        for(User user : todosJogadores) {
+                    LoginUser loginUser = new LoginUser();
+                    loginUser.setId(user.getId());
+                    loginUser.setFirstname(user.getFirstname());
+                    loginUser.setLastname(user.getLastname());
+                    loginUser.setEmail(user.getEmail());
+                    loginUser.setRole(user.getRole().toString());
+                    aux.add(loginUser);
+        }
+        var response = new ResponseType<List<LoginUser>>();
+        response.success(aux);
         return ResponseEntity.ok().body(response);
     }
 }
