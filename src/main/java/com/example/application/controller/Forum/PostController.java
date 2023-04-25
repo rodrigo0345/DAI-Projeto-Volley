@@ -286,7 +286,8 @@ public class PostController {
         String type = post.getType();
         if (post == null || type == "news") return false;
         Ride ride = post.ride;
-        if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)) return false;
+        if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)
+            || RideService.verifyIfUserIsDriver(ride, user)) return false;
         ride.addPassenger(user.getId());
         ridesRepository.save(ride);
         return true;
@@ -296,7 +297,7 @@ public class PostController {
         String type = post.getType();
         if (post == null || type == "news") return false;
         Ride ride = post.ride;
-        if (!RideService.verifyPassengerInRide(ride, user)) return false;
+        if (!RideService.verifyPassengerInRide(ride, user) || RideService.verifyIfUserIsDriver(ride, user)) return false;
         ride.removePassenger(user.getId());
         ridesRepository.save(ride);
         return false;
@@ -306,5 +307,7 @@ public class PostController {
         if (Ride.containsPassenger(ride.getPassengers(), user)) return true;
         return false;
     }
+
+
 
 }
