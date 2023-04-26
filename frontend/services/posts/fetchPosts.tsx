@@ -39,7 +39,6 @@ export async function fetchPostsByMostRecent(
     setLoading(false);
     return;
   }
-  console.log(posts);
   return posts;
 }
 

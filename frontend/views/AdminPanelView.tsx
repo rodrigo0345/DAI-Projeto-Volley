@@ -136,10 +136,8 @@ export default function AdminPanelView() {
     let resultSignup: ResponseEntity | undefined;
     try {
       resultSignup = await signup(user, register);
-      console.log({ resultSignup });
     } catch (error) {
       toast.error('Erro interno do servidor, por favor tente mais tarde.');
-      console.log(error);
       setIsLoading(false);
       return;
     }
@@ -352,7 +350,6 @@ export default function AdminPanelView() {
                       onChange={(e) => {
                         setEncarregadoSelected(false);
                         if (e.target.value === 'Encarregado') {
-                          console.log('encarregado');
                           setEncarregadoSelected(true);
                         }
                       }}

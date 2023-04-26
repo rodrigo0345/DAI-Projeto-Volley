@@ -13,7 +13,6 @@ import com.mysql.cj.log.Log;
 import com.example.application.service.ImageService;
 import com.example.application.service.NewsService;
 import com.example.application.service.RideService;
-import com.example.application.utils.ImageUtils;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;

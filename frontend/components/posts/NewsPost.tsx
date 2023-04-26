@@ -31,8 +31,6 @@ export function NewsPost({
   const [author, setAuthor] = useState<LoginUser | undefined>();
   const [image, setImage] = useState<string | undefined>(undefined);
 
-  console.log({ post });
-
   useEffect(() => {
     // get likes from the server
     (async () => {
