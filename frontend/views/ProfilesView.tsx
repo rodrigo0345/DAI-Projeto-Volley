@@ -3,6 +3,7 @@ import { UserContext } from 'Frontend/contexts/UserContext';
 import { editPost } from 'Frontend/generated/PostController';
 import { editUser, findById } from 'Frontend/generated/UserController';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
+import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 import { motion } from 'framer-motion';
 import { useEffect, useState, startTransition, useContext } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
@@ -22,12 +23,14 @@ export default function ProfilesView() {
   const [firstName, setFirstName] = useState(userProfile?.firstname);
   const [lastName, setLastName] = useState(userProfile?.lastname);
   const [email, setEmail] = useState(userProfile?.email);
+  const [password, setPassword] = useState<string>('');
   const [role, setRole] = useState(userProfile?.role);
 
   useEffect(() => {
     //if (!userId || user?.id) window.location.href = '/404';
 
-    if (user?.id === Number(userId)) setNotMyProfile(false);
+    if (user?.id === Number(userId) || user?.role === 'ADMIN')
+      setNotMyProfile(false);
 
     startTransition(() => {
       (async () => {
@@ -57,8 +60,9 @@ export default function ProfilesView() {
       firstname: firstName,
       lastname: lastName,
       email: email,
-      role: role,
-      id: user?.id,
+      role: Roles[role as keyof typeof Roles],
+      id: userProfile?.id,
+      password: password,
     });
 
     if (result?.body.error) {
@@ -146,6 +150,22 @@ export default function ProfilesView() {
             setRole(e.target.value);
           }}
         />
+
+        {editable && user?.role === 'ADMIN' && (
+          <motion.input
+            layout
+            type='password'
+            className={`outline outline-1 border-none rounded-md focus:ring-transparent ${
+              editable
+                ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none'
+                : 'outline-none focus:outline-none focus:border-none'
+            }`}
+            placeholder='Alterar palavra-passe'
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+        )}
 
         {editable && (
           <motion.button

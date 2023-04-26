@@ -318,7 +318,7 @@ export default function LandPageView() {
                 Marca presenças
               </h3>
               <p className='mt-4 text-base text-gray-600'>
-                Faz o registro de quem veio aos treinos e jogos para que depois
+                Faz o registo de quem veio aos treinos e jogos para que depois
                 possam ser obtidos dados estatísticos.
               </p>
             </motion.div>
@@ -532,7 +532,7 @@ export default function LandPageView() {
                 className='ml-6'
               >
                 <h3 className='text-lg font-semibold text-black'>
-                  Registro de contas
+                  registo de contas
                 </h3>
                 <p className='mt-4 text-base text-gray-600'>
                   De modo a registrar novas contas, é necessário que contacte o

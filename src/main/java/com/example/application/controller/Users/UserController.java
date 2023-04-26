@@ -6,6 +6,7 @@ import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 import com.example.application.repository.UserRepository;
+import com.example.application.security.CryptWithMD5;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.TokenService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -62,7 +63,7 @@ public class UserController {
 
   public ResponseEntity<ResponseType<LoginUser>> editUser(
       LoginUser currentUser,
-      LoginUser user) throws Exception {
+      User user) throws Exception {
 
     var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
     if (!isValidToken) {
@@ -75,7 +76,7 @@ public class UserController {
       response.error("Utilizador não existe");
       return ResponseEntity.badRequest().body(response);
     }
-    if (!currentUser.getRole().toString().equals("ADMIN") || !currentUser.getId().equals(user.getId())) {
+    if (!currentUser.getRole().toString().equals("ADMIN") && !currentUser.getId().equals(user.getId())) {
       var response = new ResponseType<LoginUser>();
       response.error("Você não tem permissão para editar o utilizador");
       return ResponseEntity.badRequest().body(response);
@@ -85,10 +86,15 @@ public class UserController {
     aux.setLastname(user.getLastname());
     aux.setEmail(user.getEmail());
 
+    if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+      aux.setPassword(CryptWithMD5.cryptWithMD5(user.getPassword()));
+    }
+
     users.save(aux);
 
     var response = new ResponseType<LoginUser>();
-    response.success(user);
+    response.success(new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
+        user.getRole().toString(), ""));
     return ResponseEntity.ok().body(response);
   }
 
