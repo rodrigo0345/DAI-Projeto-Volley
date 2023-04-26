@@ -269,8 +269,6 @@ export default function ForumView() {
         setOpenModal={setOpenModal}
         boleia={boleia}
         noticia={noticia}
-        imagem={imagem}
-        setImagem={setImagem}
         user={
           user ?? {
             id: 1,

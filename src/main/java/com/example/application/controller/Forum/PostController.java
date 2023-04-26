@@ -13,7 +13,8 @@ import com.mysql.cj.log.Log;
 import com.example.application.service.ImageService;
 import com.example.application.service.NewsService;
 import com.example.application.service.RideService;
-
+import com.example.application.utils.ImageUtils;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
@@ -34,6 +35,8 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Endpoint
@@ -316,9 +319,11 @@ public class PostController {
 
     public boolean addLike(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return false;
+        if (post == null || type == "ride")
+            return false;
         News news = post.news;
-        if(NewsService.verifyUserHasLiked(news, user)) return false;
+        if (NewsService.verifyUserHasLiked(news, user))
+            return false;
         news.addLike(user.getId());
         newsRepository.save(news);
         return true;
@@ -326,16 +331,19 @@ public class PostController {
 
     public boolean removeLike(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return false;
+        if (post == null || type == "ride")
+            return false;
         News news = post.news;
-        if(!NewsService.verifyUserHasLiked(news, user)) return false;
+        if (!NewsService.verifyUserHasLiked(news, user))
+            return false;
         news.removeLike(user.getId());
         newsRepository.save(news);
         return true;
     }
 
     public boolean checkUserHasLiked(News news, LoginUser user) {
-        if (News.hasLiked(news.getLikesID(), user)) return true;
+        if (News.hasLiked(news.getLikesID(), user))
+            return true;
         return false;
     }
 

@@ -8,7 +8,7 @@ export async function criarNoticia(
   noticia: {
     titulo: React.MutableRefObject<HTMLInputElement | null>;
     descricao: React.MutableRefObject<HTMLTextAreaElement | null>;
-    imagem: File | undefined;
+    imagem: React.MutableRefObject<HTMLInputElement | null>;
   },
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
   user: LoginUser
@@ -22,12 +22,9 @@ export async function criarNoticia(
     return;
   }
 
-  // convert File to byte array
-  const test = uint8ArrayToNumberArray(
-    await readFileAsByteArray(imagem ?? new File([], ''))
-  );
-
-  console.log({ test });
+  // Read the file and convert it to a byte array
+  const file = imagem.current?.files?.[0];
+  const buffer = await file?.arrayBuffer();
 
   let serverResult: ResponseEntity | undefined;
   try {
@@ -40,9 +37,7 @@ export async function criarNoticia(
         createdAt: '',
         id: 0,
         likes: 0,
-        image: uint8ArrayToNumberArray(
-          await readFileAsByteArray(imagem ?? new File([], ''))
-        ),
+        image: [...new Int8Array(buffer ?? new ArrayBuffer(0))],
       },
     });
   } catch (e: any) {
@@ -139,4 +134,7 @@ function fileToBlob(file: File): Blob {
   const options = { type: file.type };
   const blob = new Blob([file], options);
   return blob;
+}
+function reject(arg0: Error) {
+  throw new Error('Function not implemented.');
 }

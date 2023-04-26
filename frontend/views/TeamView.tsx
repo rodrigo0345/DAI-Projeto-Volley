@@ -3,6 +3,7 @@ import { UserContext } from 'Frontend/contexts/UserContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { Modal, Group, Button } from '@mantine/core';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { Crud } from '@hilla/react-components/Crud';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
