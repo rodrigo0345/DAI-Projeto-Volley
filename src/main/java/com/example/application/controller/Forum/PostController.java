@@ -11,6 +11,7 @@ import com.example.application.service.CalendarService;
 import com.mysql.cj.log.Log;
 
 import com.example.application.service.ImageService;
+import com.example.application.service.NewsService;
 import com.example.application.service.RideService;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -282,24 +283,60 @@ public class PostController {
         }
     }
 
-    public int addPassenger(PostType post, User user) {
+    public boolean addPassenger(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return 0;
+        if (post == null || type == "news")
+            return false;
         Ride ride = post.ride;
-        if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)) return 0;
+        if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)
+                || RideService.verifyIfUserIsDriver(ride, user))
+            return false;
         ride.addPassenger(user.getId());
         ridesRepository.save(ride);
-        return 1;
+        return true;
     }
 
-    public int removePassenger(PostType post, User user) {
+    public boolean removePassenger(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return 0;
+        if (post == null || type == "news")
+            return false;
         Ride ride = post.ride;
-        if (!RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)) return 0;
+        if (!RideService.verifyPassengerInRide(ride, user))
+            return false;
         ride.removePassenger(user.getId());
         ridesRepository.save(ride);
-        return 1;
+        return true;
+    }
+
+    public boolean checkPassengerInRide(Ride ride, LoginUser user) {
+        if (Ride.containsPassenger(ride.getPassengers(), user))
+            return true;
+        return false;
+    }
+
+    public boolean addLike(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type == "ride") return false;
+        News news = post.news;
+        if(NewsService.verifyUserHasLiked(news, user)) return false;
+        news.addLike(user.getId());
+        newsRepository.save(news);
+        return true;
+    }
+
+    public boolean removeLike(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type == "ride") return false;
+        News news = post.news;
+        if(!NewsService.verifyUserHasLiked(news, user)) return false;
+        news.removeLike(user.getId());
+        newsRepository.save(news);
+        return true;
+    }
+
+    public boolean checkUserHasLiked(News news, LoginUser user) {
+        if (News.hasLiked(news.getLikesID(), user)) return true;
+        return false;
     }
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 
 import lombok.AllArgsConstructor;
@@ -46,14 +47,16 @@ public class Ride {
 
     public void addPassenger(Integer userID) {
         passengers.add(userID);
+        freeSeats--;
     }
     
     public void removePassenger(Integer userID) {
         passengers.remove(userID);
+        freeSeats++;
     }
 
-    public static boolean containsPassenger(List<Integer> passengers, User user) {
-        if (passengers.contains(user.getId()) == true) return true;
+    public static boolean containsPassenger(List<Integer> passengers, LoginUser user) {
+        if (passengers.contains(user.getId())) return true;
         return false;
     }
 

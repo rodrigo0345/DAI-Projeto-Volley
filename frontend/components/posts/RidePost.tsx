@@ -11,6 +11,12 @@ import LoginUser from 'Frontend/generated/com/example/application/model/User/Log
 import { remove } from 'Frontend/generated/RideController';
 import ride from 'Frontend/assets/svgs/ride.svg';
 import AlertDialogs from '../alertDialog/AlertDialog';
+import {
+  addPassenger,
+  checkPassengerInRide,
+  removePassenger,
+} from 'Frontend/generated/PostController';
+import { toast } from 'react-toastify';
 
 export function RidePost({
   post,
@@ -23,13 +29,50 @@ export function RidePost({
 }) {
   const [driver, setDriver] = useState<string | undefined>(undefined);
   const [userJoined, setUserJoined] = useState<boolean>(false);
+  const [freeSeats, setFreeSeats] = useState<number>(post?.freeSeats ?? 0);
+  const [author, setAuthor] = useState<LoginUser | undefined>();
 
   useEffect(() => {
     (async () => {
       const driver = await findById(post?.driverID);
       setDriver(driver?.firstname + ' ' + driver?.lastname);
+      const result = await checkPassengerInRide(post, user);
+      setUserJoined(result);
+      const author = await findById(post?.driverID ?? 0);
+      setAuthor(author);
     })();
-  });
+  }, []);
+
+  useEffect(() => {}, [userJoined]);
+
+  async function joinRide() {
+    if (!userJoined) {
+      const result = await addPassenger(
+        {
+          ride: post,
+        },
+        user
+      );
+      if (result) {
+        toast.success('Entrou na boleia');
+        setUserJoined(true);
+        setFreeSeats(freeSeats - 1);
+      } else if (!result) {
+        toast.error('You already joined this ride');
+        setUserJoined(false);
+      }
+    } else if (userJoined) {
+      const result = await removePassenger({ ride: post }, user);
+      if (result) {
+        toast.success('Left ride');
+        setUserJoined(false);
+        setFreeSeats(freeSeats + 1);
+      } else if (!result) {
+        toast.error('Erro ao sair da boleia');
+        setUserJoined(true);
+      }
+    }
+  }
 
   //isAfter(Date.parse(post?.startDate ?? ''), Date.now())
   return (
@@ -46,7 +89,7 @@ export function RidePost({
               href={'/profiles/' + post?.driverID}
               className='text-sm font-semibold text-yellow-400'
             >
-              {user?.firstname + ' ' + user?.lastname}
+              {author?.firstname + ' ' + author?.lastname}
             </a>
             <span className='text-xs text-gray-400'>
               {formatDistanceToNow(Date.parse(post?.createdAt ?? '24/4/2023'), {
@@ -122,7 +165,7 @@ export function RidePost({
               type='button'
               className='flex items-center p-1 space-x-1.5 hover:text-yellow-400'
               onClick={() => {
-                setUserJoined(!userJoined);
+                joinRide();
               }}
             >
               {userJoined ? (
@@ -130,7 +173,7 @@ export function RidePost({
               ) : (
                 <AiOutlineCar aria-label='save' size={20}></AiOutlineCar>
               )}
-              <span>{post?.freeSeats}</span>
+              <span>{freeSeats}</span>
             </button>
           </div>
         </div>

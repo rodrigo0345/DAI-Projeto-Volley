@@ -101,16 +101,22 @@ export default function AdminPanelView() {
     }
 
     let roleString: string | undefined;
+
+    //USER,
+    //ADMIN,
+    //MANAGER,
+    //SECCTIONIST
+
     if (roleValue === 'Administrador') {
-      roleString = 'admin';
+      roleString = 'ADMIN';
     } else if (roleValue === 'Treinador') {
-      roleString = 'treinador';
+      roleString = 'MANAGER';
     } else if (roleValue === 'Encarregado') {
       roleString = 'encarregado';
     } else if (roleValue === 'Atleta') {
-      roleString = 'atleta';
+      roleString = 'USER';
     } else if (roleValue === 'Seccionista') {
-      roleString = 'seccionista';
+      roleString = 'SECCTIONIST';
     }
 
     const register: RegisterRequest = {
@@ -248,7 +254,7 @@ export default function AdminPanelView() {
                   <h2 className='text-1xl font-bold'>Atletas</h2>
                 </div>
                 <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
-                  {filterUsersBy('USERS')}
+                  {filterUsersBy('USER')}
                 </div>
               </div>
               <div className='flex flex-col gap-4  max-w-[100%] pb-6'>

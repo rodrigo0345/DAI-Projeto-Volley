@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import org.springframework.data.repository.CrudRepository;
 
 import com.example.application.model.Convocatorias;
-import com.example.application.model.News.NewsLike;
 
 @Table(name = "convocatorias")
 public interface ConvocatoriasRepository extends CrudRepository<Convocatorias, Integer> {
