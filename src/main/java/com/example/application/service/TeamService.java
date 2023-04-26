@@ -236,8 +236,10 @@ public class TeamService {
     public static ResponseEntity<ResponseType<Team>> trocarTreinador(TeamRepository teamRepository,
                                                                      AuthenticationService service,
                                                                      LoginUser currentUser,
-                                                                     Team team)
+                                                                     Long equipa)
     {
+        Team team = teamRepository.findById(equipa);
+
         //verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {

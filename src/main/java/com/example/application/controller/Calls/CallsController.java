@@ -15,8 +15,9 @@ public class CallsController {
 
 
         var response = new ResponseType<Team>();
-        response.success(team);
+        response.success(convocatorias);
         return ResponseEntity.ok().body(response);
+
     }
 
 
