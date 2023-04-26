@@ -114,6 +114,64 @@ public class CallsController {
     }
 
 
+    public static ResponseEntity<ResponseType<List<Long>>> adicionarJogador(ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository, UserRepository userRepository,List<Long> atletas, Long convocatoria, LoginUser loginUser) {
+
+        Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
+
+        if(convocatorias.equals(null)){
+            var response = new ResponseType<List<Long>>();
+            response.error("Essa convocatoria nao existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        User user = userRepository.findById(loginUser.getId()).get();
+        if(!(user.getRole().equals(Roles.MANAGER) || user.equals(convocatorias.getManagerID()))){
+            var response = new ResponseType<List<Long>>();
+            response.error("Nao tem permissoes");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if(isPlayerInTeam(teamRepository,userRepository,atletas).getBody().success){
+            var response = new ResponseType<List<Long>>();
+            response.error("Os jogadores não pertecem a uma equipa");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+
+        var response = new ResponseType<List<Long>>();
+        return ResponseEntity.ok().body(response);
+    }
+
+
+    public static ResponseEntity<ResponseType<List<Long>>> removerJogador(ConvocatoriasRepository convocatoriasRepository, UserRepository userRepository, LoginUser loginUser, Long convocatoria, List<Long> atletas) {
+
+        Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
+        User user = userRepository.findById(loginUser.getId()).get();
+        List<User> aRemover = null;
+
+
+
+        if(!(user.equals(convocatorias.getManagerID()) || user.getRole().equals(Roles.MANAGER) )){
+            var response = new ResponseType<List<Long>>();
+            response.error("Nao tem permissoes");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+
+        for(Long elemento : atletas){
+            User jogador = userRepository.findById(elemento).get();
+            aRemover.add(jogador);
+        }
+
+        if(convocatorias.getPlayers().contains(aRemover)){
+            var response = new ResponseType<List<Long>>();
+            response.error("Os jogadores não estao convocados");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        var response = new ResponseType<List<Long>>();
+        return ResponseEntity.ok().body(response);
+    }
 
     public static ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(TeamRepository teamRepository, UserRepository userRepository, List<Long> atletas){
 
