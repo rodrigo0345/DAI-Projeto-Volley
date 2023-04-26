@@ -19,12 +19,14 @@ public class TeamService {
 
     private static UserRepository users;
     public static ResponseType<Team> criarEquipaTreinador(TeamRepository teamRepository,
-                                                          List<User> equipa,
+                                                          List<Long> equipa,
                                                           LoginUser loginUser,
                                                           Escalao escalao,
                                                           String name)
     {
         User user = users.findById(loginUser.getId()).get();
+
+
         if(!(user.getRole().toString().equals("MANAGER"))){
             var response = new ResponseType<Team>();
             response.error("Não é treinador");
@@ -36,6 +38,13 @@ public class TeamService {
             return response;
         }
 
+        List<User> atletas = null;
+
+        for(Long elemento : equipa){
+            User atleta = users.findById(elemento).get();
+            atletas.add(atleta);
+        }
+
         if(escalao == null){
             var response = new ResponseType<Team>();
             response.error("O escalão esta vazio");
@@ -44,7 +53,7 @@ public class TeamService {
 
         Team team = new Team();
         team.setName(name);
-        team.setPlayers(equipa);
+        team.setPlayers(atletas);
         team.setManager(user);
         team.setEscalao(escalao);
 
