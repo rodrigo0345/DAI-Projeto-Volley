@@ -44,7 +44,6 @@ export default function PostView() {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
     event.preventDefault();
-    console.log(type);
     const postType: PostType = {};
     if (type === 'news') {
       postType.news = {
@@ -94,7 +93,6 @@ export default function PostView() {
         setContentState(content);
         setTitleState(title);
 
-        console.log('Here');
         const author = await findById(post?.news?.authorID ?? 0);
         setAuthor(author);
       } else if (type === 'ride') {

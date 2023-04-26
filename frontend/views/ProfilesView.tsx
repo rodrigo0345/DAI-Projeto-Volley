@@ -25,7 +25,6 @@ export default function ProfilesView() {
   const [role, setRole] = useState(userProfile?.role);
 
   useEffect(() => {
-    console.log({ user }, { userId });
     //if (!userId || user?.id) window.location.href = '/404';
 
     if (user?.id === Number(userId)) setNotMyProfile(false);
@@ -39,7 +38,6 @@ export default function ProfilesView() {
         } catch (e) {
           if (user === undefined) window.location.href = '/404';
         }
-        console.log(user);
 
         setUserProfile(user);
         setFirstName(user?.firstname);
@@ -62,8 +60,6 @@ export default function ProfilesView() {
       role: role,
       id: user?.id,
     });
-
-    console.log(result?.body);
 
     if (result?.body.error) {
       toast.error(result?.body.error);

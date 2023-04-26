@@ -3,13 +3,19 @@ import News from 'Frontend/generated/com/example/application/model/News/News';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 import { AiOutlineDelete, AiOutlineLike, AiTwotoneLike } from 'react-icons/ai';
 import { BsBookmark } from 'react-icons/bs';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import news from 'Frontend/assets/svgs/news.svg';
 import AlertDialogs from '../alertDialog/AlertDialog';
-import { addLike, checkUserHasLiked, getLikes, remove, removeLike } from 'Frontend/generated/NewsController';
+import {
+  addLike,
+  checkUserHasLiked,
+  getLikes,
+  remove,
+  removeLike,
+} from 'Frontend/generated/NewsController';
 
 export function NewsPost({
   post,
@@ -23,6 +29,7 @@ export function NewsPost({
   const [likes, setLikes] = useState<number>(0);
   const [userLiked, setUserLiked] = useState<boolean>(false);
   const [author, setAuthor] = useState<LoginUser | undefined>();
+  const [image, setImage] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     // get likes from the server
@@ -33,6 +40,14 @@ export function NewsPost({
       setUserLiked(userLiked);
       const author = await findById(post?.authorID ?? 0);
       setAuthor(author);
+    })();
+
+    (async () => {
+      if (!post?.image) return;
+      const blob = new Blob([new Uint8Array(post?.image)], {
+        type: 'image/*',
+      });
+      setImage(URL.createObjectURL(blob));
     })();
   }, []);
 
@@ -78,8 +93,12 @@ export function NewsPost({
           }}
         >
           <img
+            loading='lazy'
+            onError={(e) => {
+              e.currentTarget.src = news;
+            }}
             width={300}
-            src={news}
+            src={image ?? news}
             alt=''
             className='object-contain w-full mb-4 h-60 sm:h-96 bg-amber-50'
           />

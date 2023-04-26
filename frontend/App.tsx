@@ -29,7 +29,7 @@ const router = createBrowserRouter([
   {
     errorElement: <NotFound />,
     element: (
-      <Suspense >
+      <Suspense>
         <MainLayout />
       </Suspense>
     ),

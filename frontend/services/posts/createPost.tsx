@@ -8,7 +8,7 @@ export async function criarNoticia(
   noticia: {
     titulo: React.MutableRefObject<HTMLInputElement | null>;
     descricao: React.MutableRefObject<HTMLTextAreaElement | null>;
-    imagem: File | undefined;
+    imagem: React.MutableRefObject<HTMLInputElement | null>;
   },
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
   user: LoginUser
@@ -22,12 +22,9 @@ export async function criarNoticia(
     return;
   }
 
-  // convert File to byte array
-  const test = uint8ArrayToNumberArray(
-    await readFileAsByteArray(imagem ?? new File([], ''))
-  );
-
-  console.log({ test });
+  // Read the file and convert it to a byte array
+  const file = imagem.current?.files?.[0];
+  const buffer = await file?.arrayBuffer();
 
   let serverResult: ResponseEntity | undefined;
   try {
@@ -40,9 +37,7 @@ export async function criarNoticia(
         createdAt: '',
         id: 0,
         likes: 0,
-        image: uint8ArrayToNumberArray(
-          await readFileAsByteArray(imagem ?? new File([], ''))
-        ),
+        image: [...new Int8Array(buffer ?? new ArrayBuffer(0))],
       },
     });
   } catch (e: any) {
@@ -99,44 +94,4 @@ export async function criarBoleia(
   }
 
   setOpenModal(false);
-}
-
-function readFileAsByteArray(file: File): Promise<Uint8Array> {
-  return new Promise<Uint8Array>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as ArrayBuffer;
-      const byteArray = new Uint8Array(result);
-      console.log({ byteArray });
-      resolve(byteArray);
-    };
-    reader.onerror = () => {
-      reject(reader.error);
-    };
-    reader.readAsArrayBuffer(fileToBlob(file));
-  });
-}
-
-function uint8ArrayToNumberArray(uint8Array: Uint8Array): number[] {
-  const binaryArray = uint8Array.map((byte) => toUnsignedBinary(byte));
-  const binaryString = binaryArray.join('');
-  const result: number[] = [];
-  for (let i = 0; i < binaryString.length; i += 8) {
-    const byte = binaryString.slice(i, i + 8);
-    console.log(byte);
-    result.push(parseInt(byte, 2));
-  }
-
-  return result;
-}
-
-// convert number to binary
-function toUnsignedBinary(num: number): number {
-  return parseInt((num >>> 0).toString(2));
-}
-
-function fileToBlob(file: File): Blob {
-  const options = { type: file.type };
-  const blob = new Blob([file], options);
-  return blob;
 }

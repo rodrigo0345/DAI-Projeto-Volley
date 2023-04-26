@@ -11,8 +11,6 @@ export default function CreatePost({
   setOpenModal,
   boleia,
   noticia,
-  imagem,
-  setImagem,
   user,
 }: {
   openModal: boolean;
@@ -30,8 +28,6 @@ export default function CreatePost({
     descricao: React.MutableRefObject<HTMLTextAreaElement | null>;
     imagem: React.MutableRefObject<HTMLInputElement | null>;
   };
-  imagem: File | undefined;
-  setImagem: React.Dispatch<React.SetStateAction<any>>;
   user: LoginUser;
 }) {
   return (
@@ -191,7 +187,7 @@ export default function CreatePost({
             </label>
             <textarea
               ref={noticia.descricao}
-              className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none h-32'
+              className='grow shrink-0 rounded px-2.5 text-[15px] leading-none text-gray-800 shadow-[0_0_0_1px] shadow-transparent h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-transparent outline-none'
               id='name'
             />
           </fieldset>
@@ -202,18 +198,7 @@ export default function CreatePost({
             >
               Foto <span className='text-xs font-normal'>(opcional)</span>
             </label>
-            <Dropzone onDrop={(acceptedFiles) => setImagem(acceptedFiles)}>
-              {({ getRootProps, getInputProps }) => (
-                <section className='w-full flex items-center justify-center relative'>
-                  <div {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    <div className='h-14 w-32 flex items-center justify-center border-1 border-black rounded-md outline-2 outline-dotted cursor-pointer bg-gray-200'>
-                      <BsCloudUpload className='animate-bounce' />
-                    </div>
-                  </div>
-                </section>
-              )}
-            </Dropzone>
+            <input type='file' accept='image/*' ref={noticia.imagem} />
           </fieldset>
           <div className='flex justify-end mt-5'>
             <button
@@ -223,7 +208,7 @@ export default function CreatePost({
                   {
                     titulo: noticia.titulo,
                     descricao: noticia.descricao,
-                    imagem,
+                    imagem: noticia.imagem,
                   },
                   setOpenModal,
                   user

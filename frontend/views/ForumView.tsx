@@ -152,9 +152,7 @@ export default function ForumView() {
     setCurrIndex(0);
     (async () => {
       const posts = await fetchPopularPosts(0, setLoading, setPosts);
-      console.log(posts);
       const filteredPosts = posts?.filter((post) => {
-        console.log(post?.news?.authorID);
         if (menu === Menu.ALL) return true;
         if (menu === Menu.NEWS && post?.news) return true;
         if (menu === Menu.RIDES && post?.ride) return true;
@@ -171,7 +169,6 @@ export default function ForumView() {
   }, [menu]);
 
   useEffect(() => {
-    console.log({ order });
     setCurrIndex(0);
     (async () => {
       setLoading(true);
@@ -189,7 +186,6 @@ export default function ForumView() {
             return true;
           return false;
         });
-        console.log({ name: 'popular', filteredPosts });
         setPosts(filteredPosts ?? []);
       } else if ((Order.NEWEST as string).toUpperCase() === order) {
         const posts = await fetchPostsByMostRecent(0, setLoading, setPosts);
@@ -205,7 +201,6 @@ export default function ForumView() {
             return true;
           return false;
         });
-        console.log({ name: 'recent', filteredPosts });
         setPosts(filteredPosts ?? []);
       } else if ((Order.OLDEST as string).toUpperCase() === order) {
         const posts = await fetchPostsByOldest(0, setLoading, setPosts);
@@ -221,7 +216,6 @@ export default function ForumView() {
             return true;
           return false;
         });
-        console.log({ name: 'oldest', filteredPosts });
         setPosts(filteredPosts ?? []);
       }
       setLoading(false);
@@ -269,8 +263,6 @@ export default function ForumView() {
         setOpenModal={setOpenModal}
         boleia={boleia}
         noticia={noticia}
-        imagem={imagem}
-        setImagem={setImagem}
         user={
           user ?? {
             id: 1,

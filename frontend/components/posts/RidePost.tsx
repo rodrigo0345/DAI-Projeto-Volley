@@ -105,6 +105,7 @@ export function RidePost({
           }}
         >
           <img
+            loading='lazy'
             width={300}
             src={ride}
             alt=''

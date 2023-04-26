@@ -35,7 +35,6 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
       try {
         user = JSON.parse(userFromStorage) as LoginUser;
       } catch (e) {
-        console.log(e);
         user = undefined;
       }
     }
@@ -50,8 +49,6 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
     } catch (e) {
       console.log(e);
     }
-
-    console.log({ validToken });
 
     if (!validToken?.body) {
       toast.error('Your session has expired, please login again');
@@ -80,7 +77,6 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
     let userAux;
     userAux = await getUserFromStorage();
 
-    console.log({ reauth: user });
     if (!userAux) {
       logout();
       return undefined;
@@ -95,7 +91,6 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
         return;
       }
       setUser(user);
-      console.log({ stored: user });
     })();
   }, []);
 
