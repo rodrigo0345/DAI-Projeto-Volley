@@ -93,7 +93,6 @@ export function NewsPost({
           }}
         >
           <img
-            loading='lazy'
             onError={(e) => {
               e.currentTarget.src = news;
             }}

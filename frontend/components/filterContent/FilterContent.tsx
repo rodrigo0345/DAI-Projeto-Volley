@@ -45,7 +45,6 @@ export default function FilterContent({
                   {
                     // read all the keys of the enum
                     Object.keys(order).map((key) => {
-                      console.log(key);
                       return (
                         <SelectItem
                           key={key}

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 public class CallsController {
 
-    public static ResponseEntity<Convocatorias> criarConvocatoria(ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository,
+    /*public static ResponseEntity<Convocatorias> criarConvocatoria(ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository
                                                                   ) {
         Convocatorias convocatorias = null;
 
@@ -18,7 +18,7 @@ public class CallsController {
         response.success(convocatorias);
         return ResponseEntity.ok().body(response);
 
-    }
+    }*/
 
 
 
