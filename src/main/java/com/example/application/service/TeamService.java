@@ -4,6 +4,7 @@ import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Team.Escalao;
 import com.example.application.model.Team.Team;
 import com.example.application.model.User.LoginUser;
+import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
@@ -27,7 +28,7 @@ public class TeamService {
         User user = users.findById(loginUser.getId()).get();
 
 
-        if(!(user.getRole().toString().equals("MANAGER"))){
+        if(!(user.getRole().equals((Roles.MANAGER)))){
             var response = new ResponseType<Team>();
             response.error("Não é treinador");
             return response;
@@ -128,7 +129,7 @@ public class TeamService {
         User user = users.findById(loginUser.getId()).get();
 
 
-        if(!(user.getId() == team.getManager().getId() || user.getRole().equals("ADMIN"))){
+        if(!(user.getId() == team.getManager().getId() || user.getRole().equals(Roles.ADMIN))){
             var response  = new ResponseType<Team>();
             response.error = ("Não tem permissoes para remover equipas");
             return response;
@@ -248,7 +249,7 @@ public class TeamService {
             return ResponseEntity.badRequest().body(response);
         }
         //verificar se currentUser é admin
-        if (!currentUser.getRole().toString().equals("ADMIN")) {
+        if (!currentUser.getRole().equals("ADMIN")) {
             var response = new ResponseType<Team>();
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
