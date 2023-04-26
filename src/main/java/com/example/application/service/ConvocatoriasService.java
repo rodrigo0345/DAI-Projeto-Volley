@@ -4,7 +4,7 @@ import com.example.application.repository.ConvocatoriasRepository;
 
 public class ConvocatoriasService {
     public static void criarConvocatoria(ConvocatoriasRepository convocatoriasRepository) {
-        // façam isto
+
     }
 
     public static void editarConvocatoria(ConvocatoriasRepository convocatoriasRepository) {
