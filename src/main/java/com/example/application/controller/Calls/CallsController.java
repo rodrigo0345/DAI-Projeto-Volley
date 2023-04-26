@@ -18,11 +18,6 @@ import java.util.Set;
 
 public class CallsController {
 
-<<<<<<< HEAD
-    /*public static ResponseEntity<Convocatorias> criarConvocatoria(ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository
-                                                                  ) {
-        Convocatorias convocatorias = null;
-=======
     public static ResponseEntity<ResponseType<Convocatorias>> criarConvocatoria(ConvocatoriasRepository convocatoriasRepository,TeamRepository teamRepository ,UserRepository userRepository, List<Long> atletas,
                                                                                 String titulo, String description, LocalDateTime date, Long idManager) {
         if(atletas.equals(null) || titulo.equals(null) || description.equals(null) || idManager.equals(null) ){
@@ -30,7 +25,6 @@ public class CallsController {
             response.error("Campos em branco ");
             return ResponseEntity.badRequest().body(response);
         }
->>>>>>> 91a00ef324665bfd75b92fb98238c496b596e7b6
 
         User user = userRepository.findById(idManager).get();
         if(!(user.getRole().equals("MANAGER") )){
@@ -48,7 +42,7 @@ public class CallsController {
         var response = new ResponseType<Convocatorias>();
         return ResponseEntity.ok().body(response);
 
-    }*/
+    }
 
     public static ResponseEntity<ResponseType<Convocatorias>> editarConvocatoria(ConvocatoriasRepository convocatoriasRepository,TeamRepository teamRepository ,UserRepository userRepository, List<Long> atletas,
                                                                                 String titulo, String description, LocalDateTime date, Long idManager, Long convocatoria) {
