@@ -13,6 +13,7 @@ import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
+import volei from 'Frontend/assets/images/volei.jpg';
 
 export default function LoginPageView(): JSX.Element {
   const { login } = useContext(UserContext);
@@ -160,8 +161,8 @@ export default function LoginPageView(): JSX.Element {
         </div>
         <div className='hidden md:!block w-1/2 bg-black min-h-screen'>
           <img
-            className='h-full -z-10 w-screen object-cover'
-            src={background}
+            className='h-full -z-10 w-screen object-cover object-top'
+            src={volei}
             alt=''
           />
         </div>
