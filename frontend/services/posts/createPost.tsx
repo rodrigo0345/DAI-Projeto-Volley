@@ -1,4 +1,6 @@
 import { createPost } from 'Frontend/generated/PostController';
+import News from 'Frontend/generated/com/example/application/model/News/News';
+import Ride from 'Frontend/generated/com/example/application/model/Ride';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { PostController } from 'Frontend/generated/endpoints';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
@@ -17,7 +19,7 @@ export async function criarNoticia(
   const descricao = noticia.descricao.current?.value;
   const imagem = noticia.imagem;
 
-  if (!(titulo && descricao)) {
+  if (!(titulo || descricao)) {
     toast.error('Preencha todos os campos');
     return;
   }
@@ -66,6 +68,19 @@ export async function criarBoleia(
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
   user: LoginUser
 ) {
+  toast.info(user.id);
+
+  if (
+    !boleia.destino ||
+    !boleia.dataPartida ||
+    !boleia.lugaresDisp ||
+    !boleia.descricao ||
+    !boleia.telefone ||
+    !boleia.localPartida
+  ) {
+    toast.error('Preencha todos os campos');
+    return;
+  }
   const result = await createPost({
     ride: {
       destination: boleia.destino.current?.value ?? '',
