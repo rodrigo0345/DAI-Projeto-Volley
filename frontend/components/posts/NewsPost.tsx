@@ -3,7 +3,7 @@ import News from 'Frontend/generated/com/example/application/model/News/News';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import { format, formatDistanceToNow } from 'date-fns';
 import { motion } from 'framer-motion';
-import { startTransition, useEffect, useState } from 'react';
+import { memo, startTransition, useEffect, useState } from 'react';
 import { AiOutlineDelete, AiOutlineLike, AiTwotoneLike } from 'react-icons/ai';
 import { BsBookmark } from 'react-icons/bs';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
@@ -17,7 +17,7 @@ import {
   removeLike,
 } from 'Frontend/generated/NewsController';
 
-export function NewsPost({
+const NewsPost = ({
   post,
   type,
   user,
@@ -25,7 +25,7 @@ export function NewsPost({
   post?: News;
   type?: string;
   user?: LoginUser;
-}) {
+}) => {
   const [likes, setLikes] = useState<number>(0);
   const [userLiked, setUserLiked] = useState<boolean>(false);
   const [author, setAuthor] = useState<LoginUser | undefined>();
@@ -174,4 +174,6 @@ export function NewsPost({
       </div>
     </motion.div>
   );
-}
+};
+
+export default memo(NewsPost);

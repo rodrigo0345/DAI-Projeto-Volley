@@ -29,7 +29,7 @@ import {
   postsByOlder,
 } from 'Frontend/generated/PostController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
-import { NewsPost } from 'Frontend/components/posts/NewsPost';
+import NewsPost from 'Frontend/components/posts/NewsPost';
 import { Button, Skeleton } from '@mantine/core';
 import { AnimatePresence, motion } from 'framer-motion';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
@@ -336,7 +336,7 @@ export default function ForumView() {
                 />
               </motion.div>
             )}
-            {posts.length > 6 && (
+            {posts.length > 3 && (
               <button
                 onClick={() =>
                   loadMore(

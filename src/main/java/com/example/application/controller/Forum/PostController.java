@@ -151,6 +151,12 @@ public class PostController {
             News news = post.news;
             news.setCreatedAt(LocalDateTime.now());
 
+            if (post.news.getImage().length > 5000000) {
+                var response = new ResponseType<PostType>();
+                response.error("A imagem não pode ter mais de 5MB");
+                return ResponseEntity.badRequest().body(response);
+            }
+
             try {
                 newsRepository.save(news);
             } catch (Exception e) {
