@@ -61,7 +61,7 @@ export default function PostView() {
         authorID: news?.authorID ?? 0,
         id: news?.id,
         clicks: news?.clicks ?? 0,
-        image: undefined,
+        image: news?.image,
         likes: news?.likes ?? 0,
         createdAt: news?.createdAt ?? '',
       };
@@ -232,6 +232,7 @@ export default function PostView() {
                   setLugaresDisp(Number(e.target.value));
                 }}
                 value={lugaresDisp}
+                {...(editable ? { disabled: false } : { disabled: true })}
               />
             </div>
             <div className='flex items-center'>
@@ -248,6 +249,7 @@ export default function PostView() {
                   setLugaresOcup(Number(e.target.value));
                 }}
                 value={lugaresOcup}
+                disabled={true}
               />
             </div>
             <div className='flex items-center'>
@@ -264,6 +266,7 @@ export default function PostView() {
                   setDriverContact(e.target.value);
                 }}
                 value={driverContact}
+                {...(editable ? { disabled: false } : { disabled: true })}
               />
             </div>
             <div className='flex items-center text-sm'>
@@ -280,6 +283,7 @@ export default function PostView() {
                   setDataPartida(e.target.value);
                 }}
                 value={dataPartida}
+                {...(editable ? { disabled: false } : { disabled: true })}
               />
             </div>
             <div className='flex items-center text-sm'>
