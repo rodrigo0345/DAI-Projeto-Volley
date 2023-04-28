@@ -147,7 +147,7 @@ export default function PostView() {
   //
   return (
     <div className='h-screen z-10 bg-white relative shadow-lg'>
-      <article className='max-w-2xl px-6 py-24 mx-auto space-y-8 dark:bg-gray-800 dark:text-gray-50'>
+      <article className='max-w-2xl px-6 py-24 mx-auto space-y-8 '>
         <div className='w-full mx-auto space-y-4 relative'>
           <div className='flex items-center justify-between max-w-full'>
             <div>
@@ -188,7 +188,7 @@ export default function PostView() {
               </button>
             )}
           </div>
-          <div className='flex flex-wrap space-x-2 text-sm dark:text-gray-400'>
+          <div className='flex flex-wrap space-x-2 text-sm '>
             <a
               rel='noopener noreferrer'
               href='#'
@@ -198,14 +198,14 @@ export default function PostView() {
               {rides && '#Rides'}
             </a>
           </div>
-          <p className='text-sm dark:text-gray-400'>
+          <p className='text-sm'>
             Criado por{' '}
             <a
               href={
                 (news && '/profiles/' + (news?.authorID ?? '')) ||
                 (rides && '/profiles/' + (rides?.driverID ?? ''))
               }
-              className='hover:underline dark:text-violet-400'
+              className='hover:underline '
             >
               <span>{author?.firstname + ' ' + author?.lastname}</span>
             </a>{' '}
@@ -306,7 +306,7 @@ export default function PostView() {
           </div>
         )}
         <hr />
-        <div className='dark:text-gray-100 h-fit' contentEditable={true}>
+        <div className=' h-fit' contentEditable={true}>
           <textarea
             ref={(news && noticia.descricao) ?? (rides && boleia.descricao)}
             className={`resize-none outline outline-1 w-full overflow-visible border-none rounded-md focus:ring-transparent p-0 font-semibold text-ellipsis h-[20em] ${

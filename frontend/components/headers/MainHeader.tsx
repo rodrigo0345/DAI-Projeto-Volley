@@ -41,18 +41,18 @@ export default function mainHeader() {
           <ul className='flex gap-4'>
             {location.pathname === '/' && (
               <>
-                <li className='font-semibold  text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 focus:before:translate-y-2 cursor-pointer'>
+                <li className='font-semibold  text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1  before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 focus:before:translate-y-2 cursor-pointer'>
                   <a
                     href='#funcionalidades'
-                    className='dark:text-gray-100 text-gray-800 hover:no-underline'
+                    className=' text-gray-800 hover:no-underline'
                   >
                     Funcionalidades
                   </a>
                 </li>
-                <li className='font-semibold text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1 before:dark:bg-gray-200/60 before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 cursor-pointer'>
+                <li className='font-semibold text-md relative text-clip bg-clip-text transform-gpu transition-all before:content-[""] before:absolute before:left-0 before:right-0 before:h-1  before:bg-gray-700/60 before:bottom-0 before:transition-all hover:before:translate-y-2 cursor-pointer'>
                   <a
                     href='#sobrenos'
-                    className='dark:text-gray-100 text-gray-800 hover:no-underline'
+                    className=' text-gray-800 hover:no-underline'
                   >
                     Sobre nós
                   </a>
@@ -113,7 +113,7 @@ export default function mainHeader() {
         )}
         <div
           onClick={toggleModal}
-          className='h-full flex items-center sm:hidden dark:text-white'
+          className='h-full flex items-center sm:hidden '
         >
           <RxHamburgerMenu size={25} color='black'></RxHamburgerMenu>
         </div>
@@ -140,16 +140,14 @@ export default function mainHeader() {
               onClick={(e) => {
                 e.stopPropagation;
               }}
-              className='flex flex-col absolute right-0 top-0 h-full bg-zinc-100 dark:bg-zinc-700 w-3/4 opacity-100 z-20 p-3 translate-x-96'
+              className='flex flex-col absolute right-0 top-0 h-full bg-zinc-100  w-3/4 opacity-100 z-20 p-3 translate-x-96'
               initial={{ x: 500 }}
               animate={{ x: 0 }}
               exit={{ x: 500 }}
               transition={{ duration: 0.2 }}
             >
               <div className='px-4 py-2 flex items-center justify-between'>
-                <h3 className='font-semibold text-xl dark:text-white'>
-                  Mobile Menu
-                </h3>
+                <h3 className='font-semibold text-xl '>Mobile Menu</h3>
                 <IoClose
                   color={theme?.theme === 'light' ? '' : 'white'}
                   size={30}
@@ -160,10 +158,7 @@ export default function mainHeader() {
               </div>
               <ul className='mt-5 flex flex-col gap-4'>
                 <li className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3'>
-                  <label
-                    htmlFor='theme-switch'
-                    className='text-zinc-800 dark:text-white'
-                  >
+                  <label htmlFor='theme-switch' className='text-zinc-800 '>
                     Dark mode
                   </label>
                   <Switch
@@ -174,12 +169,12 @@ export default function mainHeader() {
                   />
                 </li>
                 <li
-                  className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3 dark:bg-zinc-800/20'
+                  className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3 '
                   onClick={() => {
                     window.location.href = '/login';
                   }}
                 >
-                  <label className='text-zinc-800 dark:text-white'>Login</label>
+                  <label className='text-zinc-800 '>Login</label>
                 </li>
               </ul>
             </motion.div>

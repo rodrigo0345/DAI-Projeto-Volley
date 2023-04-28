@@ -65,6 +65,7 @@
     "sort-by": "^1.2.0",
     "styled-components": "^5.3.8",
     "tailwind-scrollbar-hide": "^1.1.7",
+    "validator": "^13.9.0",
     "vite-plugin-compression": "^0.5.1"
   },
   "devDependencies": {
@@ -73,6 +74,7 @@
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@types/styled-components": "^5.1.26",
+    "@types/validator": "^13.7.15",
     "@vitejs/plugin-react": "^2.2.0",
     "async": "3.2.2",
     "autoprefixer": "^10.4.13",
@@ -154,7 +156,8 @@
     "dhtmlx-scheduler": "$dhtmlx-scheduler",
     "@emotion/styled": "$@emotion/styled",
     "@mui/material": "$@mui/material",
-    "@mui/x-data-grid": "$@mui/x-data-grid"
+    "@mui/x-data-grid": "$@mui/x-data-grid",
+    "validator": "$validator"
   },
   "vaadin": {
     "dependencies": {
@@ -202,6 +205,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "e799c676b55f811b9209149908ab4e8db780e1e55aab0eab27f38572026e3900"
+    "hash": "1ee2dfab9d1c16d55b8970da06ae9b58694e287670070f4087b6e74ec44cf8bb"
   }
 }

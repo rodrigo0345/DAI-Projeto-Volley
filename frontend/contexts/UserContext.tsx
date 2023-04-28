@@ -27,6 +27,10 @@ export const UserContext = createContext<{
 export default function Context({ children }: React.PropsWithChildren<{}>) {
   const [user, setUser] = useState<LoginUser | undefined>();
 
+  async function validateUser() {
+    
+  }
+
   async function getUserFromStorage() {
     const userFromStorage = localStorage.user;
 

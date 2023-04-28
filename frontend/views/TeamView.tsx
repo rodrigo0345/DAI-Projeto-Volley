@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Modal, Group, Button } from '@mantine/core';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Crud } from '@hilla/react-components/Crud';
+import ModalBox from 'Frontend/components/modalBox/ModalBox';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -31,7 +32,7 @@ const rowsExample = [
 export default function TeamView() {
   const { user } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, setOpen] = useState(false);
   const [filterByName, setFilterByName] = useState('');
   const [rows, setRows] = useState(rowsExample);
   const [usersSelected, setUsersSelected] = useState<number[]>([]);
@@ -43,13 +44,7 @@ export default function TeamView() {
 
   return (
     <div className='min-h-screen flex items-center justify-center z-10 bg-white relative shadow-lg'>
-      <Modal
-        opened={opened}
-        onClose={close}
-        title='Criar equipa'
-        centered
-        className=''
-      >
+      <ModalBox title='Criar equipa' openModal={opened} setOpenModal={setOpen}>
         <div className='mb-4 flex flex-col'>
           <label htmlFor='' className='text-sm text-gray-500'>
             Filtrar utilizadores
@@ -83,11 +78,13 @@ export default function TeamView() {
         <button className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'>
           Criar
         </button>
-      </Modal>
+      </ModalBox>
 
       <Group position='center'>
         <button
-          onClick={open}
+          onClick={() => {
+            setOpen(true);
+          }}
           className='
          bg-zinc-200 p-2 rounded-md hover:bg-zinc-300
         '

@@ -68,9 +68,9 @@ const NewsPost = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       layout
-      className='w-full flex items-center justify-center'
+      className=' flex items-center justify-center'
     >
-      <div className='flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100'>
+      <div className='flex flex-col p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100 max-w-[30em] min-w-[30em]'>
         <div className='flex space-x-4'>
           <div className='flex flex-col space-y-1'>
             <a
@@ -104,7 +104,7 @@ const NewsPost = ({
           <h2 className='mb-1 text-xl font-semibold text-white'>
             {post?.title}
           </h2>
-          <p className='text-sm dark:text-gray-400'>{post?.content}</p>
+          <p className='text-sm'>{post?.content}</p>
         </div>
         <div className='flex flex-wrap justify-between'>
           <div className='space-x-2 flex items-center'>

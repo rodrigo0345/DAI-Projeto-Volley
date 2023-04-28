@@ -15,7 +15,7 @@ import {
   addPassenger,
   checkPassengerInRide,
   removePassenger,
-} from 'Frontend/generated/PostController';
+} from 'Frontend/generated/RideController';
 import { toast } from 'react-toastify';
 
 export function RidePost({
@@ -82,7 +82,7 @@ export function RidePost({
       animate={{ opacity: 1 }}
       className='w-full flex justify-center'
     >
-      <div className='flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100'>
+      <div className='flex flex-col p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100 max-w-[30em] min-w-[30em]'>
         <div className='flex space-x-4'>
           <div className='flex flex-col space-y-1'>
             <a
@@ -114,7 +114,7 @@ export function RidePost({
           <h2 className='mb-1 text-xl font-semibold text-white'>
             {post?.origin + ' - ' + post?.destination}
           </h2>
-          <p className='text-sm dark:text-gray-400'>{post?.description}</p>
+          <p className='text-sm'>{post?.description}</p>
         </div>
         <div className='flex flex-wrap justify-between'>
           <div className='space-x-2 flex items-center'>

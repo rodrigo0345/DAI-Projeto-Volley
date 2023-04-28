@@ -10,6 +10,7 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { redirect, useActionData, useLoaderData } from 'react-router-dom';
 import { useMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import validator from 'validator';
 
 export default function ProfilesView() {
   let { user } = useContext(UserContext);
@@ -56,6 +57,11 @@ export default function ProfilesView() {
   ) {
     event.preventDefault();
 
+    if (!validator.isEmail(email ?? '')) {
+      toast.error('Invalid email');
+      return;
+    }
+
     const result = await editUser(user, {
       firstname: firstName,
       lastname: lastName,
@@ -71,6 +77,7 @@ export default function ProfilesView() {
     }
 
     toast.success('Profile updated');
+    setEditable(false);
     return;
   }
 
