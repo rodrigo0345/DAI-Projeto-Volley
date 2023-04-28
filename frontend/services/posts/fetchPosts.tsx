@@ -24,6 +24,7 @@ export async function fetchPopularPosts(
     setLoading(false);
     return;
   }
+  setLoading(false);
   return posts;
 }
 
@@ -39,6 +40,7 @@ export async function fetchPostsByMostRecent(
     setLoading(false);
     return;
   }
+  setLoading(false);
   return posts;
 }
 
@@ -54,6 +56,7 @@ export async function fetchPostsByOldest(
     setLoading(false);
     return;
   }
+  setLoading(false);
   return posts;
 }
 

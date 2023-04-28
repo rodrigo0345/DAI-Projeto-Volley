@@ -288,7 +288,7 @@ export default function ForumView() {
                   <Skeleton
                     key={i}
                     visible={loading}
-                    className='h-52'
+                    className='h-60 w-96 self-center'
                   ></Skeleton>
                 );
               })}

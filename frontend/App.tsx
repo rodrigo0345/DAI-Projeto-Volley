@@ -20,7 +20,6 @@ const MainLoadingScreen = lazy(
 );
 const ProfilesView = lazy(() => import('./views/ProfilesView'));
 const ForumView = lazy(() => import('./views/ForumView'));
-const NewPostView = lazy(() => import('./views/NewPostView'));
 const PostView = lazy(() => import('./views/PostView'));
 const TeamView = lazy(() => import('./views/TeamView'));
 const NotFound = lazy(() => import('./views/404'));
@@ -35,7 +34,6 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        errorElement: <NotFound />,
         element: <GuestsRoute />,
         children: [
           {
@@ -46,7 +44,6 @@ const router = createBrowserRouter([
         ],
       },
       {
-        errorElement: <NotFound />,
         element: <PrivateRouteNoGuests />,
         children: [
           { path: '/dashboard', element: <DashboardView /> },
@@ -55,13 +52,11 @@ const router = createBrowserRouter([
             element: <ProfilesView />,
           },
           { path: '/forum', element: <ForumView /> },
-          { path: '/new-post', element: <NewPostView /> },
           { path: '/post/:type/:id', element: <PostView /> },
           { path: '/team', element: <TeamView /> },
         ],
       },
       {
-        errorElement: <NotFound />,
         element: <PrivateAdminRoute />,
         children: [
           {

@@ -203,7 +203,7 @@ public class PostController {
         return ResponseEntity.ok().body(response);
     }
 
-    public void editPost(PostType post, LoginUser loginUser) {
+    public ResponseEntity<ResponseType<PostType>> editPost(PostType post, LoginUser loginUser) {
 
         String postType = post.getType();
         if (VerifyOwner(post, loginUser)) {
@@ -214,8 +214,11 @@ public class PostController {
                 } catch (Exception e) {
                     var response = new ResponseType<PostType>();
                     response.error(e.getMessage());
-                    return;
+                    return ResponseEntity.badRequest().body(response);
                 }
+                var response = new ResponseType<PostType>();
+                response.success(post);
+                return ResponseEntity.ok().body(response);
             } else if (postType.toLowerCase().trim().equals("news")) {
                 News news = post.news;
                 try {
@@ -224,12 +227,17 @@ public class PostController {
                 } catch (Exception e) {
                     var response = new ResponseType<PostType>();
                     response.error(e.getMessage());
-                    return;
+                    return ResponseEntity.badRequest().body(response);
                 }
+                var response = new ResponseType<PostType>();
+                response.success(post);
+                return ResponseEntity.ok().body(response);
             }
         }
 
-        return;
+        var response = new ResponseType<PostType>();
+        response.error("Não tem permissão para editar o post");
+        return ResponseEntity.badRequest().body(response);
 
     }
 
@@ -238,8 +246,7 @@ public class PostController {
         String postType = post.getType();
         if (postType.toLowerCase().trim().equals("ride")) {
             Ride ride = post.ride;
-            Long id = Long.valueOf(loginUser.getId());
-            if (!(ride.getDriverID().equals(id))) {
+            if (!(ride.getDriverID().equals(loginUser.getId()))) {
                 var response = new ResponseType<PostType>();
                 response.error("Não é o dono do post");
                 return false;

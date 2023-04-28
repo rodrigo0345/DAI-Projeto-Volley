@@ -25,6 +25,14 @@ export default function PostView() {
   const [myPost, setMyPost] = useState(false);
   const [passengers, setPassengers] = useState<LoginUser[]>([]);
 
+  const [destination, setDestination] = useState<string | undefined>(undefined);
+  const [dataPartida, setDataPartida] = useState<string | undefined>(undefined);
+  const [lugaresDisp, setLugaresDisp] = useState<number | undefined>(undefined);
+  const [lugaresOcup, setLugaresOcup] = useState<number | undefined>(undefined);
+  const [driverContact, setDriverContact] = useState<string | undefined>(
+    undefined
+  );
+
   const noticia = {
     titulo: useRef<HTMLInputElement>(null),
     descricao: useRef<HTMLTextAreaElement>(null),
@@ -35,6 +43,7 @@ export default function PostView() {
     destino: useRef<HTMLInputElement>(null),
     dataPartida: useRef<HTMLInputElement>(null),
     lugaresDisp: useRef<HTMLInputElement>(null),
+    lugaresOcup: useRef<HTMLInputElement>(null),
     descricao: useRef<HTMLTextAreaElement>(null),
     telefone: useRef<HTMLInputElement>(null),
     localPartida: useRef<HTMLInputElement>(null),
@@ -52,14 +61,13 @@ export default function PostView() {
         authorID: news?.authorID ?? 0,
         id: news?.id,
         clicks: news?.clicks ?? 0,
-        image: undefined,
+        image: news?.image,
         likes: news?.likes ?? 0,
         createdAt: news?.createdAt ?? '',
       };
-
-      const result = await editPost(postType, user);
     } else if (type === 'ride') {
       postType.ride = {
+        createdAt: rides?.createdAt ?? '',
         origin: boleia?.localPartida?.current?.value,
         destination: boleia?.destino?.current?.value,
         startDate: boleia?.dataPartida?.current?.value,
@@ -71,8 +79,17 @@ export default function PostView() {
         seats: Number.parseInt(boleia?.lugaresDisp?.current?.value ?? '0'),
         clicks: rides?.clicks ?? 0,
       };
-      const result = await editPost(postType, user);
+
+      console.log(postType.ride);
     }
+
+    const result = await editPost(postType, user);
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    toast.success(result?.body.success);
   }
 
   useEffect(() => {
@@ -82,6 +99,12 @@ export default function PostView() {
         post = await getPost(type, Number.parseInt(id ?? '0'));
       } catch (e: any) {
         toast.error(e.message);
+      }
+
+      if (!post) {
+        toast.error('Post not found');
+        window.location.href = '/forum';
+        return;
       }
 
       if (type === 'news') {
@@ -100,15 +123,21 @@ export default function PostView() {
         setMyPost(user?.id === post?.ride?.driverID);
 
         // fetch all passangers
+        setPassengers([]);
         post?.ride?.passengers?.forEach(async (passenger) => {
           const passengerUser = await findById(passenger);
           setPassengers((passengers) => [...passengers, passengerUser ?? {}]);
         });
 
-        const title = post?.ride?.origin + ' - ' + post?.ride?.destination;
+        const title = post?.ride?.origin;
         const content = post?.ride?.description;
         setContentState(content);
         setTitleState(title);
+        setDestination(post?.ride?.destination);
+        setDataPartida(post?.ride?.startDate ?? '04/06/2020');
+        setLugaresDisp(post?.ride?.seats);
+        setLugaresOcup((post?.ride?.seats ?? 0) - (post?.ride?.freeSeats ?? 0));
+        setDriverContact(post?.ride?.driverContact);
 
         const author = await findById(post?.ride?.driverID ?? 0);
         setAuthor(author);
@@ -119,12 +148,12 @@ export default function PostView() {
   return (
     <div className='h-screen z-10 bg-white relative shadow-lg'>
       <article className='max-w-2xl px-6 py-24 mx-auto space-y-8 dark:bg-gray-800 dark:text-gray-50'>
-        <div className='w-full mx-auto space-y-4'>
-          <div className='flex items-center justify-between my-8'>
-            {
+        <div className='w-full mx-auto space-y-4 relative'>
+          <div className='flex items-center justify-between max-w-full'>
+            <div>
               <input
-                ref={(news && noticia.titulo) || (rides && boleia.destino)}
-                className={`text-5xl font-bold leading-none m-0 h-fit bg-white outline outline-1  border-none rounded-md focus:ring-transparent p-0 ${
+                ref={(news && noticia.titulo) || (rides && boleia.localPartida)}
+                className={`text-5xl font-bold leading-none m-0 h-fit bg-white outline outline-1  border-none rounded-md focus:ring-transparent p-0 w-60 ${
                   editable
                     ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                     : 'outline-none focus:outline-none focus:border-none'
@@ -133,16 +162,31 @@ export default function PostView() {
                 value={titleState}
                 {...(editable ? { disabled: false } : { disabled: true })}
               ></input>
-            }
-
-            <button
-              className='m-0 bg-blue-400 hover:bg-blue-500 text-white py-1 px-3 rounded-md shadow-lg'
-              onClick={() => {
-                setEditable((editable) => !editable);
-              }}
-            >
-              Editar
-            </button>
+              {rides && (
+                <input
+                  type='text'
+                  value={destination ?? ''}
+                  ref={boleia.destino}
+                  onChange={(e) => setDestination(e.target.value)}
+                  className={`text-5xl font-bold leading-none m-0 h-fit bg-white outline outline-1  border-none rounded-md focus:ring-transparent p-0 w-60 ${
+                    editable
+                      ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
+                      : 'outline-none focus:outline-none focus:border-none'
+                  }`}
+                />
+              )}
+            </div>
+            {((news && user?.id === news.authorID) ||
+              (rides && user?.id === rides?.driverID)) && (
+              <button
+                className='m-0 bg-blue-400 hover:bg-blue-500 text-white py-1 px-3 rounded-md shadow-lg'
+                onClick={() => {
+                  setEditable((editable) => !editable);
+                }}
+              >
+                Editar
+              </button>
+            )}
           </div>
           <div className='flex flex-wrap space-x-2 text-sm dark:text-gray-400'>
             <a
@@ -177,37 +221,69 @@ export default function PostView() {
             <div className='flex items-center'>
               <p className='m-0 pr-2 text-sm'> Lugares disponíveis: </p>
               <input
+                ref={boleia.lugaresDisp}
                 className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold text-sm ${
                   editable
                     ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                     : 'outline-none focus:outline-none focus:border-none'
                 }`}
                 type='number'
-                value={rides.seats}
+                onChange={(e) => {
+                  setLugaresDisp(Number(e.target.value));
+                }}
+                value={lugaresDisp}
+                {...(editable ? { disabled: false } : { disabled: true })}
               />
             </div>
             <div className='flex items-center'>
               <p className='m-0 pr-2 text-sm'> Lugares ocupados: </p>
               <input
+                ref={boleia.lugaresOcup}
                 className={`outline outline-1  border-none rounded-md focus:ring-transparent font-semibold p-0 text-sm ${
                   editable
                     ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                     : 'outline-none focus:outline-none focus:border-none'
                 }`}
                 type='number'
-                value={rides.seats - rides.freeSeats}
+                onChange={(e) => {
+                  setLugaresOcup(Number(e.target.value));
+                }}
+                value={lugaresOcup}
+                disabled={true}
+              />
+            </div>
+            <div className='flex items-center'>
+              <p className='m-0 pr-2 text-sm'> Contacto: </p>
+              <input
+                ref={boleia.telefone}
+                className={`outline outline-1  border-none rounded-md focus:ring-transparent font-semibold p-0 text-sm ${
+                  editable
+                    ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
+                    : 'outline-none focus:outline-none focus:border-none'
+                }`}
+                type='number'
+                onChange={(e) => {
+                  setDriverContact(e.target.value);
+                }}
+                value={driverContact}
+                {...(editable ? { disabled: false } : { disabled: true })}
               />
             </div>
             <div className='flex items-center text-sm'>
               <p className='m-0 pr-2 text-sm'> Hora e dia: </p>
               <input
+                ref={boleia.dataPartida}
                 className={`outline outline-1  border-none rounded-md focus:ring-transparent p-0 font-semibold text-sm ${
                   editable
                     ? 'focus:outline-1 focus:outline-offset-0 focus:outline-green-500 outline-green-500 focus:border-none p-2'
                     : 'outline-none focus:outline-none focus:border-none'
                 }`}
                 type='datetime-local'
-                value={rides.startDate}
+                onChange={(e) => {
+                  setDataPartida(e.target.value);
+                }}
+                value={dataPartida}
+                {...(editable ? { disabled: false } : { disabled: true })}
               />
             </div>
             <div className='flex items-center text-sm'>
