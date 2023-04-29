@@ -68,8 +68,6 @@ export async function criarBoleia(
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>,
   user: LoginUser
 ) {
-  toast.info(user.id);
-
   if (
     !boleia.destino ||
     !boleia.dataPartida ||
