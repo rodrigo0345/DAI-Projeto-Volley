@@ -18,7 +18,7 @@ import {
 } from 'Frontend/generated/RideController';
 import { toast } from 'react-toastify';
 
-export function RidePost({
+export default function RidePost({
   post,
   type,
   user,
@@ -34,12 +34,22 @@ export function RidePost({
 
   useEffect(() => {
     (async () => {
-      const driver = await findById(post?.driverID);
-      setDriver(driver?.firstname + ' ' + driver?.lastname);
+      try {
+        const driver = await findById(post?.driverID);
+        console.log(driver);
+        if (!driver) {
+          await remove(post);
+          return;
+        }
+        setDriver(driver?.firstname + ' ' + driver?.lastname);
+        setAuthor(driver);
+      } catch (e) {
+        await remove(post);
+        return;
+      }
+
       const result = await checkPassengerInRide(post, user);
       setUserJoined(result);
-      const author = await findById(post?.driverID ?? 0);
-      setAuthor(author);
     })();
   }, []);
 

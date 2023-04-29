@@ -2,7 +2,7 @@ import SidePanel, {
   AsideContent,
 } from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { lazy, useContext, useEffect, useRef, useState } from 'react';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { BsCalendarDate, BsCarFront, BsCloudUpload } from 'react-icons/bs';
 import { MdOutlineForum } from 'react-icons/md';
@@ -29,7 +29,6 @@ import {
   postsByOlder,
 } from 'Frontend/generated/PostController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
-import NewsPost from 'Frontend/components/posts/NewsPost';
 import { Button, Skeleton } from '@mantine/core';
 import { AnimatePresence, motion } from 'framer-motion';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
@@ -43,9 +42,11 @@ import {
 } from 'Frontend/services/posts/fetchPosts';
 import { criarNoticia } from 'Frontend/services/posts/createPost';
 import FilterContent from 'Frontend/components/filterContent/FilterContent';
-import { RidePost } from 'Frontend/components/posts/RidePost';
 import CreatePost from 'Frontend/components/posts/CreatePost';
 import { CgProfile } from 'react-icons/cg';
+
+const NewsPost = lazy(() => import('Frontend/components/posts/NewsPost'));
+const RidePost = lazy(() => import('Frontend/components/posts/RidePost'));
 
 enum Menu {
   ALL = 'ALL',
@@ -56,6 +57,7 @@ enum Menu {
 
 export default function ForumView() {
   const { user, logout } = useContext(UserContext);
+  const [firstLoader, setFirstLoader] = useState(true);
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
   const [posts, setPosts] = useState<(PostType | undefined)[]>([]);
   const [openModal, setOpenModal] = useState(false);
@@ -148,6 +150,7 @@ export default function ForumView() {
   ];
 
   useEffect(() => {
+    if (firstLoader) return;
     setOrder(Order.POPULAR);
     setCurrIndex(0);
     (async () => {
@@ -169,6 +172,7 @@ export default function ForumView() {
   }, [menu]);
 
   useEffect(() => {
+    if (firstLoader) return;
     setCurrIndex(0);
     (async () => {
       setLoading(true);
@@ -253,6 +257,7 @@ export default function ForumView() {
         setPosts(filteredPosts ?? []);
       }
       setLoading(false);
+      setFirstLoader(false);
     })();
   }, []);
 

@@ -14,6 +14,8 @@ const Card = styled.div`
   overflow: hidden;
   width: fit-content;
   min-width: fit-content;
+  height: fit-content;
+  min-height: fit-content;
   .symbol {
     transition: transform 0.5s ease;
   }

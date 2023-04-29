@@ -38,8 +38,19 @@ const NewsPost = ({
       setLikes(likes ?? 0);
       const userLiked = await checkUserHasLiked(post, user);
       setUserLiked(userLiked);
-      const author = await findById(post?.authorID ?? 0);
-      setAuthor(author);
+      try {
+        const author = await findById(post?.authorID ?? 0);
+        if (!author) {
+          await remove(post);
+          return;
+        }
+        setAuthor(author);
+      } catch (e) {
+        console.log(e);
+        await remove(post);
+        return;
+      }
+      // this means the post is not associated with a user
     })();
 
     (async () => {
@@ -93,10 +104,11 @@ const NewsPost = ({
           }}
         >
           <img
+            width={300}
+            loading='lazy'
             onError={(e) => {
               e.currentTarget.src = news;
             }}
-            width={300}
             src={image ?? news}
             alt=''
             className='object-contain w-full mb-4 h-60 sm:h-96 bg-amber-50'

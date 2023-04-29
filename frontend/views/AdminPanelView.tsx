@@ -480,7 +480,7 @@ export default function AdminPanelView() {
                   ></FilterModalBox>
                 </div>
                 <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
-                  {displayUsersBy('SECCTIONIST')}
+                  {displayUsersBy('SECCIONIST')}
                 </div>
               </div>
             </div>
