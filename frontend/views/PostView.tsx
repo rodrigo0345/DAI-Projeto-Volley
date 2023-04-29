@@ -79,8 +79,6 @@ export default function PostView() {
         seats: Number.parseInt(boleia?.lugaresDisp?.current?.value ?? '0'),
         clicks: rides?.clicks ?? 0,
       };
-
-      console.log(postType.ride);
     }
 
     const result = await editPost(postType, user);
@@ -89,7 +87,8 @@ export default function PostView() {
       return;
     }
 
-    toast.success(result?.body.success);
+    setEditable(false);
+    toast.success('Post editado com sucesso!');
   }
 
   useEffect(() => {
@@ -149,6 +148,9 @@ export default function PostView() {
     <div className='h-screen z-10 bg-white relative shadow-lg'>
       <article className='max-w-2xl px-6 py-24 mx-auto space-y-8 '>
         <div className='w-full mx-auto space-y-4 relative'>
+          <a className='m-0 decoration-slate-700' href='/forum'>
+            Voltar ao fórum
+          </a>
           <div className='flex items-center justify-between max-w-full'>
             <div>
               <input
@@ -179,7 +181,7 @@ export default function PostView() {
             {((news && user?.id === news.authorID) ||
               (rides && user?.id === rides?.driverID)) && (
               <button
-                className='m-0 bg-blue-400 hover:bg-blue-500 text-white py-1 px-3 rounded-md shadow-lg'
+                className='m-0 bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md shadow-lg'
                 onClick={() => {
                   setEditable((editable) => !editable);
                 }}
