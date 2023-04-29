@@ -5,6 +5,8 @@ import Dropzone from 'react-dropzone';
 import { criarBoleia, criarNoticia } from 'Frontend/services/posts/createPost';
 import { BsCloudUpload } from 'react-icons/bs';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
+import { isBefore } from 'date-fns';
+import { toast } from 'react-toastify';
 
 export default function CreatePost({
   openModal,
@@ -33,14 +35,14 @@ export default function CreatePost({
   return (
     <ModalBox openModal={openModal} setOpenModal={setOpenModal}>
       <Tabs.Root
-        className='m-auto relative !max-w-[45em] lg:max-w-[50em] md:!w-[25em] w-full overflow-x-hidden shadow-lg rounded-lg z-[100]'
-        defaultValue='tab1'
+        className='m-auto relative !max-w-[45em] lg:max-w-[50em] md:!w-[25em] w-full overflow-x-hidden rounded-lg z-[100]'
+        defaultValue='tab2'
       >
         <Tabs.List
           className='shrink-0 flex border-b '
           aria-label='Manage your account'
         >
-          {user.role === 'ADMIN' && (
+          {user.role !== 'ADMIN' && (
             <Tabs.Trigger
               className='bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-yellow-300 data-[state=active]:text-yellow-300 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative data-[state=active]:focus:shadow-[0_0_0_2px] data-[state=active]:focus:shadow-transparent outline-none cursor-default focus:border-none'
               value='tab1'
@@ -150,6 +152,16 @@ export default function CreatePost({
           <div className='flex justify-end mt-5'>
             <button
               onClick={() => {
+                if (
+                  isBefore(
+                    new Date(boleia.dataPartida.current?.value ?? ''),
+                    new Date()
+                  )
+                ) {
+                  toast.error('Data de partida inválida');
+                  boleia.dataPartida.current?.focus();
+                  return;
+                }
                 criarBoleia(boleia, setOpenModal, user);
               }}
               className='inline-flex items-center justify-center rounded px-[15px] text-[15px] leading-none font-medium h-[35px] bg-green4 text-green11 hover:bg-green5 focus:shadow-[0_0_0_2px] focus:shadow-green7 outline-none hover:bg-yellow-300 cursor-pointer'
