@@ -36,7 +36,6 @@ export default function RidePost({
     (async () => {
       try {
         const driver = await findById(post?.driverID);
-        console.log(driver);
         if (!driver) {
           await remove(post);
           return;

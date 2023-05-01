@@ -15,6 +15,7 @@ import com.example.application.service.NewsService;
 import com.example.application.service.RideService;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.example.application.controller.Forum.AuxThread.AuxThread;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Ride;
@@ -31,6 +32,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.function.Consumer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -69,8 +71,20 @@ public class PostController {
     }
 
     public Iterable<PostType> popularPosts(Integer pageSize, Integer index) {
-        List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
+        List<News> newsAux = null;
+
+        AuxThread newsThread = new AuxThread();
+        newsThread.run(newsRepository, index, pageSize, "clicks", false);
         List<Ride> ridesAux = ridesRepository.findAll(PageRequest.of(index, pageSize, Sort.by("clicks").descending()));
+
+        try {
+            newsThread.join();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        newsAux = newsThread.getResult();
 
         Comparator<? super PostType> cmp = (PostType p1, PostType p2) -> {
             var p1Type = p1.getType();
@@ -85,9 +99,21 @@ public class PostController {
     }
 
     public Iterable<PostType> postsByNewest(int pageSize, int index) {
-        List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").descending()));
+        List<News> newsAux = null;
+
+        AuxThread newsThread = new AuxThread();
+        newsThread.run(newsRepository, index, pageSize, "createdAt", false);
         List<Ride> ridesAux = ridesRepository
                 .findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").descending()));
+
+        try {
+            newsThread.join();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        newsAux = newsThread.getResult();
 
         Comparator<? super PostType> cmp = (PostType p1, PostType p2) -> {
             var p1Type = p1.getType();
@@ -103,9 +129,22 @@ public class PostController {
     }
 
     public Iterable<PostType> postsByOlder(int pageSize, int index) {
-        List<News> newsAux = newsRepository.findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").ascending()));
+        List<News> newsAux = null;
+
+        AuxThread newsThread = new AuxThread();
+        newsThread.run(newsRepository, index, pageSize, "createdAt", true);
+
         List<Ride> ridesAux = ridesRepository
                 .findAll(PageRequest.of(index, pageSize, Sort.by("createdAt").ascending()));
+
+        try {
+            newsThread.join();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        newsAux = newsThread.getResult();
 
         Comparator<? super PostType> cmp = (PostType p1, PostType p2) -> {
             var p1Type = p1.getType();

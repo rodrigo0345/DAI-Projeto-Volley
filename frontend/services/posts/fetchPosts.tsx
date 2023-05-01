@@ -18,7 +18,7 @@ export async function fetchPopularPosts(
   setPosts: React.Dispatch<React.SetStateAction<(PostType | undefined)[]>>,
   prevPosts?: (PostType | undefined)[]
 ) {
-  const posts = await popularPosts(4, index);
+  const posts = await popularPosts(5, index);
   if (!posts || posts.length === 0) {
     toast.warn('Não existem mais posts');
     setLoading(false);
@@ -34,7 +34,7 @@ export async function fetchPostsByMostRecent(
   setPosts: React.Dispatch<React.SetStateAction<(PostType | undefined)[]>>,
   prevPosts?: (PostType | undefined)[]
 ) {
-  const posts = await postsByNewest(4, index);
+  const posts = await postsByNewest(5, index);
   if (!posts || posts.length === 0) {
     toast.warn('Não existem mais posts');
     setLoading(false);
@@ -50,7 +50,7 @@ export async function fetchPostsByOldest(
   setPosts: React.Dispatch<React.SetStateAction<(PostType | undefined)[]>>,
   prevPosts?: (PostType | undefined)[]
 ) {
-  const posts = await postsByOlder(4, index);
+  const posts = await postsByOlder(5, index);
   if (!posts || posts.length === 0) {
     toast.warn('Não existem mais posts');
     setLoading(false);
