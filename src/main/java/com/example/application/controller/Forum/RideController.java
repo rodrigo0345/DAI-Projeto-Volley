@@ -1,4 +1,4 @@
-package com.example.application.controller.Forum;
+ package com.example.application.controller.Forum;
 
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.Ride;

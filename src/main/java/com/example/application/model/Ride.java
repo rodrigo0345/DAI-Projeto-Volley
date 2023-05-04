@@ -42,23 +42,23 @@ public class Ride {
     private LocalDateTime createdAt;
 
     @ElementCollection
-    //@JoinColumn(name = "user_id", nullable = true)
+    // @JoinColumn(name = "user_id", nullable = true)
     private List<Integer> passengers;
 
     public void addPassenger(Integer userID) {
         passengers.add(userID);
         freeSeats--;
     }
-    
+
     public void removePassenger(Integer userID) {
         passengers.remove(userID);
         freeSeats++;
     }
 
     public static boolean containsPassenger(List<Integer> passengers, LoginUser user) {
-        if (passengers.contains(user.getId())) return true;
+        if (passengers.contains(user.getId()))
+            return true;
         return false;
     }
 
 }
-

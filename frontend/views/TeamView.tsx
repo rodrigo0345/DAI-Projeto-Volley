@@ -5,6 +5,12 @@ import { Modal, Group, Button } from '@mantine/core';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Crud } from '@hilla/react-components/Crud';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
+import { findAll, findById } from 'Frontend/generated/UserController';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
+import {
+  getPlayersWithoutTeam,
+  isPlayerInTeam,
+} from 'Frontend/generated/TeamController';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -39,7 +45,20 @@ export default function TeamView() {
 
   useEffect(() => {
     if (user?.role === 'admin' || user?.role === 'ADMIN') setIsAdmin(true);
-    async () => {};
+    const loadPlayers = async () => {
+      const players = await getPlayersWithoutTeam();
+      setRows(
+        players?.body.success.map((user: LoginUser) => {
+          return {
+            id: user.id,
+            lastName: user.lastname,
+            firstName: user.firstname,
+            age: 0,
+          };
+        })
+      );
+    };
+    loadPlayers();
   }, []);
 
   return (
@@ -57,7 +76,7 @@ export default function TeamView() {
             className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
           />
         </div>
-        {/* Modal content */}
+
         <DataGrid
           rows={rows.filter((value) => {
             if (filterByName === '') return true;
@@ -89,7 +108,7 @@ export default function TeamView() {
          bg-zinc-200 p-2 rounded-md hover:bg-zinc-300
         '
         >
-          Open centered Modal
+          Criar Equipa
         </button>
       </Group>
     </div>
