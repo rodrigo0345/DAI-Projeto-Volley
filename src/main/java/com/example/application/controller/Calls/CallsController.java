@@ -1,5 +1,6 @@
 package com.example.application.controller.Calls;
 
+import com.example.application.controller.Team.TeamController;
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Convocatorias;
 import com.example.application.model.Team.Team;
@@ -35,7 +36,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
+        if (TeamController.isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
             var response = new ResponseType<Convocatorias>();
             response.error("Os jogadores não pertecem a uma equipa");
             return ResponseEntity.badRequest().body(response);
@@ -79,7 +80,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
+        if (TeamController.isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
             var response = new ResponseType<Convocatorias>();
             response.error("Os jogadores não pertecem a uma equipa");
             return ResponseEntity.badRequest().body(response);
@@ -133,7 +134,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
+        if (TeamController.isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
             var response = new ResponseType<List<Long>>();
             response.error("Os jogadores não pertecem a uma equipa");
             return ResponseEntity.badRequest().body(response);
@@ -170,35 +171,6 @@ public class CallsController {
 
         var response = new ResponseType<List<Long>>();
         return ResponseEntity.ok().body(response);
-    }
-
-    public static ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(TeamRepository teamRepository,
-            UserRepository userRepository, List<Long> atletas) {
-
-        List<User> atleta = null;
-
-        for (Long elemento : atletas) {
-            User jogador = userRepository.findById(elemento).get();
-            atleta.add(jogador);
-        }
-
-        Set<User> jogadoresEmEquipas = new HashSet<User>();
-        List<Team> todasEquipas = teamRepository.findAll();
-
-        for (Team t : todasEquipas) {
-            jogadoresEmEquipas.addAll(t.getPlayers());
-        }
-
-        if (!(jogadoresEmEquipas.contains(atleta))) {
-            var response = new ResponseType<Boolean>();
-            response.success(true);
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        var response = new ResponseType<Boolean>();
-        response.success(false);
-        return ResponseEntity.ok().body(response);
-
     }
 
 }
