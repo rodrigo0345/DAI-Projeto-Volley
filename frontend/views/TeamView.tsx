@@ -1,7 +1,7 @@
 import { useDisclosure } from '@mantine/hooks';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import React, { useContext, useEffect, useState } from 'react';
-import { Modal, Group, Button } from '@mantine/core';
+import { Modal, Group, Button, Autocomplete } from '@mantine/core';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Crud } from '@hilla/react-components/Crud';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
@@ -11,6 +11,11 @@ import {
   getPlayersWithoutTeam,
   isPlayerInTeam,
 } from 'Frontend/generated/TeamController';
+import Escalao from 'Frontend/generated/com/example/application/model/Team/Escalao';
+import { toast } from 'react-toastify';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
+import Team from 'Frontend/generated/com/example/application/model/Team/Team';
+import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -23,25 +28,54 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rowsExample = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
-
 export default function TeamView() {
   const { user } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
   const [opened, setOpen] = useState(false);
   const [filterByName, setFilterByName] = useState('');
-  const [rows, setRows] = useState(rowsExample);
+  const [rows, setRows] = useState<readonly any[]>();
   const [usersSelected, setUsersSelected] = useState<number[]>([]);
+  const [managers, setManagers] = useState<(LoginUser | undefined)[]>([]);
+  const [teams, setTeams] = useState<Team[]>();
+
+  const teamNameRef = React.useRef<HTMLInputElement>(null);
+  const escalaoRef = React.useRef<HTMLInputElement>(null);
+  const managerRef = React.useRef<HTMLInputElement>(null);
+
+  async function createTeam() {
+    const escalao = escalaoRef.current?.value;
+    const teamName = teamNameRef.current?.value;
+    const manager = managerRef.current?.value;
+    const playersSelected = usersSelected;
+
+    if (teamName === undefined || teamName.trim() === '') {
+      teamNameRef.current?.focus();
+      toast.error('Nome da equipa não pode estar vazio');
+      return;
+    }
+
+    if (escalao === undefined) {
+      escalaoRef.current?.focus();
+      toast.error('Escalão não pode estar vazio');
+      return;
+    }
+
+    // todo: criar equipa
+    const result: ResponseEntity | undefined = {};
+    try {
+    } catch (e: any) {
+      toast.error(e.message);
+      return;
+    }
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    toast.success('Equipa criada com sucesso');
+    setOpen(false);
+  }
 
   useEffect(() => {
     if (user?.role === 'admin' || user?.role === 'ADMIN') setIsAdmin(true);
@@ -59,11 +93,59 @@ export default function TeamView() {
       );
     };
     loadPlayers();
+
+    const loadManagers = async () => {
+      const managers = (await findAll()).filter(
+        (user) => user?.role?.toUpperCase() === Roles.MANAGER
+      );
+      setManagers(managers);
+    };
+    loadManagers();
   }, []);
 
   return (
     <div className='min-h-screen flex items-center justify-center z-10 bg-white relative shadow-lg'>
       <ModalBox title='Criar equipa' openModal={opened} setOpenModal={setOpen}>
+        <div className='mb-4 flex flex-col'>
+          <label htmlFor='' className='text-sm text-gray-500'>
+            Nome da equipa*
+          </label>
+          <input
+            type='text'
+            ref={teamNameRef}
+            className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+          />
+        </div>
+
+        <div className='mb-4 flex flex-col'>
+          <label htmlFor='' className='text-sm text-gray-500'>
+            Escalão*
+          </label>
+          <Autocomplete
+            ref={escalaoRef}
+            placeholder='Escalão'
+            withAsterisk
+            radius='lg'
+            data={Object.values(Escalao)}
+            className='rounded-md'
+          />
+        </div>
+
+        <div className='mb-4 flex flex-col'>
+          <label htmlFor='' className='text-sm text-gray-500'>
+            Treinador
+          </label>
+          <Autocomplete
+            ref={managerRef}
+            placeholder='Treinador'
+            radius='lg'
+            data={managers.map(
+              (manager) => manager?.firstname + ' ' + manager?.lastname
+            )}
+            className='rounded-md'
+          />
+        </div>
+
         <div className='mb-4 flex flex-col'>
           <label htmlFor='' className='text-sm text-gray-500'>
             Filtrar utilizadores
@@ -78,14 +160,16 @@ export default function TeamView() {
         </div>
 
         <DataGrid
-          rows={rows.filter((value) => {
-            if (filterByName === '') return true;
-            return (
-              value.firstName?.includes(filterByName) ||
-              value.lastName?.includes(filterByName) ||
-              value.age?.toString().includes(filterByName)
-            );
-          })}
+          rows={
+            rows?.filter((value) => {
+              if (filterByName === '') return true;
+              return (
+                value.firstName?.includes(filterByName) ||
+                value.lastName?.includes(filterByName) ||
+                value.age?.toString().includes(filterByName)
+              );
+            }) ?? []
+          }
           rowSelection={true}
           columns={columns}
           onRowSelectionModelChange={(e: any) => {
@@ -94,7 +178,12 @@ export default function TeamView() {
           checkboxSelection
         />
 
-        <button className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'>
+        <button
+          className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
+          onClick={() => {
+            createTeam();
+          }}
+        >
           Criar
         </button>
       </ModalBox>

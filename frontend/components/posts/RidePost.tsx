@@ -91,7 +91,7 @@ export default function RidePost({
       animate={{ opacity: 1 }}
       className='w-full flex justify-center'
     >
-      <div className='flex flex-col p-6 space-y-6 overflow-hidden rounded-lg shadow-lg bg-zinc-900 text-gray-100 max-w-[30em] min-w-[30em]'>
+      <div className='flex flex-col p-6 space-y-6 overflow-hidden rounded-lg shadow-xl bg-zinc-100 text-zinc-100 max-w-[30em] min-w-[30em]'>
         <div className='flex space-x-4'>
           <div className='flex flex-col space-y-1'>
             <a
@@ -120,10 +120,10 @@ export default function RidePost({
             alt=''
             className='object-contain w-full mb-4 h-60 sm:h-96 !bg-amber-50'
           />
-          <h2 className='mb-1 text-xl font-semibold text-white'>
+          <h2 className='mb-1 text-xl font-semibold text-gray-800'>
             {post?.origin + ' - ' + post?.destination}
           </h2>
-          <p className='text-sm'>{post?.description}</p>
+          <p className='text-sm text-gray-800'>{post?.description}</p>
         </div>
         <div className='flex flex-wrap justify-between'>
           <div className='space-x-2 flex items-center'>
