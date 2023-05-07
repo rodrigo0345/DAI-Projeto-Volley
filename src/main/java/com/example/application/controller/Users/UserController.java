@@ -28,7 +28,7 @@ public class UserController {
     this.service = service;
   }
 
-  public @Nonnull Iterable<LoginUser> findAll() throws Exception {
+  public @Nonnull ResponseEntity<ResponseType<Iterable<LoginUser>>> findAll() throws Exception {
     Iterable<User> usersAux = users.findAll();
     List<LoginUser> loginUserList = new ArrayList<>();
     for (User user : usersAux) {
@@ -36,19 +36,27 @@ public class UserController {
           user.getEmail(), user.getRole().toString(), null);
       loginUserList.add(aux);
     }
-    return loginUserList;
+
+    var response = new ResponseType<Iterable<LoginUser>>();
+    response.success(loginUserList);
+
+    return ResponseEntity.ok().body(response);
   }
 
-  public LoginUser findById(Integer id) throws Exception {
+  public ResponseEntity<ResponseType<LoginUser>> findById(Integer id) throws Exception {
     if (id == null)
       return null;
     User user = users.findById(id).get();
     LoginUser loginUser = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(),
         user.getEmail(), user.getRole().toString(), null);
-    return loginUser;
+    
+    var response = new ResponseType<LoginUser>();
+    response.success(loginUser);
+
+    return ResponseEntity.ok().body(response);
   }
 
-  public LoginUser deleteUser(Integer id, LoginUser user) throws Exception {
+  public ResponseEntity<ResponseType<LoginUser>> deleteUser(Integer id, LoginUser user) throws Exception {
 
     if (!user.getRole().equals("ADMIN")) {
       return null;
@@ -58,7 +66,11 @@ public class UserController {
     LoginUser loginUser = new LoginUser(dbUser.getId(), dbUser.getFirstname(), dbUser.getLastname(),
         dbUser.getEmail(), dbUser.getRole().toString(), null);
     users.deleteById(id);
-    return loginUser;
+
+    var response = new ResponseType<LoginUser>();
+    response.success(loginUser);
+
+    return ResponseEntity.ok().body(response);
   }
 
   public ResponseEntity<ResponseType<LoginUser>> editUser(

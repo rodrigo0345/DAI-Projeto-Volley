@@ -42,6 +42,8 @@ public class TeamController {
 
     private final TeamRepository teamRepository;
 
+    private final AuthenticationService service;
+
     public ResponseEntity<ResponseType<List<LoginUser>>> getPlayersWithoutTeam() {
 
         List<User> players = new ArrayList<User>();
@@ -68,13 +70,11 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> criarEquipaTreinador(TeamRepository teamRepository,
-            UserRepository users,
-            LoginUser loginUser,
+    public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
             List<Integer> equipa,
             Escalao escalao,
             String name) {
-        User user = users.findById(loginUser.getId()).get();
+        User user = usersRepository.findById(loginUser.getId()).get();
         if (!(user.getRole().equals((Roles.MANAGER)))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");
@@ -98,9 +98,7 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> editarEquipa(TeamRepository teamRepository,
-            AuthenticationService service,
-            LoginUser currentUser,
+    public ResponseEntity<ResponseType<Team>> editTeam( LoginUser currentUser,
             Team team) {
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
@@ -151,11 +149,9 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> removerEquipa(TeamRepository teamRepository,
-            UserRepository users,
-            LoginUser loginUser,
+    public ResponseEntity<ResponseType<Team>> removeTeam( LoginUser loginUser,
             Team team) {
-        User user = users.findById(loginUser.getId()).get();
+        User user = usersRepository.findById(loginUser.getId()).get();
 
         if (!(user.getId().equals(team.getManager().getId()) || user.getRole().equals(Roles.ADMIN))) {
             var response = new ResponseType<Team>();
@@ -169,9 +165,7 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> adicionarJogador(TeamRepository teamRepository,
-            AuthenticationService service,
-            Team team,
+    public ResponseEntity<ResponseType<Team>> addPlayer( Team team,
             LoginUser currentUser) {
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
@@ -216,12 +210,10 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<List<Integer>>> removerJogador(TeamRepository teamRepository,
-            UserRepository users,
-            List<Integer> atletas,
+    public ResponseEntity<ResponseType<List<Integer>>> removePlayer( List<Integer> atletas,
             LoginUser loginUser,
             Team team) {
-        User user = users.findById(loginUser.getId()).get();
+        User user = usersRepository.findById(loginUser.getId()).get();
 
         if (!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))) {
             var response = new ResponseType<List<Integer>>();
@@ -238,7 +230,7 @@ public class TeamController {
         List<User> jogadores = new ArrayList<>();
 
         for (Integer elemento : atletas) {
-            User atleta = users.findById(elemento).get();
+            User atleta = usersRepository.findById(elemento).get();
             jogadores.add(atleta);
         }
 
@@ -252,7 +244,7 @@ public class TeamController {
         List<User> usersARemover = new ArrayList<>();
 
         for (Integer elemento : atletas) {
-            User atleta = users.findById(elemento).get();
+            User atleta = usersRepository.findById(elemento).get();
             usersARemover.add(atleta);
         }
 
@@ -269,9 +261,7 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> trocarTreinador(TeamRepository teamRepository,
-            AuthenticationService service,
-            LoginUser currentUser,
+    public ResponseEntity<ResponseType<Team>> switchManager(LoginUser currentUser,
             Integer equipa) {
         Team team = teamRepository.findById(equipa).get();
 
@@ -296,13 +286,12 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(TeamRepository teamRepository,
-            UserRepository userRepository, List<Long> atletas) {
+    public ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(List<Long> atletas) {
 
         List<User> atleta = null;
 
         for (Long elemento : atletas) {
-            User jogador = userRepository.findById(elemento).get();
+            User jogador = usersRepository.findById(elemento).get();
             atleta.add(jogador);
         }
 
