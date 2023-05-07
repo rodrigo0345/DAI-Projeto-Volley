@@ -206,7 +206,9 @@ export default function AdminPanelView() {
     async function getUsers() {
       try {
         let resultUsers = await UserController.findAll();
-        const result = resultUsers.map((user) => user as LoginUser);
+        const result = resultUsers.body.success.map(
+          (user: LoginUser) => user as LoginUser
+        );
         setUsers(result);
         setAdmins(filterUsersBy('ADMIN', result));
 
@@ -490,7 +492,7 @@ export default function AdminPanelView() {
                   ></FilterModalBox>
                 </div>
                 <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
-                  {displayUsersBy('SECCIONIST')}
+                  {displayUsersBy('SECCTIONIST')}
                 </div>
               </div>
             </div>

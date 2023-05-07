@@ -8,6 +8,8 @@ import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import { findAll, findById } from 'Frontend/generated/UserController';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import {
+  createTeamWithAdmin,
+  createTeamWithManager,
   getPlayersWithoutTeam,
   isPlayerInTeam,
 } from 'Frontend/generated/TeamController';
@@ -61,8 +63,14 @@ export default function TeamView() {
     }
 
     // todo: criar equipa
-    const result: ResponseEntity | undefined = {};
+    let result: ResponseEntity | undefined = {};
     try {
+      result = await createTeamWithAdmin(
+        user,
+        usersSelected,
+        Escalao[escalao as keyof typeof Escalao],
+        teamName
+      );
     } catch (e: any) {
       toast.error(e.message);
       return;
@@ -95,8 +103,8 @@ export default function TeamView() {
     loadPlayers();
 
     const loadManagers = async () => {
-      const managers = (await findAll()).filter(
-        (user) => user?.role?.toUpperCase() === Roles.MANAGER
+      const managers = (await findAll()).body.success.filter(
+        (user: LoginUser) => user?.role?.toUpperCase() === Roles.MANAGER
       );
       setManagers(managers);
     };

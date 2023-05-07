@@ -116,7 +116,7 @@ export default function PostView() {
         setTitleState(title);
 
         const author = await findById(post?.news?.authorID ?? 0);
-        setAuthor(author);
+        setAuthor(author?.body.success);
       } else if (type === 'ride') {
         setRides(post?.ride);
         setMyPost(user?.id === post?.ride?.driverID);
@@ -125,7 +125,10 @@ export default function PostView() {
         setPassengers([]);
         post?.ride?.passengers?.forEach(async (passenger) => {
           const passengerUser = await findById(passenger);
-          setPassengers((passengers) => [...passengers, passengerUser ?? {}]);
+          setPassengers((passengers) => [
+            ...passengers,
+            passengerUser?.body.success ?? {},
+          ]);
         });
 
         const title = post?.ride?.origin;
@@ -139,7 +142,7 @@ export default function PostView() {
         setDriverContact(post?.ride?.driverContact);
 
         const author = await findById(post?.ride?.driverID ?? 0);
-        setAuthor(author);
+        setAuthor(author?.body.success);
       } // [2]
     })();
   }, []);

@@ -36,12 +36,14 @@ export default function RidePost({
     (async () => {
       try {
         const driver = await findById(post?.driverID);
-        if (!driver) {
+        if (driver?.body.error || !driver) {
           await remove(post);
           return;
         }
-        setDriver(driver?.firstname + ' ' + driver?.lastname);
-        setAuthor(driver);
+        setDriver(
+          driver?.body.success.firstname + ' ' + driver?.body.success.lastname
+        );
+        setAuthor(driver?.body.success);
       } catch (e) {
         await remove(post);
         return;

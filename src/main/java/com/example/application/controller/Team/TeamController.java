@@ -98,7 +98,35 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Team>> editTeam( LoginUser currentUser,
+    public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
+            List<Integer> equipa,
+            Escalao escalao,
+            String name) {
+        User user = usersRepository.findById(loginUser.getId()).get();
+        if (!(user.getRole().equals((Roles.ADMIN)))) {
+            var response = new ResponseType<Team>();
+            response.error("Não tem permissões para criar equipas");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (equipa == null) {
+            var response = new ResponseType<Team>();
+            response.error("A equipa esta vazia");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (escalao == null) {
+            var response = new ResponseType<Team>();
+            response.error("O escalão não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Team createdTeam = TeamService.criarEquipaTreinador(teamRepository, loginUser, equipa, escalao, name).success;
+
+        var response = new ResponseType<Team>();
+        response.success(createdTeam);
+        return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity<ResponseType<Team>> editTeam(LoginUser currentUser,
             Team team) {
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
@@ -149,7 +177,7 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Team>> removeTeam( LoginUser loginUser,
+    public ResponseEntity<ResponseType<Team>> removeTeam(LoginUser loginUser,
             Team team) {
         User user = usersRepository.findById(loginUser.getId()).get();
 
@@ -165,7 +193,7 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Team>> addPlayer( Team team,
+    public ResponseEntity<ResponseType<Team>> addPlayer(Team team,
             LoginUser currentUser) {
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
@@ -210,7 +238,7 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<List<Integer>>> removePlayer( List<Integer> atletas,
+    public ResponseEntity<ResponseType<List<Integer>>> removePlayer(List<Integer> atletas,
             LoginUser loginUser,
             Team team) {
         User user = usersRepository.findById(loginUser.getId()).get();

@@ -16,6 +16,7 @@ import {
   remove,
   removeLike,
 } from 'Frontend/generated/NewsController';
+import { toast } from 'react-toastify';
 
 const NewsPost = ({
   post,
@@ -40,11 +41,11 @@ const NewsPost = ({
       setUserLiked(userLiked);
       try {
         const author = await findById(post?.authorID ?? 0);
-        if (!author) {
+        if (author?.body.error || !author) {
           await remove(post);
           return;
         }
-        setAuthor(author);
+        setAuthor(author?.body.success);
       } catch (e) {
         console.log(e);
         await remove(post);
