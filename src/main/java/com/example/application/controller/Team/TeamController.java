@@ -66,7 +66,6 @@ public class TeamController {
             loginUsers.add(AuthenticationService.convertToLoginUser(el, null));
         });
         response.success(loginUsers);
-
         return ResponseEntity.ok().body(response);
     }
 
@@ -194,7 +193,7 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> addPlayer(Team team,
-            LoginUser currentUser) {
+                                                        LoginUser currentUser) {
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
@@ -239,8 +238,8 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<List<Integer>>> removePlayer(List<Integer> atletas,
-            LoginUser loginUser,
-            Team team) {
+                                                                    LoginUser loginUser,
+                                                                    Team team) {
         User user = usersRepository.findById(loginUser.getId()).get();
 
         if (!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))) {
@@ -290,7 +289,8 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> switchManager(LoginUser currentUser,
-            Integer equipa) {
+                                                            Integer equipa,
+                                                            Integer treinador) {
         Team team = teamRepository.findById(equipa).get();
 
         // verificar se o token é válido
@@ -306,7 +306,15 @@ public class TeamController {
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
         }
+        //verificar se o treinador é MANAGER
+        User treinadorNovo = usersRepository.findById(treinador).get();
+        if (!treinadorNovo.getRole().toString().equals("MANAGER")) {
+            var response = new ResponseType<Team>();
+            response.error("O utilizador selecionado não é treinador");
+            return ResponseEntity.badRequest().body(response);
+        }
 
+        team.setManager(treinadorNovo);
         Team changedManagerTeam = TeamService.trocarTreinador(teamRepository, team).success;
 
         var response = new ResponseType<Team>();
