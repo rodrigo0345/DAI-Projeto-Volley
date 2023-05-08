@@ -10,6 +10,7 @@ import com.example.application.model.User.User;
 import com.example.application.repository.ConvocatoriasRepository;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
+import com.example.application.service.CallsService;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -36,37 +37,43 @@ public class CallsController {
     public ResponseEntity<ResponseType<Convocatorias>> createCall(List<Long> atletas,
             String titulo, String description, LocalDateTime date, Long idManager) {
 
+        //verificar quem ta a fazer ?? permissoes ns
+
         if (atletas.isEmpty() || titulo.trim().isEmpty() || description.trim().equals(null) || idManager == null) {
             var response = new ResponseType<Convocatorias>();
             response.error("Campos em branco ");
             return ResponseEntity.badRequest().body(response);
         }
-
         User user = userRepository.findById(idManager).get();
         if (!(user.getRole().toString().equals("MANAGER"))) {
             var response = new ResponseType<Convocatorias>();
             response.error("Não é treinador");
             return ResponseEntity.badRequest().body(response);
         }
-
         if (teamController.isPlayerInTeam(atletas).getBody().success) {
             var response = new ResponseType<Convocatorias>();
             response.error("Os jogadores não pertecem a uma equipa");
             return ResponseEntity.badRequest().body(response);
         }
 
-        var response = new ResponseType<Convocatorias>();
-        return ResponseEntity.ok().body(response);
+        Convocatorias createdCall = CallsService.createCall(convocatoriasRepository, atletas, titulo, description,
+                date, idManager).success;
 
+        var response = new ResponseType<Convocatorias>();
+        response.success(createdCall);
+        return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Convocatorias>> editCall(List<Long> atletas, String titulo,
-            String description, LocalDateTime date,
-            Long idManager, Long convocatoria) {
+    public ResponseEntity<ResponseType<Convocatorias>> editCall(List<Long> atletas,
+                                                                String titulo,
+                                                                String description,
+                                                                LocalDateTime date,
+                                                                Long idManager,
+                                                                Long callId) {
 
-        Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
+        Convocatorias convocatorias = convocatoriasRepository.findById(callId);
 
-        if (convocatorias.equals(null)) {
+        if (convocatorias == null) {
             var response = new ResponseType<Convocatorias>();
             response.error("Não existe convocatoria");
             return ResponseEntity.badRequest().body(response);
@@ -80,9 +87,9 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (atletas.equals(null) || titulo.equals(null) || description.equals(null) || idManager.equals(null)) {
+        if (atletas.isEmpty() || titulo.trim().isEmpty() || description.trim().isEmpty() || idManager == null) {
             var response = new ResponseType<Convocatorias>();
-            response.error("Campos em branco ");
+            response.error("Campos em branco");
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -98,17 +105,20 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        var response = new ResponseType<Convocatorias>();
-        return ResponseEntity.ok().body(response);
+        Convocatorias editedCall = CallsService.editCall(convocatoriasRepository, callId, titulo, description, date,
+                idManager, atletas).success;
 
+        var response = new ResponseType<Convocatorias>();
+        response.success(editedCall);
+        return ResponseEntity.ok().body(response);
     }
 
     public ResponseEntity<ResponseType<Convocatorias>> removeCall(Long convocatoriaID,
-            LoginUser loginUser) {
+                                                                  LoginUser loginUser) {
 
         Convocatorias convocatoria = convocatoriasRepository.findById(convocatoriaID);
 
-        if (convocatoria.equals(null)) {
+        if (convocatoria == null) {
             var response = new ResponseType<Convocatorias>();
             response.error("A convocatoria nao existe");
             return ResponseEntity.badRequest().body(response);
@@ -122,7 +132,10 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
+        Convocatorias deletedCall = CallsService.removeCall(convocatoriasRepository, convocatoriaID).success;
+
         var response = new ResponseType<Convocatorias>();
+        response.success(deletedCall);
         return ResponseEntity.ok().body(response);
     }
 
@@ -131,7 +144,7 @@ public class CallsController {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
 
-        if (convocatorias.equals(null)) {
+        if (convocatorias == null) {
             var response = new ResponseType<List<Long>>();
             response.error("Essa convocatoria nao existe");
             return ResponseEntity.badRequest().body(response);
@@ -150,7 +163,10 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
+        //Convocatorias addedPlayers = CallsService.addPlayer().success;
+
         var response = new ResponseType<List<Long>>();
+        //response.success();
         return ResponseEntity.ok().body(response);
     }
 
@@ -178,7 +194,10 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
+        // Convocatorias removedPlayers = CallsService.removePlayer().success;
+
         var response = new ResponseType<List<Long>>();
+        //response.success();
         return ResponseEntity.ok().body(response);
     }
 

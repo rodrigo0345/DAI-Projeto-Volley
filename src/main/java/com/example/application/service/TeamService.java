@@ -57,15 +57,15 @@ public class TeamService {
         User manager = users.findById(managerId).get();
 
         //fazer update da equipa
-        Team aux = teamRepository.findById(teamId).get();
-        aux.setName(name);
-        aux.setManager(manager);
-        aux.setPlayers(atletas);
+        Team team = teamRepository.findById(teamId).get();
+        team.setName(name);
+        team.setManager(manager);
+        team.setPlayers(atletas);
 
-        teamRepository.save(aux);
+        teamRepository.save(team);
 
         var response = new ResponseType<Team>();
-        response.success(aux);
+        response.success(team);
         return response;
     }
 
