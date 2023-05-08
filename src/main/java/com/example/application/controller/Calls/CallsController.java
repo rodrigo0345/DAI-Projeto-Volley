@@ -36,14 +36,14 @@ public class CallsController {
     public ResponseEntity<ResponseType<Convocatorias>> createCall(List<Long> atletas,
             String titulo, String description, LocalDateTime date, Long idManager) {
 
-        if (atletas.equals(null) || titulo.equals(null) || description.equals(null) || idManager.equals(null)) {
+        if (atletas.isEmpty() || titulo.trim().isEmpty() || description.trim().equals(null) || idManager == null) {
             var response = new ResponseType<Convocatorias>();
             response.error("Campos em branco ");
             return ResponseEntity.badRequest().body(response);
         }
 
         User user = userRepository.findById(idManager).get();
-        if (!(user.getRole().equals("MANAGER"))) {
+        if (!(user.getRole().toString().equals("MANAGER"))) {
             var response = new ResponseType<Convocatorias>();
             response.error("Não é treinador");
             return ResponseEntity.badRequest().body(response);

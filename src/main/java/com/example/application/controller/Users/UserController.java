@@ -73,9 +73,8 @@ public class UserController {
     return ResponseEntity.ok().body(response);
   }
 
-  public ResponseEntity<ResponseType<LoginUser>> editUser(
-      LoginUser currentUser,
-      User user) throws Exception {
+  public ResponseEntity<ResponseType<LoginUser>> editUser(LoginUser currentUser,
+                                                          User user) throws Exception {
 
     var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
     if (!isValidToken) {

@@ -89,6 +89,16 @@ public class TeamController {
             response.error("O escalão não existe");
             return ResponseEntity.badRequest().body(response);
         }
+        if (name.trim().isEmpty()) {
+            var response = new ResponseType<Team>();
+            response.error("O nome da equipa não pode ser vazio");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if(teamRepository.findByName(name) != null){
+            var response = new ResponseType<Team>();
+            response.error("O nome da equipa já existe");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         Team createdTeam = TeamService.criarEquipa(teamRepository, loginUser, equipa, escalao, name).success;
 
