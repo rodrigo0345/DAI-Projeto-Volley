@@ -162,6 +162,7 @@ public class AuthenticationController {
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
+                user.getAge(),
                 user.getRole().toString(),
                 token.getToken());
 

@@ -112,6 +112,7 @@ public class AuthenticationService {
           user.getFirstname(),
           user.getLastname(),
           user.getEmail(),
+          user.getAge(),
           user.getRole().toString(), null);
     }
     return new LoginUser(
@@ -119,6 +120,7 @@ public class AuthenticationService {
         user.getFirstname(),
         user.getLastname(),
         user.getEmail(),
+        user.getAge(),
         user.getRole().toString(),
         token.getToken());
   }
