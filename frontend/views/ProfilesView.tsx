@@ -4,6 +4,7 @@ import { editPost } from 'Frontend/generated/PostController';
 import { editUser, findById } from 'Frontend/generated/UserController';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 import { motion } from 'framer-motion';
 import { useEffect, useState, startTransition, useContext } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
@@ -35,7 +36,7 @@ export default function ProfilesView() {
 
     startTransition(() => {
       (async () => {
-        let user: LoginUser | undefined;
+        let user: ResponseEntity | undefined;
 
         try {
           user = await findById(Number(userId));
@@ -43,11 +44,11 @@ export default function ProfilesView() {
           if (user === undefined) window.location.href = '/404';
         }
 
-        setUserProfile(user);
-        setFirstName(user?.firstname);
-        setLastName(user?.lastname);
-        setEmail(user?.email);
-        setRole(user?.role);
+        setUserProfile(user?.body.success);
+        setFirstName(user?.body.success.firstname);
+        setLastName(user?.body.success.lastname);
+        setEmail(user?.body.success.email);
+        setRole(user?.body.success.role);
       })();
     });
   }, [user]);

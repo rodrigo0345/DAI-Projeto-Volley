@@ -19,24 +19,37 @@ import java.util.Set;
 
 public class CallsController {
 
-    public static ResponseEntity<ResponseType<Convocatorias>> criarConvocatoria(
-            ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository,
-            UserRepository userRepository, List<Long> atletas,
+    private final ConvocatoriasRepository convocatoriasRepository;
+    private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
+    private final TeamController teamController;
+
+    public CallsController(ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository,
+            UserRepository userRepository, TeamController teamController) {
+
+        this.convocatoriasRepository = convocatoriasRepository;
+        this.teamRepository = teamRepository;
+        this.userRepository = userRepository;
+        this.teamController = teamController;
+    }
+
+    public ResponseEntity<ResponseType<Convocatorias>> createCall(List<Long> atletas,
             String titulo, String description, LocalDateTime date, Long idManager) {
-        if (atletas.equals(null) || titulo.equals(null) || description.equals(null) || idManager.equals(null)) {
+
+        if (atletas.isEmpty() || titulo.trim().isEmpty() || description.trim().equals(null) || idManager == null) {
             var response = new ResponseType<Convocatorias>();
             response.error("Campos em branco ");
             return ResponseEntity.badRequest().body(response);
         }
 
         User user = userRepository.findById(idManager).get();
-        if (!(user.getRole().equals("MANAGER"))) {
+        if (!(user.getRole().toString().equals("MANAGER"))) {
             var response = new ResponseType<Convocatorias>();
             response.error("Não é treinador");
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (TeamController.isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
+        if (teamController.isPlayerInTeam(atletas).getBody().success) {
             var response = new ResponseType<Convocatorias>();
             response.error("Os jogadores não pertecem a uma equipa");
             return ResponseEntity.badRequest().body(response);
@@ -47,9 +60,8 @@ public class CallsController {
 
     }
 
-    public static ResponseEntity<ResponseType<Convocatorias>> editarConvocatoria(
-            ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository,
-            UserRepository userRepository, List<Long> atletas, String titulo, String description, LocalDateTime date,
+    public ResponseEntity<ResponseType<Convocatorias>> editCall(List<Long> atletas, String titulo,
+            String description, LocalDateTime date,
             Long idManager, Long convocatoria) {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
@@ -80,7 +92,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (TeamController.isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
+        if (teamController.isPlayerInTeam(atletas).getBody().success) {
             var response = new ResponseType<Convocatorias>();
             response.error("Os jogadores não pertecem a uma equipa");
             return ResponseEntity.badRequest().body(response);
@@ -91,13 +103,12 @@ public class CallsController {
 
     }
 
-    public static ResponseEntity<ResponseType<Convocatorias>> removerConvocatoria(
-            ConvocatoriasRepository convocatoriasRepository, UserRepository userRepository, Long convocatoria,
+    public ResponseEntity<ResponseType<Convocatorias>> removeCall(Long convocatoriaID,
             LoginUser loginUser) {
 
-        Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
+        Convocatorias convocatoria = convocatoriasRepository.findById(convocatoriaID);
 
-        if (convocatorias.equals(null)) {
+        if (convocatoria.equals(null)) {
             var response = new ResponseType<Convocatorias>();
             response.error("A convocatoria nao existe");
             return ResponseEntity.badRequest().body(response);
@@ -105,7 +116,7 @@ public class CallsController {
 
         User user = userRepository.findById(loginUser.getId()).get();
 
-        if (!(user.getRole().equals(Roles.MANAGER) || user.equals(convocatorias.getManagerID()))) {
+        if (!(user.getRole().equals(Roles.MANAGER) || user.equals(convocatoria.getManagerID()))) {
             var response = new ResponseType<Convocatorias>();
             response.error("Não tem permissoes");
             return ResponseEntity.badRequest().body(response);
@@ -115,9 +126,8 @@ public class CallsController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<List<Long>>> adicionarJogador(
-            ConvocatoriasRepository convocatoriasRepository, TeamRepository teamRepository,
-            UserRepository userRepository, List<Long> atletas, Long convocatoria, LoginUser loginUser) {
+    public ResponseEntity<ResponseType<List<Long>>> addPlayer(List<Long> atletas, Long convocatoria,
+            LoginUser loginUser) {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
 
@@ -134,7 +144,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (TeamController.isPlayerInTeam(teamRepository, userRepository, atletas).getBody().success) {
+        if (teamController.isPlayerInTeam(atletas).getBody().success) {
             var response = new ResponseType<List<Long>>();
             response.error("Os jogadores não pertecem a uma equipa");
             return ResponseEntity.badRequest().body(response);
@@ -144,8 +154,7 @@ public class CallsController {
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<List<Long>>> removerJogador(
-            ConvocatoriasRepository convocatoriasRepository, UserRepository userRepository, LoginUser loginUser,
+    public ResponseEntity<ResponseType<List<Long>>> removePlayer(LoginUser loginUser,
             Long convocatoria, List<Long> atletas) {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);

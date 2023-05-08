@@ -16,12 +16,11 @@ import java.util.List;
 public class TeamService {
 
     private static UserRepository users;
-    public static ResponseType<Team> criarEquipaTreinador(TeamRepository teamRepository,
-                                                                          LoginUser loginUser,
-                                                                          List<Integer> equipa,
-                                                                          Escalao escalao,
-                                                                          String name)
-    {
+    public static ResponseType<Team> criarEquipa(TeamRepository teamRepository,
+                                                          LoginUser loginUser,
+                                                          List<Integer> equipa,
+                                                          Escalao escalao,
+                                                          String name) {
         User user = users.findById(loginUser.getId()).get();
 
         List<User> atletas = null;
@@ -45,25 +44,36 @@ public class TeamService {
     }
 
     public static ResponseType<Team> editarEquipa(TeamRepository teamRepository,
-                                                                  Team team)
-    {
+                                                  Integer teamId,
+                                                  Integer managerId,
+                                                  List<Integer> equipa,
+                                                  String name) {
+        List<User> atletas = null;
+
+        for(Integer elemento : equipa){
+            User atleta = users.findById(elemento).get();
+            atletas.add(atleta);
+        }
+        User manager = users.findById(managerId).get();
+
         //fazer update da equipa
-        Team aux = teamRepository.findById(team.getId());
-        aux.setEscalao(team.getEscalao());
-        aux.setName(team.getName());
-        aux.setManager(team.getManager());
-        aux.setPlayers(team.getPlayers());
+        Team aux = teamRepository.findById(teamId).get();
+        aux.setName(name);
+        aux.setManager(manager);
+        aux.setPlayers(atletas);
 
         teamRepository.save(aux);
 
         var response = new ResponseType<Team>();
-        response.success(team);
+        response.success(aux);
         return response;
     }
 
     public static ResponseType<Team> removerEquipa(TeamRepository teamRepository,
-                                                                   Team team)
-    {
+                                                   Integer teamId) {
+
+        Team team = teamRepository.findById(teamId).get();
+
         teamRepository.delete(team);
 
         var response = new ResponseType<Team>();
@@ -73,44 +83,50 @@ public class TeamService {
     }
 
     public static ResponseType<Team> adicionarJogador(TeamRepository teamRepository,
-                                                                      Team team)
-    {
-        Team aux = teamRepository.findById(team.getId());
-        aux.setPlayers(team.getPlayers());
+                                                      Integer teamId,
+                                                      List<User> atletas) {
+        Team team = teamRepository.findById(teamId).get();
+        team.setPlayers(atletas);
 
-        teamRepository.save(aux);
-
-        var response = new ResponseType<Team>();
-        response.success(team);
-        return response;
-    }
-
-    public static ResponseType<List<User>> removerJogador(TeamRepository teamRepository,
-                                                                          List<User> atletas,
-                                                                          Team team)
-    {
-        team.getPlayers().removeAll(atletas);
         teamRepository.save(team);
 
-        var response = new ResponseType<List<User>>();
-        response.success(atletas);
+        var response = new ResponseType<Team>();
+        response.success(team);
         return response;
     }
+    public static ResponseType<Team> removerJogador(TeamRepository teamRepository,
+                                                   Integer teamId,
+                                                   List<Integer> jogadoresRemovidos) {
+        List<User> jogadores = new ArrayList<>();
 
+        for(Integer elemento : jogadoresRemovidos){
+            User atleta = users.findById(elemento).get();
+            jogadores.add(atleta);
+        }
+
+        Team team = teamRepository.findById(teamId).get();
+        team.getPlayers().removeAll(jogadores);
+
+        teamRepository.save(team);
+
+        var response = new ResponseType<Team>();
+        response.success(team);
+        return response;
+    }
     public static ResponseType<Team> trocarTreinador(TeamRepository teamRepository,
-                                                                     Team team)
-    {
-        Team aux = teamRepository.findById(team.getId());
-        aux.setManager(team.getManager());
+                                                     Integer teamId,
+                                                     Integer managerId) {
+        Team team = teamRepository.findById(teamId).get();
+        team.setManager(users.findById(managerId).get());
 
-        teamRepository.save(aux);
+        teamRepository.save(team);
 
         var response = new ResponseType<Team>();
         response.success(team);
         return response;
     }
 
-    public static ResponseEntity<ResponseType<Team>>  findPlayerTeam(TeamRepository teamRepository,
+    public ResponseEntity<ResponseType<Team>>  findPlayerTeam(TeamRepository teamRepository,
                                                                      LoginUser currentUser,
                                                                      Integer id,
                                                                      AuthenticationService service)
@@ -133,7 +149,7 @@ public class TeamService {
         }
         return ResponseEntity.notFound().build();
     }
-    public static ResponseEntity<ResponseType<List<LoginUser>>> playersWithNoTeam(TeamRepository teamRepository,
+    public ResponseEntity<ResponseType<List<LoginUser>>> playersWithNoTeam(TeamRepository teamRepository,
                                                                                   UserRepository users,
                                                                                   LoginUser currentUser,
                                                                                   AuthenticationService service)

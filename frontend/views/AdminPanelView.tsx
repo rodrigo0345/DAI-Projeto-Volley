@@ -47,6 +47,7 @@ export default function AdminPanelView() {
   const [users, setUsers] = useState<LoginUser[] | undefined>(undefined);
   const [addUser, setAddUser] = useState(false);
   const [isEncarregadoSelected, setEncarregadoSelected] = useState(false);
+  const [isAtletaSelected, setIsAtletaSelected] = useState(false);
   const [plan, setPlan] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -74,6 +75,7 @@ export default function AdminPanelView() {
   const lastname = useRef<HTMLInputElement>(null);
   const role = useRef<HTMLSelectElement>(null);
   const educandos = useRef<HTMLSelectElement>(null);
+  const idadeAtleta = useRef<HTMLInputElement>(null);
   const form = useRef<HTMLFormElement>(null);
 
   function filterUsersBy(
@@ -113,6 +115,7 @@ export default function AdminPanelView() {
     const lastnameValue = lastname.current?.value;
     const roleValue = role?.current?.value;
     const educandosValue = educandos.current?.value;
+    const idade = idadeAtleta.current?.value;
 
     if (!emailValue || !passwordValue || !firstnameValue || !lastnameValue) {
       toast.error('Preencha todos os campos');
@@ -124,6 +127,13 @@ export default function AdminPanelView() {
     if (passwordValue !== passwordConfirmValue) {
       toast.error('As passwords inseridas não coincidem');
       password.current?.focus();
+      setIsLoading(false);
+      return;
+    }
+
+    if (isAtletaSelected && !idade) {
+      toast.error('Preencha a idade do atleta');
+      idadeAtleta.current?.focus();
       setIsLoading(false);
       return;
     }
@@ -196,7 +206,9 @@ export default function AdminPanelView() {
     async function getUsers() {
       try {
         let resultUsers = await UserController.findAll();
-        const result = resultUsers.map((user) => user as LoginUser);
+        const result = resultUsers.body.success.map(
+          (user: LoginUser) => user as LoginUser
+        );
         setUsers(result);
         setAdmins(filterUsersBy('ADMIN', result));
 
@@ -480,7 +492,7 @@ export default function AdminPanelView() {
                   ></FilterModalBox>
                 </div>
                 <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
-                  {displayUsersBy('SECCIONIST')}
+                  {displayUsersBy('SECCTIONIST')}
                 </div>
               </div>
             </div>
@@ -569,8 +581,12 @@ export default function AdminPanelView() {
                     <select
                       onChange={(e) => {
                         setEncarregadoSelected(false);
+                        setIsAtletaSelected(false);
                         if (e.target.value === 'Encarregado') {
                           setEncarregadoSelected(true);
+                        }
+                        if (e.target.value === 'Atleta') {
+                          setIsAtletaSelected(true);
                         }
                       }}
                       ref={role}
@@ -593,6 +609,19 @@ export default function AdminPanelView() {
                           Encarregado de
                         </option>
                       </select>
+                    )}
+                    {isAtletaSelected && (
+                      <div className='flex flex-col justify-center h-min'>
+                        <div className='flex gap-4 w-full'>
+                          <input
+                            className='bg-gray-200 rounded-md outline-0 px-2 py-1 w-fit focus:bg-gray-200'
+                            type='number'
+                            name=''
+                            placeholder='Idade'
+                            ref={idadeAtleta}
+                          />
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>

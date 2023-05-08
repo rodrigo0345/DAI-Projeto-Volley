@@ -42,6 +42,8 @@ public class TeamController {
 
     private final TeamRepository teamRepository;
 
+    private final AuthenticationService service;
+
     public ResponseEntity<ResponseType<List<LoginUser>>> getPlayersWithoutTeam() {
 
         List<User> players = new ArrayList<User>();
@@ -64,17 +66,14 @@ public class TeamController {
             loginUsers.add(AuthenticationService.convertToLoginUser(el, null));
         });
         response.success(loginUsers);
-
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> criarEquipaTreinador(TeamRepository teamRepository,
-            UserRepository users,
-            LoginUser loginUser,
-            List<Integer> equipa,
-            Escalao escalao,
-            String name) {
-        User user = users.findById(loginUser.getId()).get();
+    public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
+                                                                    List<Integer> equipa,
+                                                                    Escalao escalao,
+                                                                    String name) {
+        User user = usersRepository.findById(loginUser.getId()).get();
         if (!(user.getRole().equals((Roles.MANAGER)))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");
@@ -90,18 +89,58 @@ public class TeamController {
             response.error("O escalão não existe");
             return ResponseEntity.badRequest().body(response);
         }
+        if (name.trim().isEmpty()) {
+            var response = new ResponseType<Team>();
+            response.error("O nome da equipa não pode ser vazio");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if(teamRepository.findByName(name) != null){
+            var response = new ResponseType<Team>();
+            response.error("O nome da equipa já existe");
+            return ResponseEntity.badRequest().body(response);
+        }
 
-        Team createdTeam = TeamService.criarEquipaTreinador(teamRepository, loginUser, equipa, escalao, name).success;
+        Team createdTeam = TeamService.criarEquipa(teamRepository, loginUser, equipa, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> editarEquipa(TeamRepository teamRepository,
-            AuthenticationService service,
-            LoginUser currentUser,
-            Team team) {
+    public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
+                                                                  List<Integer> equipa,
+                                                                  Escalao escalao,
+                                                                  String name) {
+        User user = usersRepository.findById(loginUser.getId()).get();
+        if (!(user.getRole().equals((Roles.ADMIN)))) {
+            var response = new ResponseType<Team>();
+            response.error("Não tem permissões para criar equipas");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (equipa == null) {
+            var response = new ResponseType<Team>();
+            response.error("A equipa esta vazia");
+            return ResponseEntity.badRequest().body(response);
+        }
+        if (escalao == null) {
+            var response = new ResponseType<Team>();
+            response.error("O escalão não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Team createdTeam = TeamService.criarEquipa(teamRepository, loginUser, equipa, escalao, name).success;
+
+        var response = new ResponseType<Team>();
+        response.success(createdTeam);
+        return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity<ResponseType<Team>> editTeam(LoginUser currentUser,
+                                                       Integer teamId,
+                                                       Integer managerId,
+                                                       List<Integer> equipa,
+                                                       String name) {
+
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
@@ -109,6 +148,8 @@ public class TeamController {
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
+
+        Team team = teamRepository.findById(teamId).get();
         // verificar se currentUser é admin ou treinador da equipa
         if (!currentUser.getRole().toString().equals("ADMIN")
                 && !currentUser.getId().equals(team.getManager().getId())) {
@@ -123,56 +164,52 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se o nome da equipa é válido (nao vazio)
-        if (team.getName().trim().isEmpty()) {
+        if (name.trim().isEmpty()) {
             var response = new ResponseType<Team>();
             response.error("O nome da equipa não pode ser vazio");
             return ResponseEntity.badRequest().body(response);
         }
-        // verificar se o nome da equipa editada já existe (overlap) VERIFICA POR FIRST
-        // LASTNAME, DEPENDE DE FRONTEND?
-        if (teamRepository.findByName(team.getName()) != null
-                && !teamRepository.findByName(team.getName()).equals(team)) {
+        // verificar se o nome da equipa editada já existe (overlap)
+        if (teamRepository.findByName(name) != null) {
             var response = new ResponseType<Team>();
             response.error("O nome da equipa já existe");
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se o nome do treinador é válido (nao vazio) MESMA CENA DE CIMA IDK
-        // BRO
-        if (team.getManager().getFirstname().trim().isEmpty() || team.getManager().getLastname().trim().isEmpty()) {
+        if (usersRepository.findById(managerId).isEmpty()) {
             var response = new ResponseType<Team>();
-            response.error("O nome do treinador não pode ser vazio");
+            response.error("O treinador não existe");
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team editedTeam = TeamService.editarEquipa(teamRepository, team).success;
+        Team editedTeam = TeamService.editarEquipa(teamRepository, teamId, managerId, equipa, name).success;
 
         var response = new ResponseType<Team>();
         response.success(editedTeam);
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> removerEquipa(TeamRepository teamRepository,
-            UserRepository users,
-            LoginUser loginUser,
-            Team team) {
-        User user = users.findById(loginUser.getId()).get();
+    public ResponseEntity<ResponseType<Team>> removeTeam(LoginUser loginUser,
+                                                         Integer teamId) {
+        User user = usersRepository.findById(loginUser.getId()).get();
 
-        if (!(user.getId().equals(team.getManager().getId()) || user.getRole().equals(Roles.ADMIN))) {
+        if (!(user.getId().equals(teamRepository.findById(teamId).get().getManager().getId())
+                || user.getRole().equals(Roles.ADMIN))) {
             var response = new ResponseType<Team>();
             response.error = ("Não tem permissoes para remover equipas");
             return ResponseEntity.ok().body(response);
         }
-        Team deletedTeam = TeamService.removerEquipa(teamRepository, team).success;
+
+        Team deletedTeam = TeamService.removerEquipa(teamRepository, teamId).success;
 
         var response = new ResponseType<Team>();
         response.success(deletedTeam);
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Team>> adicionarJogador(TeamRepository teamRepository,
-            AuthenticationService service,
-            Team team,
-            LoginUser currentUser) {
+    public ResponseEntity<ResponseType<Team>> addPlayer(LoginUser currentUser,
+                                                        Integer teamId,
+                                                        List<Integer> equipa) {
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
@@ -181,14 +218,14 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se currentUser é admin ou treinador da equipa
-        if (!((currentUser.getRole().toString().equals("MANAGER"))
-                || currentUser.getRole().toString().equals("ADMIN"))) {
+        if (!((currentUser.getRole().equals("MANAGER"))
+                || currentUser.getRole().equals("ADMIN"))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissoes para remover jogadores");
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se o jogador é valido
-        if (team.getPlayers() == null) {
+        if (equipa.isEmpty()) {
             var response = new ResponseType<Team>();
             response.error("O jogador não existe");
             return ResponseEntity.badRequest().body(response);
@@ -201,7 +238,15 @@ public class TeamController {
             jogadoresEmEquipas.addAll(t.getPlayers());
         }
 
-        for (User user : team.getPlayers()) {
+        List<User> atletas = null;
+
+        for(Integer elemento : equipa){
+            User atleta = usersRepository.findById(elemento).get();
+            atletas.add(atleta);
+        }
+
+        assert atletas != null;
+        for (User user : atletas) {
             if (jogadoresEmEquipas.contains(user)) {
                 var response = new ResponseType<Team>();
                 response.error(user.getFirstname() + " " + user.getLastname() + " já pertence a outra equipa");
@@ -209,71 +254,50 @@ public class TeamController {
             }
         }
 
-        Team addedPlayerTeam = TeamService.adicionarJogador(teamRepository, team).success;
+        Team addedPlayerTeam = TeamService.adicionarJogador(teamRepository, teamId, atletas).success;
 
         var response = new ResponseType<Team>();
         response.success(addedPlayerTeam);
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<List<Integer>>> removerJogador(TeamRepository teamRepository,
-            UserRepository users,
-            List<Integer> atletas,
-            LoginUser loginUser,
-            Team team) {
-        User user = users.findById(loginUser.getId()).get();
+    public ResponseEntity<ResponseType<Team>> removePlayer(LoginUser loginUser,
+                                                           Integer teamId,
+                                                           List<Integer> jogadoresRemovidos) {
+
+        User user = usersRepository.findById(loginUser.getId()).get();
 
         if (!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))) {
-            var response = new ResponseType<List<Integer>>();
+            var response = new ResponseType<Team>();
             response.error("Não tem permissoes para remover jogadores");
             return ResponseEntity.badRequest().body(response);
         }
-
-        if (team == null) {
-            var response = new ResponseType<List<Integer>>();
+        if (teamRepository.existsById(teamId)) {
+            var response = new ResponseType<Team>();
             response.error("Sem equipa selecionada");
             return ResponseEntity.badRequest().body(response);
         }
-
-        List<User> jogadores = new ArrayList<>();
-
-        for (Integer elemento : atletas) {
-            User atleta = users.findById(elemento).get();
-            jogadores.add(atleta);
+        if (jogadoresRemovidos.isEmpty()){
+            var response = new ResponseType<Team>();
+            response.error("Sem jogadores selecionados");
+            return ResponseEntity.badRequest().body(response);
         }
-
-        List<Integer> jogadoresARemover = new ArrayList<>();
-
-        for (User jogador : jogadores) {
-            Integer id = jogador.getId();
-            jogadoresARemover.add(id);
-        }
-
-        List<User> usersARemover = new ArrayList<>();
-
-        for (Integer elemento : atletas) {
-            User atleta = users.findById(elemento).get();
-            usersARemover.add(atleta);
-        }
-
-        if (!team.getPlayers().contains(atletas)) {
-            var response = new ResponseType<List<Integer>>();
-            response.error("Os atletaes nao pertecem a esta equipa");
+        if (teamRepository.findById(teamId).get().getPlayers().contains(jogadoresRemovidos)) {
+            var response = new ResponseType<Team>();
+            response.error("Os atletas nao pertecem a esta equipa");
             return ResponseEntity.badRequest().body(response);
         }
 
-        List<User> removedPlayerTeam = TeamService.removerJogador(teamRepository, usersARemover, team).success;
+        Team removedPlayerTeam = TeamService.removerJogador(teamRepository, teamId, jogadoresRemovidos).success;
 
-        var response = new ResponseType<List<Integer>>();
-        response.success(jogadoresARemover);
+        var response = new ResponseType<Team>();
+        response.success(removedPlayerTeam);
         return ResponseEntity.ok().body(response);
     }
-
-    public static ResponseEntity<ResponseType<Team>> trocarTreinador(TeamRepository teamRepository,
-            AuthenticationService service,
-            LoginUser currentUser,
-            Integer equipa) {
-        Team team = teamRepository.findById(equipa).get();
+    public ResponseEntity<ResponseType<Team>> switchManager(LoginUser currentUser,
+                                                            Integer teamId,
+                                                            Integer managerId) {
+        Team team = teamRepository.findById(teamId).get();
 
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
@@ -288,21 +312,27 @@ public class TeamController {
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
         }
+        //verificar se o treinador é MANAGER
+        User treinadorNovo = usersRepository.findById(managerId).get();
+        if (!treinadorNovo.getRole().toString().equals("MANAGER")) {
+            var response = new ResponseType<Team>();
+            response.error("O utilizador selecionado não é treinador");
+            return ResponseEntity.badRequest().body(response);
+        }
 
-        Team changedManagerTeam = TeamService.trocarTreinador(teamRepository, team).success;
+        Team changedManagerTeam = TeamService.trocarTreinador(teamRepository, teamId, managerId).success;
 
         var response = new ResponseType<Team>();
         response.success(changedManagerTeam);
         return ResponseEntity.ok().body(response);
     }
 
-    public static ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(TeamRepository teamRepository,
-            UserRepository userRepository, List<Long> atletas) {
+    public ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(List<Long> atletas) {
 
         List<User> atleta = null;
 
         for (Long elemento : atletas) {
-            User jogador = userRepository.findById(elemento).get();
+            User jogador = usersRepository.findById(elemento).get();
             atleta.add(jogador);
         }
 
@@ -322,6 +352,5 @@ public class TeamController {
         var response = new ResponseType<Boolean>();
         response.success(false);
         return ResponseEntity.ok().body(response);
-
     }
 }
