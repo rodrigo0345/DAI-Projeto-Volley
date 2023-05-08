@@ -66,7 +66,6 @@ public class TeamController {
             loginUsers.add(AuthenticationService.convertToLoginUser(el, null));
         });
         response.success(loginUsers);
-
         return ResponseEntity.ok().body(response);
     }
 
@@ -194,7 +193,7 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> addPlayer(Team team,
-            LoginUser currentUser) {
+                                                        LoginUser currentUser) {
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
@@ -239,8 +238,8 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<List<Integer>>> removePlayer(List<Integer> atletas,
-            LoginUser loginUser,
-            Team team) {
+                                                                    LoginUser loginUser,
+                                                                    Team team) {
         User user = usersRepository.findById(loginUser.getId()).get();
 
         if (!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))) {
@@ -290,8 +289,8 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> switchManager(LoginUser currentUser,
-            Integer equipa,
-            Integer treinador) {
+                                                            Integer equipa,
+                                                            Integer treinador) {
         Team team = teamRepository.findById(equipa).get();
 
         // verificar se o token é válido
