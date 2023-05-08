@@ -11,6 +11,7 @@ public class LoginUser {
   private String firstname;
   private String lastname;
   private String email;
+  private Integer age;
   private String role;
   private String stringToken;
 

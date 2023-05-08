@@ -7,12 +7,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.example.application.model.User.LoginUser;
-import com.example.application.model.User.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,7 +42,7 @@ public class Ride {
     // @JoinColumn(name = "user_id", nullable = true)
     private List<Integer> passengers;
 
-    public void addPassenger(Integer userID) {
+        public void addPassenger(Integer userID) {
         passengers.add(userID);
         freeSeats--;
     }

@@ -33,7 +33,7 @@ public class UserController {
     List<LoginUser> loginUserList = new ArrayList<>();
     for (User user : usersAux) {
       LoginUser aux = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(),
-          user.getEmail(), user.getRole().toString(), null);
+          user.getEmail(), user.getAge(), user.getRole().toString(), null);
       loginUserList.add(aux);
     }
 
@@ -48,7 +48,7 @@ public class UserController {
       return null;
     User user = users.findById(id).get();
     LoginUser loginUser = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(),
-        user.getEmail(), user.getRole().toString(), null);
+        user.getEmail(), user.getAge(), user.getRole().toString(), null);
     
     var response = new ResponseType<LoginUser>();
     response.success(loginUser);
@@ -64,7 +64,7 @@ public class UserController {
 
     User dbUser = users.findById(id).get();
     LoginUser loginUser = new LoginUser(dbUser.getId(), dbUser.getFirstname(), dbUser.getLastname(),
-        dbUser.getEmail(), dbUser.getRole().toString(), null);
+        dbUser.getEmail(), user.getAge(), dbUser.getRole().toString(), null);
     users.deleteById(id);
 
     var response = new ResponseType<LoginUser>();
@@ -105,7 +105,7 @@ public class UserController {
 
     var response = new ResponseType<LoginUser>();
     response.success(new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
-        user.getRole().toString(), ""));
+                      user.getAge(), user.getRole().toString(), ""));
     return ResponseEntity.ok().body(response);
   }
 
