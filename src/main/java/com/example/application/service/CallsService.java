@@ -88,11 +88,11 @@ public class CallsService {
 
 
 
-    public static void adicionarJogador(ConvocatoriasRepository convocatoriasRepository) {
+    public static void addPlayer(ConvocatoriasRepository convocatoriasRepository) {
 
     }
 
-    public static void removerJogador(ConvocatoriasRepository convocatoriasRepository) {
+    public static void removePlayer(ConvocatoriasRepository convocatoriasRepository) {
 
     }
 }
