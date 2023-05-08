@@ -98,7 +98,7 @@ public class TeamService {
     }
 
     public static ResponseType<Team> trocarTreinador(TeamRepository teamRepository,
-                                                                     Team team)
+                                                     Team team)
     {
         Team aux = teamRepository.findById(team.getId());
         aux.setManager(team.getManager());

@@ -116,7 +116,7 @@ public class NewsController {
 
     public boolean addLike(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return false;
+        if (post == null || type.equals("news")) return false;
         News news = post.news;
         if(NewsService.verifyUserHasLiked(news, user)) return false;
         news.addLike(user.getId());
@@ -126,7 +126,7 @@ public class NewsController {
 
     public boolean removeLike(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "ride") return false;
+        if (post == null || type.equals("news")) return false;
         News news = post.news;
         if(!NewsService.verifyUserHasLiked(news, user)) return false;
         news.removeLike(user.getId());

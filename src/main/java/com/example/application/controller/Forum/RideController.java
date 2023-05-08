@@ -82,7 +82,7 @@ public class RideController {
 
     public boolean addPassenger(PostType post, LoginUser user) {
         String type = post.getType();
-        if (post == null || type == "news")
+        if (post == null || type.equals("news"))
             return false;
         Ride ride = post.ride;
         if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)

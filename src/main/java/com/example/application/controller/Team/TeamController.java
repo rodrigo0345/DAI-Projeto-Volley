@@ -290,7 +290,8 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> switchManager(LoginUser currentUser,
-            Integer equipa) {
+            Integer equipa,
+            Integer treinador) {
         Team team = teamRepository.findById(equipa).get();
 
         // verificar se o token é válido
@@ -306,7 +307,15 @@ public class TeamController {
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
         }
+        //verificar se o treinador é MANAGER
+        User treinadorNovo = usersRepository.findById(treinador).get();
+        if (!treinadorNovo.getRole().toString().equals("MANAGER")) {
+            var response = new ResponseType<Team>();
+            response.error("O utilizador selecionado não é treinador");
+            return ResponseEntity.badRequest().body(response);
+        }
 
+        team.setManager(treinadorNovo);
         Team changedManagerTeam = TeamService.trocarTreinador(teamRepository, team).success;
 
         var response = new ResponseType<Team>();
