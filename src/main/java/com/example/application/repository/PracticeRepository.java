@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.example.application.model.Practice;
 
-@Table(name = "news")
+@Table(name = "practices")
 public interface PracticeRepository extends CrudRepository<Practice,Integer> {
     
     public List<Practice> findAll(Pageable rq);
