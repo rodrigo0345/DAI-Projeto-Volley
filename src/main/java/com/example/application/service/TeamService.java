@@ -17,10 +17,10 @@ public class TeamService {
 
     private static UserRepository users;
     public static ResponseType<Team> criarEquipa(TeamRepository teamRepository,
-                                                          LoginUser loginUser,
-                                                          List<Integer> equipa,
-                                                          Escalao escalao,
-                                                          String name) {
+                                                 LoginUser loginUser,
+                                                 List<Integer> equipa,
+                                                 Escalao escalao,
+                                                 String name) {
         User user = users.findById(loginUser.getId()).get();
 
         List<User> atletas = null;
@@ -85,8 +85,9 @@ public class TeamService {
     public static ResponseType<Team> adicionarJogador(TeamRepository teamRepository,
                                                       Integer teamId,
                                                       List<User> atletas) {
+
         Team team = teamRepository.findById(teamId).get();
-        team.setPlayers(atletas);
+        team.getPlayers().addAll(atletas);
 
         teamRepository.save(team);
 
@@ -127,10 +128,9 @@ public class TeamService {
     }
 
     public ResponseEntity<ResponseType<Team>>  findPlayerTeam(TeamRepository teamRepository,
-                                                                     LoginUser currentUser,
-                                                                     Integer id,
-                                                                     AuthenticationService service)
-    {
+                                                              LoginUser currentUser,
+                                                              Integer id,
+                                                              AuthenticationService service) {
         //verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {
@@ -150,10 +150,9 @@ public class TeamService {
         return ResponseEntity.notFound().build();
     }
     public ResponseEntity<ResponseType<List<LoginUser>>> playersWithNoTeam(TeamRepository teamRepository,
-                                                                                  UserRepository users,
-                                                                                  LoginUser currentUser,
-                                                                                  AuthenticationService service)
-    {
+                                                                           UserRepository users,
+                                                                           LoginUser currentUser,
+                                                                           AuthenticationService service) {
         //verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
         if (!isValidToken) {

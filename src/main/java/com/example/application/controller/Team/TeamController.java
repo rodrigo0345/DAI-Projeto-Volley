@@ -230,6 +230,7 @@ public class TeamController {
             response.error("O jogador não existe");
             return ResponseEntity.badRequest().body(response);
         }
+
         // verificar se o jogador já pertence a outra equipa
         Set<User> jogadoresEmEquipas = new HashSet<>();
         List<Team> todasEquipas = teamRepository.findAll();
@@ -245,7 +246,6 @@ public class TeamController {
             atletas.add(atleta);
         }
 
-        assert atletas != null;
         for (User user : atletas) {
             if (jogadoresEmEquipas.contains(user)) {
                 var response = new ResponseType<Team>();
@@ -266,22 +266,32 @@ public class TeamController {
                                                            List<Integer> jogadoresRemovidos) {
 
         User user = usersRepository.findById(loginUser.getId()).get();
-
+        //verificar se o token é válido
+        var isValidToken = TokenService.validateToken(loginUser, loginUser.getStringToken(), service).getBody();
+        if (!isValidToken) {
+            var response = new ResponseType<Team>();
+            response.error("Token inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+        //verificar se currentUser é admin ou treinador da equipa
         if (!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissoes para remover jogadores");
             return ResponseEntity.badRequest().body(response);
         }
+        //verificar se a equipa é válida
         if (teamRepository.existsById(teamId)) {
             var response = new ResponseType<Team>();
             response.error("Sem equipa selecionada");
             return ResponseEntity.badRequest().body(response);
         }
+        //verificar se os jogadores são válidos
         if (jogadoresRemovidos.isEmpty()){
             var response = new ResponseType<Team>();
             response.error("Sem jogadores selecionados");
             return ResponseEntity.badRequest().body(response);
         }
+        //verificar se os jogadores pertencem à equipa
         if (teamRepository.findById(teamId).get().getPlayers().contains(jogadoresRemovidos)) {
             var response = new ResponseType<Team>();
             response.error("Os atletas nao pertecem a esta equipa");

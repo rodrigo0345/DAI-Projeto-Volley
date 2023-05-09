@@ -171,7 +171,7 @@ public class CallsController {
     }
 
     public ResponseEntity<ResponseType<List<Long>>> removePlayer(LoginUser loginUser,
-            Long convocatoria, List<Long> atletas) {
+            Long convocatoriaId, List<Long> atletasId) {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
         User user = userRepository.findById(loginUser.getId()).get();
@@ -194,7 +194,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        // Convocatorias removedPlayers = CallsService.removePlayer().success;
+        Convocatorias removedPlayers = CallsService.removePlayer(atletasId, convocatoriaId, convocatoriasRepository).success;
 
         var response = new ResponseType<List<Long>>();
         //response.success();
