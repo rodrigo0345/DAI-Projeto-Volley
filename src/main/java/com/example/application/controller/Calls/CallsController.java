@@ -37,7 +37,7 @@ public class CallsController {
     public ResponseEntity<ResponseType<Convocatorias>> createCall(List<Long> atletas,
             String titulo, String description, LocalDateTime date, Long idManager) {
 
-        //verificar quem ta a fazer ?? permissoes ns
+        // verificar quem ta a fazer ?? permissoes ns
 
         if (atletas.isEmpty() || titulo.trim().isEmpty() || description.trim().equals(null) || idManager == null) {
             var response = new ResponseType<Convocatorias>();
@@ -65,11 +65,11 @@ public class CallsController {
     }
 
     public ResponseEntity<ResponseType<Convocatorias>> editCall(List<Long> atletas,
-                                                                String titulo,
-                                                                String description,
-                                                                LocalDateTime date,
-                                                                Long idManager,
-                                                                Long callId) {
+            String titulo,
+            String description,
+            LocalDateTime date,
+            Long idManager,
+            Long callId) {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(callId);
 
@@ -114,7 +114,7 @@ public class CallsController {
     }
 
     public ResponseEntity<ResponseType<Convocatorias>> removeCall(Long convocatoriaID,
-                                                                  LoginUser loginUser) {
+            LoginUser loginUser) {
 
         Convocatorias convocatoria = convocatoriasRepository.findById(convocatoriaID);
 
@@ -139,19 +139,19 @@ public class CallsController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<List<Long>>> addPlayer(List<Long> atletas, Long convocatoria,
+    public ResponseEntity<ResponseType<List<Long>>> addPlayer(List<Long> atletas, Long convocatoriaID,
             LoginUser loginUser) {
 
-        Convocatorias convocatorias = convocatoriasRepository.findById(convocatoria);
+        Convocatorias convocatoria = convocatoriasRepository.findById(convocatoriaID);
 
-        if (convocatorias == null) {
+        if (convocatoria == null) {
             var response = new ResponseType<List<Long>>();
             response.error("Essa convocatoria nao existe");
             return ResponseEntity.badRequest().body(response);
         }
 
         User user = userRepository.findById(loginUser.getId()).get();
-        if (!(user.getRole().equals(Roles.MANAGER) || user.equals(convocatorias.getManagerID()))) {
+        if (!(user.getRole().equals(Roles.MANAGER) || user.equals(convocatoria.getManagerID()))) {
             var response = new ResponseType<List<Long>>();
             response.error("Nao tem permissoes");
             return ResponseEntity.badRequest().body(response);
@@ -163,10 +163,10 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        //Convocatorias addedPlayers = CallsService.addPlayer().success;
+        Convocatorias addedPlayers = CallsService.addPlayer(atletas, convocatoriaID, convocatoriasRepository).success;
 
         var response = new ResponseType<List<Long>>();
-        //response.success();
+        // response.success();
         return ResponseEntity.ok().body(response);
     }
 
@@ -197,7 +197,7 @@ public class CallsController {
         // Convocatorias removedPlayers = CallsService.removePlayer().success;
 
         var response = new ResponseType<List<Long>>();
-        //response.success();
+        // response.success();
         return ResponseEntity.ok().body(response);
     }
 
