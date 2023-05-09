@@ -11,22 +11,23 @@ import java.util.List;
 
 public class CallsService {
     private static UserRepository usersRepository;
+
     public static ResponseType<Convocatorias> createCall(ConvocatoriasRepository convocatoriasRepository,
-                                                         List<Long> equipa,
-                                                         String titulo,
-                                                         String description,
-                                                         LocalDateTime date,
-                                                         Long managerId) {
+            List<Long> equipa,
+            String titulo,
+            String description,
+            LocalDateTime date,
+            Long managerId) {
 
         List<User> atletas = null;
 
-        for(Long elemento : equipa){
+        for (Long elemento : equipa) {
             User atleta = usersRepository.findById(elemento).get();
             atletas.add(atleta);
         }
 
         User manager = usersRepository.findById(managerId).get();
-        //managerId no model é user???
+        // managerId no model é user???
 
         Convocatorias call = new Convocatorias();
         call.setTitle(titulo);
@@ -43,16 +44,16 @@ public class CallsService {
     }
 
     public static ResponseType<Convocatorias> editCall(ConvocatoriasRepository convocatoriasRepository,
-                                                       Long callId,
-                                                       String titulo,
-                                                       String description,
-                                                       LocalDateTime date,
-                                                       Long managerId,
-                                                       List<Long> equipa) {
+            Long callId,
+            String titulo,
+            String description,
+            LocalDateTime date,
+            Long managerId,
+            List<Long> equipa) {
 
         List<User> atletas = null;
 
-        for(Long elemento : equipa){
+        for (Long elemento : equipa) {
             User atleta = usersRepository.findById(elemento).get();
             atletas.add(atleta);
         }
@@ -75,7 +76,7 @@ public class CallsService {
     }
 
     public static ResponseType<Convocatorias> removeCall(ConvocatoriasRepository convocatoriasRepository,
-                                                         Long callId) {
+            Long callId) {
 
         Convocatorias call = convocatoriasRepository.findById(callId);
 
@@ -86,13 +87,45 @@ public class CallsService {
         return response;
     }
 
+    public static ResponseType<Convocatorias> addPlayer(List<Long> atletasID, Long convocatoriaID,
+            ConvocatoriasRepository convocatoriasRepository) {
 
+        Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
 
-    public static void addPlayer(ConvocatoriasRepository convocatoriasRepository) {
+        List<User> atletas = call.getPlayers();
 
+        for (Long elemento : atletasID) {
+            User atleta = usersRepository.findById(elemento).get();
+            atletas.add(atleta);
+        }
+
+        call.setPlayers(atletas);
+
+        convocatoriasRepository.save(call);
+
+        var response = new ResponseType<Convocatorias>();
+        response.success(call);
+        return response;
     }
 
-    public static void removePlayer(ConvocatoriasRepository convocatoriasRepository) {
+    public static ResponseType<Convocatorias> removePlayer(List<Long> atletasID, Long convocatoriaID,
+            ConvocatoriasRepository convocatoriasRepository) {
 
+        Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
+
+        List<User> atletas = call.getPlayers();
+
+        for (Long elemento : atletasID) {
+            User atleta = usersRepository.findById(elemento).get();
+            atletas.remove(atleta);
+        }
+
+        call.setPlayers(atletas);
+
+        convocatoriasRepository.save(call);
+
+        var response = new ResponseType<Convocatorias>();
+        response.success(call);
+        return response;
     }
 }

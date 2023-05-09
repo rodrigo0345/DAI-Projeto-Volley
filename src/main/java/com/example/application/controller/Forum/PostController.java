@@ -46,11 +46,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostController {
 
     private final RideRepository ridesRepository;
-
     private final NewsRepository newsRepository;
-
     private final UserRepository usersRepository;
-
     private final CalendarRepository calendarRepository;
 
     private List<PostType> mixPosts(List<News> news, List<Ride> rides, Comparator<? super PostType> cmp) {
