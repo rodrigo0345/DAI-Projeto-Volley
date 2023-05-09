@@ -16,8 +16,8 @@ import {
 import Escalao from 'Frontend/generated/com/example/application/model/Team/Escalao';
 import { toast } from 'react-toastify';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
-import Team from 'Frontend/generated/com/example/application/model/Team/Team';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
+import Team from 'Frontend/generated/com/example/application/model/Team/Team';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -63,7 +63,7 @@ export default function TeamView() {
     }
 
     // todo: criar equipa
-    let result: ResponseEntity | undefined = {};
+    let result: ResponseEntity | undefined = undefined;
     try {
       result = await createTeamWithAdmin(
         user,

@@ -48,7 +48,7 @@ public class AuthenticationController {
             @RequestBody RegisterRequest request) throws Exception {
 
         // verificar se currentUser é admin
-        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
         if (!isValidToken) {
             var response = new ResponseType<LoginUser>();
             response.error("Token inválida");
@@ -173,7 +173,7 @@ public class AuthenticationController {
 
     @AnonymousAllowed
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
-        return ResponseEntity.ok(TokenService.validateToken(user, token, service).getBody());
+        return ResponseEntity.ok(TokenService.validateToken(user, token, service));
     }
 
 }

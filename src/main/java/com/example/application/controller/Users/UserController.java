@@ -49,7 +49,7 @@ public class UserController {
     User user = users.findById(id).get();
     LoginUser loginUser = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(),
         user.getEmail(), user.getAge(), user.getRole().toString(), null);
-    
+
     var response = new ResponseType<LoginUser>();
     response.success(loginUser);
 
@@ -74,9 +74,9 @@ public class UserController {
   }
 
   public ResponseEntity<ResponseType<LoginUser>> editUser(LoginUser currentUser,
-                                                          User user) throws Exception {
+      User user) throws Exception {
 
-    var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+    var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
     if (!isValidToken) {
       var response = new ResponseType<LoginUser>();
       response.error("Token inválida");
@@ -105,7 +105,7 @@ public class UserController {
 
     var response = new ResponseType<LoginUser>();
     response.success(new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
-                      user.getAge(), user.getRole().toString(), ""));
+        user.getAge(), user.getRole().toString(), ""));
     return ResponseEntity.ok().body(response);
   }
 

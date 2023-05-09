@@ -9,23 +9,23 @@ import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TeamService {
 
     private static UserRepository users;
+
     public static ResponseType<Team> criarEquipa(TeamRepository teamRepository,
-                                                 LoginUser loginUser,
-                                                 List<Integer> equipa,
-                                                 Escalao escalao,
-                                                 String name) {
+            LoginUser loginUser,
+            List<Integer> equipa,
+            Escalao escalao,
+            String name) {
         User user = users.findById(loginUser.getId()).get();
 
         List<User> atletas = null;
 
-        for(Integer elemento : equipa){
+        for (Integer elemento : equipa) {
             User atleta = users.findById(elemento).get();
             atletas.add(atleta);
         }
@@ -44,19 +44,19 @@ public class TeamService {
     }
 
     public static ResponseType<Team> editarEquipa(TeamRepository teamRepository,
-                                                  Integer teamId,
-                                                  Integer managerId,
-                                                  List<Integer> equipa,
-                                                  String name) {
+            Integer teamId,
+            Integer managerId,
+            List<Integer> equipa,
+            String name) {
         List<User> atletas = null;
 
-        for(Integer elemento : equipa){
+        for (Integer elemento : equipa) {
             User atleta = users.findById(elemento).get();
             atletas.add(atleta);
         }
         User manager = users.findById(managerId).get();
 
-        //fazer update da equipa
+        // fazer update da equipa
         Team team = teamRepository.findById(teamId).get();
         team.setName(name);
         team.setManager(manager);
@@ -70,7 +70,7 @@ public class TeamService {
     }
 
     public static ResponseType<Team> removerEquipa(TeamRepository teamRepository,
-                                                   Integer teamId) {
+            Integer teamId) {
 
         Team team = teamRepository.findById(teamId).get();
 
@@ -83,8 +83,8 @@ public class TeamService {
     }
 
     public static ResponseType<Team> adicionarJogador(TeamRepository teamRepository,
-                                                      Integer teamId,
-                                                      List<User> atletas) {
+            Integer teamId,
+            List<User> atletas) {
 
         Team team = teamRepository.findById(teamId).get();
         team.getPlayers().addAll(atletas);
@@ -95,12 +95,13 @@ public class TeamService {
         response.success(team);
         return response;
     }
+
     public static ResponseType<Team> removerJogador(TeamRepository teamRepository,
-                                                   Integer teamId,
-                                                   List<Integer> jogadoresRemovidos) {
+            Integer teamId,
+            List<Integer> jogadoresRemovidos) {
         List<User> jogadores = new ArrayList<>();
 
-        for(Integer elemento : jogadoresRemovidos){
+        for (Integer elemento : jogadoresRemovidos) {
             User atleta = users.findById(elemento).get();
             jogadores.add(atleta);
         }
@@ -114,9 +115,10 @@ public class TeamService {
         response.success(team);
         return response;
     }
+
     public static ResponseType<Team> trocarTreinador(TeamRepository teamRepository,
-                                                     Integer teamId,
-                                                     Integer managerId) {
+            Integer teamId,
+            Integer managerId) {
         Team team = teamRepository.findById(teamId).get();
         team.setManager(users.findById(managerId).get());
 
@@ -127,12 +129,12 @@ public class TeamService {
         return response;
     }
 
-    public ResponseEntity<ResponseType<Team>>  findPlayerTeam(TeamRepository teamRepository,
-                                                              LoginUser currentUser,
-                                                              Integer id,
-                                                              AuthenticationService service) {
-        //verificar se o token é válido
-        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+    public ResponseEntity<ResponseType<Team>> findPlayerTeam(TeamRepository teamRepository,
+            LoginUser currentUser,
+            Integer id,
+            AuthenticationService service) {
+        // verificar se o token é válido
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
         if (!isValidToken) {
             var response = new ResponseType<Team>();
             response.error("Token inválida");
@@ -140,8 +142,8 @@ public class TeamService {
         }
 
         User atleta = users.findById(id).get();
-        for(Team t : teamRepository.findAll()) {
-            if(t.getPlayers().contains(atleta)) {
+        for (Team t : teamRepository.findAll()) {
+            if (t.getPlayers().contains(atleta)) {
                 var response = new ResponseType<Team>();
                 response.success(t);
                 return ResponseEntity.ok().body(response);
@@ -149,12 +151,13 @@ public class TeamService {
         }
         return ResponseEntity.notFound().build();
     }
+
     public ResponseEntity<ResponseType<List<LoginUser>>> playersWithNoTeam(TeamRepository teamRepository,
-                                                                           UserRepository users,
-                                                                           LoginUser currentUser,
-                                                                           AuthenticationService service) {
-        //verificar se o token é válido
-        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+            UserRepository users,
+            LoginUser currentUser,
+            AuthenticationService service) {
+        // verificar se o token é válido
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
         if (!isValidToken) {
             var response = new ResponseType<List<LoginUser>>();
             response.error("Token inválida");
@@ -166,29 +169,29 @@ public class TeamService {
         for (Team t : todasEquipas) {
             jogadoresEmEquipas.addAll(t.getPlayers());
         }
-        //suposto ser pra encontrar todos os atletas
+        // suposto ser pra encontrar todos os atletas
         List<User> todosJogadores = new ArrayList<>();
-        for(User user : users.findAll()) {
-            if(user.getRole().toString().equals("User")) {
+        for (User user : users.findAll()) {
+            if (user.getRole().toString().equals("User")) {
                 todosJogadores.add(user);
             }
         }
-        //verificar se users vazios
-        if(todosJogadores.isEmpty()){
+        // verificar se users vazios
+        if (todosJogadores.isEmpty()) {
             var response = new ResponseType<List<LoginUser>>();
             response.error("Não existem jogadores");
             return ResponseEntity.badRequest().body(response);
         }
         todosJogadores.removeAll(jogadoresEmEquipas);
-        //verificar se jogadores em equipas está vazia
-        if(jogadoresEmEquipas.isEmpty()){
+        // verificar se jogadores em equipas está vazia
+        if (jogadoresEmEquipas.isEmpty()) {
             var response = new ResponseType<List<LoginUser>>();
             response.error("Não existem jogadores sem equipa");
             return ResponseEntity.badRequest().body(response);
         }
-        //passe de user pra loginuser a um aux
+        // passe de user pra loginuser a um aux
         List<LoginUser> aux = new ArrayList<>();
-        for(User user : todosJogadores) {
+        for (User user : todosJogadores) {
             LoginUser loginUser = new LoginUser();
             loginUser.setId(user.getId());
             loginUser.setFirstname(user.getFirstname());
