@@ -44,6 +44,7 @@ public class CallsController {
             response.error("Campos em branco ");
             return ResponseEntity.badRequest().body(response);
         }
+
         User user = userRepository.findById(idManager).get();
         if (!(user.getRole().toString().equals("MANAGER"))) {
             var response = new ResponseType<Convocatorias>();
@@ -163,7 +164,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Convocatorias addedPlayers = CallsService.addPlayer(atletas, convocatoriaID, convocatoriasRepository).success;
+        Convocatorias addedPlayers = CallsService.addPlayers(atletas, convocatoriaID, convocatoriasRepository).success;
 
         var response = new ResponseType<Convocatorias>();
         response.success(addedPlayers);
@@ -194,7 +195,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Convocatorias removedPlayers = CallsService.removePlayer(atletasId, convocatoriaId,
+        Convocatorias removedPlayers = CallsService.removePlayers(atletasId, convocatoriaId,
                 convocatoriasRepository).success;
 
         var response = new ResponseType<Convocatorias>();

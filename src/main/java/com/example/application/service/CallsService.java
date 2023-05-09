@@ -87,7 +87,7 @@ public class CallsService {
         return response;
     }
 
-    public static ResponseType<Convocatorias> addPlayer(List<Long> atletasID, Long convocatoriaID,
+    public static ResponseType<Convocatorias> addPlayers(List<Long> atletasID, Long convocatoriaID,
             ConvocatoriasRepository convocatoriasRepository) {
 
         Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
@@ -108,7 +108,7 @@ public class CallsService {
         return response;
     }
 
-    public static ResponseType<Convocatorias> removePlayer(List<Long> atletasID, Long convocatoriaID,
+    public static ResponseType<Convocatorias> removePlayers(List<Long> atletasID, Long convocatoriaID,
             ConvocatoriasRepository convocatoriasRepository) {
 
         Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
