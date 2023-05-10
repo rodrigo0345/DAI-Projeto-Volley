@@ -13,6 +13,7 @@ import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.TeamService;
+import java.util.List;
 
 import com.example.application.service.TokenService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -33,16 +34,12 @@ import java.util.Set;
 public class TeamController {
 
     private final RideRepository ridesRepository;
-
     private final NewsRepository newsRepository;
-
     private final UserRepository usersRepository;
-
     private final CalendarRepository calendarRepository;
-
     private final TeamRepository teamRepository;
-
     private final AuthenticationService service;
+    private final TeamService teamService;
 
     public ResponseEntity<ResponseType<List<LoginUser>>> getPlayersWithoutTeam() {
 
@@ -71,8 +68,9 @@ public class TeamController {
 
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
             List<Integer> equipa,
-            Escalao escalao,
+            String escalaoI,
             String name) {
+        Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
         User user = usersRepository.findById(loginUser.getId()).get();
         if (!(user.getRole().equals((Roles.MANAGER)))) {
             var response = new ResponseType<Team>();
@@ -100,7 +98,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team createdTeam = TeamService.criarEquipa(teamRepository, loginUser, equipa, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -109,8 +107,9 @@ public class TeamController {
 
     public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
             List<Integer> equipa,
-            Escalao escalao,
+            String escalaoI,
             String name) {
+        Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
         User user = usersRepository.findById(loginUser.getId()).get();
         if (!(user.getRole().equals((Roles.ADMIN)))) {
             var response = new ResponseType<Team>();
@@ -131,7 +130,7 @@ public class TeamController {
             return null;
         }
 
-        Team createdTeam = TeamService.criarEquipa(teamRepository, loginUser, equipa, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -185,7 +184,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team editedTeam = TeamService.editarEquipa(teamRepository, teamId, managerId, equipa, name).success;
+        Team editedTeam = teamService.editarEquipa(teamRepository, teamId, managerId, equipa, name).success;
 
         var response = new ResponseType<Team>();
         response.success(editedTeam);
@@ -203,7 +202,7 @@ public class TeamController {
             return ResponseEntity.ok().body(response);
         }
 
-        Team deletedTeam = TeamService.removerEquipa(teamRepository, teamId).success;
+        Team deletedTeam = teamService.removerEquipa(teamRepository, teamId).success;
 
         var response = new ResponseType<Team>();
         response.success(deletedTeam);
@@ -257,7 +256,7 @@ public class TeamController {
             }
         }
 
-        Team addedPlayerTeam = TeamService.adicionarJogador(teamRepository, teamId, atletas).success;
+        Team addedPlayerTeam = teamService.adicionarJogador(teamRepository, teamId, atletas).success;
 
         var response = new ResponseType<Team>();
         response.success(addedPlayerTeam);
@@ -301,7 +300,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team removedPlayerTeam = TeamService.removerJogador(teamRepository, teamId, jogadoresRemovidos).success;
+        Team removedPlayerTeam = teamService.removerJogador(teamRepository, teamId, jogadoresRemovidos).success;
 
         var response = new ResponseType<Team>();
         response.success(removedPlayerTeam);
@@ -334,7 +333,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team changedManagerTeam = TeamService.trocarTreinador(teamRepository, teamId, managerId).success;
+        Team changedManagerTeam = teamService.trocarTreinador(teamRepository, teamId, managerId).success;
 
         var response = new ResponseType<Team>();
         response.success(changedManagerTeam);

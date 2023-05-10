@@ -8,20 +8,25 @@ import com.example.application.model.User.User;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class TeamService {
 
-    private static UserRepository users;
+    private final UserRepository users;
 
-    public static ResponseType<Team> criarEquipa(TeamRepository teamRepository,
-            LoginUser loginUser,
-            List<Integer> equipa,
-            Escalao escalao,
-            String name) {
-        User user = users.findById(loginUser.getId()).get();
+    public TeamService(UserRepository users) {
+        this.users = users;
+    }
+
+    public ResponseType<Team> criarEquipa(TeamRepository teamRepository,
+                                                 User user,
+                                                 List<Integer> equipa,
+                                                 Escalao escalao,
+                                                 String name) {
 
         List<User> atletas = null;
 
@@ -43,7 +48,7 @@ public class TeamService {
         return response;
     }
 
-    public static ResponseType<Team> editarEquipa(TeamRepository teamRepository,
+    public ResponseType<Team> editarEquipa(TeamRepository teamRepository,
             Integer teamId,
             Integer managerId,
             List<Integer> equipa,
@@ -69,7 +74,7 @@ public class TeamService {
         return response;
     }
 
-    public static ResponseType<Team> removerEquipa(TeamRepository teamRepository,
+    public ResponseType<Team> removerEquipa(TeamRepository teamRepository,
             Integer teamId) {
 
         Team team = teamRepository.findById(teamId).get();
@@ -82,7 +87,7 @@ public class TeamService {
 
     }
 
-    public static ResponseType<Team> adicionarJogador(TeamRepository teamRepository,
+    public ResponseType<Team> adicionarJogador(TeamRepository teamRepository,
             Integer teamId,
             List<User> atletas) {
 
@@ -96,7 +101,7 @@ public class TeamService {
         return response;
     }
 
-    public static ResponseType<Team> removerJogador(TeamRepository teamRepository,
+    public ResponseType<Team> removerJogador(TeamRepository teamRepository,
             Integer teamId,
             List<Integer> jogadoresRemovidos) {
         List<User> jogadores = new ArrayList<>();
@@ -116,7 +121,7 @@ public class TeamService {
         return response;
     }
 
-    public static ResponseType<Team> trocarTreinador(TeamRepository teamRepository,
+    public ResponseType<Team> trocarTreinador(TeamRepository teamRepository,
             Integer teamId,
             Integer managerId) {
         Team team = teamRepository.findById(teamId).get();

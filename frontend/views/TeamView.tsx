@@ -64,11 +64,13 @@ export default function TeamView() {
 
     // todo: criar equipa
     let result: ResponseEntity | undefined = undefined;
+
+    console.log(usersSelected, escalao, teamName);
     try {
       result = await createTeamWithAdmin(
         user,
         usersSelected,
-        Escalao[escalao as keyof typeof Escalao],
+        escalao,
         teamName
       );
     } catch (e: any) {
