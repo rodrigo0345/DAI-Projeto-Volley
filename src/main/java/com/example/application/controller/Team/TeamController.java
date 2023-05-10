@@ -33,16 +33,12 @@ import java.util.Set;
 public class TeamController {
 
     private final RideRepository ridesRepository;
-
     private final NewsRepository newsRepository;
-
     private final UserRepository usersRepository;
-
     private final CalendarRepository calendarRepository;
-
     private final TeamRepository teamRepository;
-
     private final AuthenticationService service;
+    private final TeamService teamService;
 
     public ResponseEntity<ResponseType<List<LoginUser>>> getPlayersWithoutTeam() {
 
@@ -101,7 +97,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team createdTeam = TeamService.criarEquipa(teamRepository, loginUser, equipa, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -133,7 +129,7 @@ public class TeamController {
             return null;
         }
 
-        Team createdTeam = TeamService.criarEquipa(teamRepository, loginUser, equipa, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -187,7 +183,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team editedTeam = TeamService.editarEquipa(teamRepository, teamId, managerId, equipa, name).success;
+        Team editedTeam = teamService.editarEquipa(teamRepository, teamId, managerId, equipa, name).success;
 
         var response = new ResponseType<Team>();
         response.success(editedTeam);
@@ -205,7 +201,7 @@ public class TeamController {
             return ResponseEntity.ok().body(response);
         }
 
-        Team deletedTeam = TeamService.removerEquipa(teamRepository, teamId).success;
+        Team deletedTeam = teamService.removerEquipa(teamRepository, teamId).success;
 
         var response = new ResponseType<Team>();
         response.success(deletedTeam);
@@ -259,7 +255,7 @@ public class TeamController {
             }
         }
 
-        Team addedPlayerTeam = TeamService.adicionarJogador(teamRepository, teamId, atletas).success;
+        Team addedPlayerTeam = teamService.adicionarJogador(teamRepository, teamId, atletas).success;
 
         var response = new ResponseType<Team>();
         response.success(addedPlayerTeam);
@@ -303,7 +299,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team removedPlayerTeam = TeamService.removerJogador(teamRepository, teamId, jogadoresRemovidos).success;
+        Team removedPlayerTeam = teamService.removerJogador(teamRepository, teamId, jogadoresRemovidos).success;
 
         var response = new ResponseType<Team>();
         response.success(removedPlayerTeam);
@@ -336,7 +332,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team changedManagerTeam = TeamService.trocarTreinador(teamRepository, teamId, managerId).success;
+        Team changedManagerTeam = teamService.trocarTreinador(teamRepository, teamId, managerId).success;
 
         var response = new ResponseType<Team>();
         response.success(changedManagerTeam);
