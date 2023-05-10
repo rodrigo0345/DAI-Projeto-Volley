@@ -67,7 +67,7 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
-            List<Integer> equipa,
+            List<Integer> jogadores,
             String escalaoI,
             String name) {
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
@@ -77,7 +77,7 @@ public class TeamController {
             response.error("Não tem permissões para criar equipas");
             return ResponseEntity.badRequest().body(response);
         }
-        if (equipa == null) {
+        if (jogadores == null) {
             var response = new ResponseType<Team>();
             response.error("A equipa esta vazia");
             return ResponseEntity.badRequest().body(response);
@@ -98,7 +98,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, user, jogadores, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -106,11 +106,15 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
-            List<Integer> equipa,
-            String escalaoI,
-            String name) {
+                                                                  List<Integer> equipa,
+                                                                  String escalaoI,
+                                                                  String name) {
+        //Integer managerId
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
+
         User user = usersRepository.findById(loginUser.getId()).get();
+        //User manager = usersRepository.findById(managerId).get();
+
         if (!(user.getRole().equals((Roles.ADMIN)))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");

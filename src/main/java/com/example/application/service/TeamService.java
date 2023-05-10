@@ -1,5 +1,6 @@
 package com.example.application.service;
 
+import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Team.Escalao;
 import com.example.application.model.Team.Team;
@@ -10,6 +11,10 @@ import com.example.application.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +33,7 @@ public class TeamService {
                                                  Escalao escalao,
                                                  String name) {
 
-        List<User> atletas = null;
+        List<User> atletas = new ArrayList<>();
 
         for (Integer elemento : equipa) {
             User atleta = users.findById(elemento).get();
@@ -36,13 +41,19 @@ public class TeamService {
         }
 
         Team team = new Team();
-        team.setName(name);
-        team.setPlayers(atletas);
-        team.setManager(user);
         team.setEscalao(escalao);
+        team.setName(name);
+        team.setManager(user);
+        team.setPlayers(atletas);
 
-        teamRepository.save(team);
-
+        try {
+            teamRepository.save(team);
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            var response = new ResponseType<Team>();
+            response.error("Erro ao criar equipa");
+            return response;
+        }
         var response = new ResponseType<Team>();
         response.success(team);
         return response;
