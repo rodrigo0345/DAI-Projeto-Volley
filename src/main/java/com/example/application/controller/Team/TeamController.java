@@ -71,8 +71,9 @@ public class TeamController {
 
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
             List<Integer> equipa,
-            Escalao escalao,
+            String escalaoI,
             String name) {
+        Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
         User user = usersRepository.findById(loginUser.getId()).get();
         if (!(user.getRole().equals((Roles.MANAGER)))) {
             var response = new ResponseType<Team>();
@@ -109,8 +110,9 @@ public class TeamController {
 
     public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
             List<Integer> equipa,
-            Escalao escalao,
+            String escalaoI,
             String name) {
+        Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
         User user = usersRepository.findById(loginUser.getId()).get();
         if (!(user.getRole().equals((Roles.ADMIN)))) {
             var response = new ResponseType<Team>();
