@@ -1,4 +1,4 @@
-package com.example.application.controller.Practice;
+/*package com.example.application.controller.Practice;
 
 import com.example.application.controller.Team.TeamController;
 import com.example.application.controller.Wrapper.ResponseType;
@@ -190,4 +190,4 @@ public class PracticeController {
 
         return ResponseEntity.ok().body(response);
     }
-}
+}*/

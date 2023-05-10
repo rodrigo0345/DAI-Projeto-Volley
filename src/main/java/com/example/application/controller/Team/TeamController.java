@@ -13,6 +13,7 @@ import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.TeamService;
+import java.util.List;
 
 import com.example.application.service.TokenService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
