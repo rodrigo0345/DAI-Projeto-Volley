@@ -245,7 +245,10 @@ export default function DashboardView() {
                 { label: 'Pessoal', value: 'pessoal' },
               ]}
             />
-            <CalendarView></CalendarView>
+            <CalendarView
+              user={user}
+              calendarType={calendarType}
+            ></CalendarView>
           </div>
         )}
       </div>

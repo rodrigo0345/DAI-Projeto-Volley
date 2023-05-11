@@ -41,21 +41,21 @@ public class CalendarService {
                 case RIDE:
                     Ride ride = el.returnType();
                     event.title = ride.getOrigin() + " -> " + ride.getDestination();
-                    event.url = "/ride/" + ride.getId();
+                    event.url = "post/ride/" + ride.getId();
                     event.date = ride.getStartDate();
                     break;
                 case GAME:
                     // TODO ACABAR ISTO
                     Game game = el.returnType();
                     event.title = "Matosinhos contra Odivelas";
-                    event.url = "/game/" + 0;
+                    event.url = "post/game/" + 0;
                     event.date = null;
                     break;
                 case PRACTICE:
                     // TODO ACABAR ISTO
                     Practice practice = el.returnType();
                     event.title = "Treino " + practice.getTeam();
-                    event.url = "/practice/" + practice.getId();
+                    event.url = "post/practice/" + practice.getId();
                     event.date = practice.getStartDate();
                     break;
                 default:
@@ -85,7 +85,7 @@ public class CalendarService {
                         break;
                     }
                     event.title = ride.getOrigin() + " -> " + ride.getDestination();
-                    event.url = "/ride/" + ride.getId();
+                    event.url = "/post/ride/" + ride.getId();
                     event.date = ride.getStartDate();
                     break;
                 case GAME:
@@ -93,21 +93,21 @@ public class CalendarService {
                     Game game = el.returnType();
                     // TODO CHECK IF USER IS IN THE GAME
                     event.title = "Matosinhos contra Odivelas";
-                    event.url = "/game/" + 0;
+                    event.url = "post/game/" + 0;
                     event.date = null;
                     break;
                 case PRACTICE:
                     Practice practice = el.returnType();
                     // TODO CHECK IF USER IS IN THE PRACTICE
                     event.title = "Treino " + practice.getTeam();
-                    event.url = "/practice/" + practice.getId();
+                    event.url = "post/practice/" + practice.getId();
                     event.date = practice.getStartDate();
                     break;
                 case APPOINTMENT:
                     Appointment appointment = el.returnType();
                     // TODO CHECK IF USER IS IN THE APPOINTMENT
                     event.title = "Consulta " + "Dr. " + "Joao";
-                    event.url = "/appointment/" + 0;
+                    event.url = "post/appointment/" + 0;
                     event.date = null;
                     break;
                 default:
@@ -125,19 +125,19 @@ public class CalendarService {
         // fetch all the data
 
         RetrieveNews news = new RetrieveNews();
-        news.run();
+        news.run(newsRepo);
 
         RetrieveRides rides = new RetrieveRides();
-        rides.run();
+        rides.run(rideRepo);
 
         RetrieveGames games = new RetrieveGames();
-        games.run();
+        games.run(gameRepo);
 
         RetrievePractices practices = new RetrievePractices();
-        practices.run();
+        practices.run(practiceRepo);
 
         RetrieveAppointments appointments = new RetrieveAppointments();
-        appointments.run();
+        appointments.run(appointmentRepo);
 
         List<PostType> posts = new ArrayList<>();
 

@@ -2,12 +2,22 @@ import { useEffect, useState } from 'react';
 import { Group, Indicator } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { getAllEvents } from 'Frontend/generated/CalendarController';
+import {
+  getAllEvents,
+  getEventsByPerson,
+} from 'Frontend/generated/CalendarController';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import Event from 'Frontend/generated/com/example/application/service/CalendarService/Event';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 
-export default function CalendarView() {
+export default function CalendarView({
+  calendarType,
+  user,
+}: {
+  calendarType: string;
+  user: LoginUser | undefined;
+}) {
   const [events, setEvents] = useState<(Event | undefined)[] | undefined>([]);
   const [showEvent, setShowEvent] = useState<(Event | undefined)[] | undefined>(
     undefined
@@ -40,10 +50,16 @@ export default function CalendarView() {
 
   useEffect(() => {
     (async () => {
+      if (calendarType === 'pessoal') {
+        const events = await getEventsByPerson(user?.id ?? 0);
+        setEvents(events);
+        return;
+      }
       const events = await getAllEvents();
+      console.log({ events });
       setEvents(events);
     })();
-  }, []);
+  }, [calendarType]);
 
   return (
     <motion.div className='flex flex-col justify-between flex-wrap gap-8 pb-8'>
@@ -56,7 +72,6 @@ export default function CalendarView() {
         }}
         renderDay={(date) => {
           const day = date.getDate();
-          console.log({ events });
           const isInEvents = events?.find((event) => {
             if (dayjs(date).isSame(new Date(event?.date ?? ''), 'date')) {
               return true;

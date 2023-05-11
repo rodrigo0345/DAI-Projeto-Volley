@@ -43,7 +43,7 @@ public class CalendarController {
         return events;
     }
 
-    public List<Event> getAllEvents(Integer id) {
+    public List<Event> getEventsByPerson(Integer id) {
         var events = CalendarService.getEventsByUser(id, ridesRepository, newsRepository, gameRepository,
                 practiceRepository,
                 appointmentRepository);
