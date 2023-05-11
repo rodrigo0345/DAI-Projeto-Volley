@@ -78,12 +78,14 @@ export default function TeamView() {
       return;
     }
 
+    console.log(result);
+
     if (result?.body.error) {
       toast.error(result?.body.error);
       return;
     }
 
-    toast.success('Equipa criada com sucesso');
+    toast.success(result?.body.success);
     setOpen(false);
   }
 
@@ -97,7 +99,7 @@ export default function TeamView() {
             id: user.id,
             lastName: user.lastname,
             firstName: user.firstname,
-            age: 0,
+            age: user.age,
           };
         })
       );
