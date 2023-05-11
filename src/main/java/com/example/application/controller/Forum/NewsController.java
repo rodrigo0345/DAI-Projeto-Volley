@@ -1,5 +1,6 @@
 package com.example.application.controller.Forum;
 
+import com.example.application.controller.Forum.Wrappers.PostSavedType;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.News.News;
 import com.example.application.model.User.LoginUser;
@@ -115,8 +116,8 @@ public class NewsController {
     }
 
     public boolean addLike(PostType post, LoginUser user) {
-        String type = post.getType();
-        if (post == null || type.equals("news"))
+        PostSavedType type = post.getType();
+        if (post == null || type.equals(PostSavedType.NEWS))
             return false;
         News news = post.news;
         if (NewsService.verifyUserHasLiked(news, user))
@@ -127,8 +128,8 @@ public class NewsController {
     }
 
     public boolean removeLike(PostType post, LoginUser user) {
-        String type = post.getType();
-        if (post == null || type.equals("news"))
+        PostSavedType type = post.getType();
+        if (post == null || type.equals(PostSavedType.NEWS))
             return false;
         News news = post.news;
         if (!NewsService.verifyUserHasLiked(news, user))

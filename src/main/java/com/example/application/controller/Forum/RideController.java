@@ -1,5 +1,6 @@
- package com.example.application.controller.Forum;
+package com.example.application.controller.Forum;
 
+import com.example.application.controller.Forum.Wrappers.PostSavedType;
 import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.Ride;
 import com.example.application.model.User.LoginUser;
@@ -81,8 +82,8 @@ public class RideController {
     }
 
     public boolean addPassenger(PostType post, LoginUser user) {
-        String type = post.getType();
-        if (post == null || type.equals("news"))
+        PostSavedType type = post.getType();
+        if (post == null || type.equals(PostSavedType.NEWS))
             return false;
         Ride ride = post.ride;
         if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)
@@ -94,8 +95,8 @@ public class RideController {
     }
 
     public boolean removePassenger(PostType post, LoginUser user) {
-        String type = post.getType();
-        if (post == null || type == "news")
+        PostSavedType type = post.getType();
+        if (post == null || type.equals(PostSavedType.NEWS))
             return false;
         Ride ride = post.ride;
         if (!RideService.verifyPassengerInRide(ride, user))

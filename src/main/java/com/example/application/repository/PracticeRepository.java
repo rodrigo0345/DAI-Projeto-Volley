@@ -8,7 +8,6 @@ import javax.persistence.Table;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.example.application.model.Convocatorias;
 import com.example.application.model.Practice;
 
 @Table(name = "prectices")
@@ -16,7 +15,7 @@ public interface PracticeRepository extends CrudRepository<Practice, Integer> {
 
     public List<Practice> findAll();
 
-    public Convocatorias findById(Long id);
+    public Practice findById(Long id);
 
     // public List<NewsLike> findAllfromUser(Pageable rq);
 

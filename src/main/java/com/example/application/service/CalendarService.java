@@ -67,7 +67,7 @@ public class CalendarService {
         return events;
     }
 
-    public List<Event> getEventsByUser(Integer id, RideRepository rideRepo, NewsRepository newsRepo,
+    public static List<Event> getEventsByUser(Integer id, RideRepository rideRepo, NewsRepository newsRepo,
             GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();

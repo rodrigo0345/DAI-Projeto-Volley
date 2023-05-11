@@ -8,7 +8,6 @@ import javax.persistence.Table;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.example.application.model.Convocatorias;
 import com.example.application.model.Team.Team;
 import com.example.application.model.User.User;
 

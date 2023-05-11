@@ -6,7 +6,6 @@ import com.example.application.model.Team.Team;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
-import com.example.application.repository.CalendarRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.TeamRepository;
@@ -19,6 +18,7 @@ import com.example.application.service.TokenService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import dev.hilla.Endpoint;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,13 +33,12 @@ import java.util.Set;
 
 @Endpoint
 @AnonymousAllowed
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TeamController {
 
     private final RideRepository ridesRepository;
     private final NewsRepository newsRepository;
     private final UserRepository usersRepository;
-    private final CalendarRepository calendarRepository;
     private final TeamRepository teamRepository;
     private final AuthenticationService service;
     private final TeamService teamService;
