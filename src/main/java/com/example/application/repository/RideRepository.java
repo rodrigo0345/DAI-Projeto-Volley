@@ -3,7 +3,7 @@ package com.example.application.repository;
 import com.example.application.model.Ride;
 
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.persistence.Table;
@@ -21,5 +21,8 @@ public interface RideRepository extends CrudRepository<Ride, Integer> {
     // Optional<Ride> findByDriver(User driver);
 
     public Ride findById(Long id);
+
+    //@Query(value = "DELET FROM ride_passengers WHERE ride_id = :id")
+    //public void removePassengerFromRide(Integer id);
 
 }

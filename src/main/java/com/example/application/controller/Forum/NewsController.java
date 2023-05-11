@@ -1,7 +1,10 @@
 package com.example.application.controller.Forum;
 
+import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.News.News;
+import com.example.application.model.User.LoginUser;
 import com.example.application.repository.NewsRepository;
+import com.example.application.service.NewsService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
@@ -32,7 +35,9 @@ public class NewsController {
                             n.getAuthorID(),
                             n.getCreatedAt(),
                             n.getClicks(),
-                            n.getLikes()));
+                            n.getLikes(),
+                            n.getLikesID(),
+                            n.getImage()));
         }
         return newsList;
     }
@@ -48,7 +53,9 @@ public class NewsController {
                 newsAux.getAuthorID(),
                 newsAux.getCreatedAt(),
                 newsAux.getClicks(),
-                newsAux.getLikes());
+                newsAux.getLikes(),
+                newsAux.getLikesID(),
+                newsAux.getImage());
     }
 
     /*
@@ -107,32 +114,34 @@ public class NewsController {
         return news.getLikes();
     }
 
-    public void addLike(Long id) throws Exception {
-        News news = newsRepository.findById(id);
-        if (news == null)
-            return;
-        news.setLikes(news.getLikes() + 1);
-        // there is stuff missing here
+    public boolean addLike(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type.equals("news"))
+            return false;
+        News news = post.news;
+        if (NewsService.verifyUserHasLiked(news, user))
+            return false;
+        news.addLike(user.getId());
         newsRepository.save(news);
+        return true;
     }
 
-    public void removeLike(Long id) throws Exception {
-        News news = newsRepository.findById(id);
-        if (news == null)
-            return;
-        news.setLikes(news.getLikes() - 1);
-        // there is stuff missing here
+    public boolean removeLike(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type.equals("news"))
+            return false;
+        News news = post.news;
+        if (!NewsService.verifyUserHasLiked(news, user))
+            return false;
+        news.removeLike(user.getId());
         newsRepository.save(news);
+        return true;
     }
 
-    /*
-     * public void addClick(Long id) throws Exception {
-     * News news = newsRepository.findById(id);
-     * if (news == null)
-     * return;
-     * news.setClicks(news.getClicks() + 1);
-     * newsRepository.save(news);
-     * }
-     */
+    public boolean checkUserHasLiked(News news, LoginUser user) {
+        if (News.hasLiked(news.getLikesID(), user))
+            return true;
+        return false;
+    }
 
 }

@@ -2,7 +2,7 @@ import SidePanel, {
   AsideContent,
 } from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { lazy, useContext, useEffect, useRef, useState } from 'react';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { BsCalendarDate, BsCarFront, BsCloudUpload } from 'react-icons/bs';
 import { MdOutlineForum } from 'react-icons/md';
@@ -29,7 +29,6 @@ import {
   postsByOlder,
 } from 'Frontend/generated/PostController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
-import { NewsPost } from 'Frontend/components/posts/NewsPost';
 import { Button, Skeleton } from '@mantine/core';
 import { AnimatePresence, motion } from 'framer-motion';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
@@ -43,9 +42,11 @@ import {
 } from 'Frontend/services/posts/fetchPosts';
 import { criarNoticia } from 'Frontend/services/posts/createPost';
 import FilterContent from 'Frontend/components/filterContent/FilterContent';
-import { RidePost } from 'Frontend/components/posts/RidePost';
 import CreatePost from 'Frontend/components/posts/CreatePost';
 import { CgProfile } from 'react-icons/cg';
+
+const NewsPost = lazy(() => import('Frontend/components/posts/NewsPost'));
+const RidePost = lazy(() => import('Frontend/components/posts/RidePost'));
 
 enum Menu {
   ALL = 'ALL',
@@ -56,6 +57,7 @@ enum Menu {
 
 export default function ForumView() {
   const { user, logout } = useContext(UserContext);
+  const [firstLoader, setFirstLoader] = useState(true);
   const [menu, setMenu] = useState<Menu>(Menu.ALL);
   const [posts, setPosts] = useState<(PostType | undefined)[]>([]);
   const [openModal, setOpenModal] = useState(false);
@@ -148,13 +150,12 @@ export default function ForumView() {
   ];
 
   useEffect(() => {
+    if (firstLoader) return;
     setOrder(Order.POPULAR);
     setCurrIndex(0);
     (async () => {
       const posts = await fetchPopularPosts(0, setLoading, setPosts);
-      console.log(posts);
       const filteredPosts = posts?.filter((post) => {
-        console.log(post?.news?.authorID);
         if (menu === Menu.ALL) return true;
         if (menu === Menu.NEWS && post?.news) return true;
         if (menu === Menu.RIDES && post?.ride) return true;
@@ -171,7 +172,7 @@ export default function ForumView() {
   }, [menu]);
 
   useEffect(() => {
-    console.log({ order });
+    if (firstLoader) return;
     setCurrIndex(0);
     (async () => {
       setLoading(true);
@@ -189,7 +190,6 @@ export default function ForumView() {
             return true;
           return false;
         });
-        console.log({ name: 'popular', filteredPosts });
         setPosts(filteredPosts ?? []);
       } else if ((Order.NEWEST as string).toUpperCase() === order) {
         const posts = await fetchPostsByMostRecent(0, setLoading, setPosts);
@@ -205,7 +205,6 @@ export default function ForumView() {
             return true;
           return false;
         });
-        console.log({ name: 'recent', filteredPosts });
         setPosts(filteredPosts ?? []);
       } else if ((Order.OLDEST as string).toUpperCase() === order) {
         const posts = await fetchPostsByOldest(0, setLoading, setPosts);
@@ -221,7 +220,6 @@ export default function ForumView() {
             return true;
           return false;
         });
-        console.log({ name: 'oldest', filteredPosts });
         setPosts(filteredPosts ?? []);
       }
       setLoading(false);
@@ -259,17 +257,17 @@ export default function ForumView() {
         setPosts(filteredPosts ?? []);
       }
       setLoading(false);
+      setFirstLoader(false);
     })();
   }, []);
 
   return (
-    <div className='min-h-screen flex relative z-10 bg-white'>
+    <div className='min-h-screen flex relative z-10 bg-white shadow-lg'>
       <CreatePost
         openModal={openModal}
         setOpenModal={setOpenModal}
         boleia={boleia}
         noticia={noticia}
-        setImagem={setImagem}
         user={
           user ?? {
             id: 1,
@@ -295,7 +293,7 @@ export default function ForumView() {
                   <Skeleton
                     key={i}
                     visible={loading}
-                    className='h-52'
+                    className='h-60 w-96 self-center'
                   ></Skeleton>
                 );
               })}
@@ -315,12 +313,16 @@ export default function ForumView() {
                     <NewsPost
                       key={post?.news.id}
                       post={post.news}
-                      currentUserID={user?.id}
+                      user={user}
                     ></NewsPost>
                   );
                 }
                 return (
-                  <RidePost key={post?.ride?.id} post={post?.ride}></RidePost>
+                  <RidePost
+                    key={post?.ride?.id}
+                    post={post?.ride}
+                    user={user}
+                  ></RidePost>
                 );
               })
             ) : (
@@ -339,7 +341,7 @@ export default function ForumView() {
                 />
               </motion.div>
             )}
-            {posts.length > 6 && (
+            {posts.length > 3 && (
               <button
                 onClick={() =>
                   loadMore(

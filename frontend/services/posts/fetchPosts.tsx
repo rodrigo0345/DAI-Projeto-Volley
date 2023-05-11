@@ -18,12 +18,13 @@ export async function fetchPopularPosts(
   setPosts: React.Dispatch<React.SetStateAction<(PostType | undefined)[]>>,
   prevPosts?: (PostType | undefined)[]
 ) {
-  const posts = await popularPosts(8, index);
+  const posts = await popularPosts(5, index);
   if (!posts || posts.length === 0) {
     toast.warn('Não existem mais posts');
     setLoading(false);
     return;
   }
+  setLoading(false);
   return posts;
 }
 
@@ -33,13 +34,13 @@ export async function fetchPostsByMostRecent(
   setPosts: React.Dispatch<React.SetStateAction<(PostType | undefined)[]>>,
   prevPosts?: (PostType | undefined)[]
 ) {
-  const posts = await postsByNewest(8, index);
-  if (!posts) {
+  const posts = await postsByNewest(5, index);
+  if (!posts || posts.length === 0) {
     toast.warn('Não existem mais posts');
     setLoading(false);
     return;
   }
-  console.log(posts);
+  setLoading(false);
   return posts;
 }
 
@@ -49,12 +50,13 @@ export async function fetchPostsByOldest(
   setPosts: React.Dispatch<React.SetStateAction<(PostType | undefined)[]>>,
   prevPosts?: (PostType | undefined)[]
 ) {
-  const posts = await postsByOlder(8, index);
-  if (!posts) {
+  const posts = await postsByOlder(5, index);
+  if (!posts || posts.length === 0) {
     toast.warn('Não existem mais posts');
     setLoading(false);
     return;
   }
+  setLoading(false);
   return posts;
 }
 
@@ -69,7 +71,7 @@ export async function loadMore(
   const newIndex = currIndex + 1;
   setCurrIndex(newIndex);
 
-  if ((Order.POPULAR.toUpperCase() as string) === order) {
+  if ((Order.POPULAR.toUpperCase() as string) === order.toUpperCase()) {
     const nextPosts = await fetchPopularPosts(
       newIndex,
       setLoading,
@@ -77,7 +79,8 @@ export async function loadMore(
       posts
     );
     setPosts([...(posts ?? []), ...(nextPosts ?? [])]);
-  } else if ((Order.NEWEST.toUpperCase() as string) === order) {
+  } else if ((Order.NEWEST.toUpperCase() as string) === order.toUpperCase()) {
+    console.log('here');
     const nextPosts = await fetchPostsByMostRecent(
       newIndex,
       setLoading,
@@ -85,7 +88,8 @@ export async function loadMore(
       posts
     );
     setPosts([...(posts ?? []), ...(nextPosts ?? [])]);
-  } else if ((Order.OLDEST.toUpperCase() as string) === order) {
+  } else if ((Order.OLDEST.toUpperCase() as string) === order.toUpperCase()) {
+    console.log('here');
     const nextPosts = await fetchPostsByOldest(
       newIndex,
       setLoading,

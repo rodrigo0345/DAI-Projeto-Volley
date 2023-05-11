@@ -14,6 +14,8 @@ const Card = styled.div`
   overflow: hidden;
   width: fit-content;
   min-width: fit-content;
+  height: fit-content;
+  min-height: fit-content;
   .symbol {
     transition: transform 0.5s ease;
   }
@@ -40,23 +42,25 @@ export default function UserCard({
 
   return (
     <Card>
-      <button
-        className='delete bg-red-400 font-bold absolute z-10 right-0 p-2 rounded-md overflow-hidden hover:bg-red-500'
-        title='Delete'
-        onClick={() => {
-          (async () => {
-            const result = await deleteUser(userSubject?.id, user);
-            if (!result) {
-              toast.error('Error deleting user');
-            }
-            toast.success('User deleted');
-            // reload window
-            window.location.reload();
-          })();
-        }}
-      >
-        <AiOutlineCloseCircle size={25}></AiOutlineCloseCircle>
-      </button>
+      {!(userSubject?.id === user?.id) && (
+        <button
+          className='delete bg-red-400 font-bold absolute z-10 right-0 p-2 rounded-md overflow-hidden hover:bg-red-500'
+          title='Delete'
+          onClick={() => {
+            (async () => {
+              const result = await deleteUser(userSubject?.id, user);
+              if (!result) {
+                toast.error('Error deleting user');
+              }
+              toast.success('User deleted');
+              // reload window
+              window.location.reload();
+            })();
+          }}
+        >
+          <AiOutlineCloseCircle size={25}></AiOutlineCloseCircle>
+        </button>
+      )}
       <a
         href={'/profiles/' + userSubject?.id}
         className='overflow-hidden relative w-52 h-60 bg-gray-300 rounded-lg flex flex-col px-4 shadow-lg hover:bg-yellow-500/40 transition-all cursor-pointer underline-none hover:no-underline

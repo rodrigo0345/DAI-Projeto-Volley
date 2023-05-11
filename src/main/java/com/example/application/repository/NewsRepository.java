@@ -24,4 +24,6 @@ public interface NewsRepository extends CrudRepository<News, Integer> {
     public News findByTitle(String title);
 
     public News findById(Long id);
+
+    
 }

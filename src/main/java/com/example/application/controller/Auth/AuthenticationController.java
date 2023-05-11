@@ -8,7 +8,6 @@ import com.example.application.model.User.Roles;
 //import com.example.application.security.CryptWithMD5;
 import com.example.application.security.CryptWithMD5;
 import com.example.application.service.TokenService;
-import io.swagger.models.Response;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -49,7 +48,7 @@ public class AuthenticationController {
             @RequestBody RegisterRequest request) throws Exception {
 
         // verificar se currentUser é admin
-        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
+        var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
         if (!isValidToken) {
             var response = new ResponseType<LoginUser>();
             response.error("Token inválida");
@@ -102,20 +101,25 @@ public class AuthenticationController {
 
         // encriptar palavra pass
         user.setPassword(CryptWithMD5.cryptWithMD5(request.getPassword()));
-        // registar na base de dados
 
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
 
+        if (request.getAge() < 3 || request.getAge() > 120) {
+            var response = new ResponseType<LoginUser>();
+            response.error("Idade inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        user.setAge(request.getAge());
+
         if (!(request.getRoles() == null)) {
-            var role = Roles.valueOf(request.getRoles());
+            Roles role = Roles.valueOf(request.getRoles());
             user.setRole(role);
         } else {
             user.setRole(Roles.USER);
         }
 
-        // falta encriptar
-        // user.setPassword(request.getPassword());
         users.save(user);
 
         // criar token e returnar o utilizador check
@@ -147,7 +151,7 @@ public class AuthenticationController {
 
         RegisterRequest request = new RegisterRequest(user.getFirstname(), user.getLastname(), user.getUsername(),
                 user.getEmail(),
-                user.getPassword(), user.getRole().toString());
+                user.getPassword(), user.getRole().toString(), user.getAge());
 
         AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
 
@@ -166,6 +170,7 @@ public class AuthenticationController {
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
+                user.getAge(),
                 user.getRole().toString(),
                 token.getToken());
 
@@ -176,37 +181,7 @@ public class AuthenticationController {
 
     @AnonymousAllowed
     public ResponseEntity<Boolean> validateToken(LoginUser user, String token) {
-        return ResponseEntity.ok(TokenService.validateToken(user, token, service).getBody());
-    }
-
-    public ResponseEntity<ResponseType<LoginUser>> editUser(
-            @RequestBody LoginUser currentUser,
-            @RequestBody LoginUser user) throws Exception {
-        TokenService serviceToken = new TokenService();
-        var isValidToken = serviceToken.validateToken(currentUser, currentUser.getStringToken(), service).getBody();
-        if (!isValidToken) {
-            var response = new ResponseType<LoginUser>();
-            response.error("Token inválida");
-            return ResponseEntity.badRequest().body(response);
-        }
-        if (user == null) {
-            var response = new ResponseType<LoginUser>();
-            response.error("Utilizador não existe");
-            return ResponseEntity.badRequest().body(response);
-        }
-        if (!currentUser.getRole().toString().equals("ADMIN")) {
-            var response = new ResponseType<LoginUser>();
-            response.error("Você não tem permissão para editar o utilizador");
-            return ResponseEntity.badRequest().body(response);
-        }
-        User aux = users.findById(user.getId()).get();
-        aux.setFirstname(user.getFirstname());
-        aux.setLastname(user.getLastname());
-        aux.setEmail(user.getEmail());
-
-        users.save(aux);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(TokenService.validateToken(user, token, service));
     }
 
 }

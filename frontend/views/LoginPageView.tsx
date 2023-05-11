@@ -13,6 +13,7 @@ import { UserContext } from 'Frontend/contexts/UserContext';
 import { toast } from 'react-toastify';
 import MainBackground from 'Frontend/components/backgrounds/MainBackground';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
+import volei from 'Frontend/assets/images/volei.jpg';
 
 export default function LoginPageView(): JSX.Element {
   const { login } = useContext(UserContext);
@@ -103,13 +104,11 @@ export default function LoginPageView(): JSX.Element {
             <div className='flex flex-col items-center justify-center h-screen'>
               <div className='flex flex-col items-start justify-center gap-8'>
                 <div className='flex flex-col items-start justify-start gap-2'>
-                  <h1 className='text-4xl font-bold m-0 dark:text-white'>
-                    Login
-                  </h1>
+                  <h1 className='text-4xl font-bold m-0'>Login</h1>
                 </div>
                 <div className='flex flex-col items-center justify-center gap-4'>
                   <div className='flex flex-col items-start justify-center gap-4'>
-                    <label htmlFor='email' className='dark:text-white'>
+                    <label htmlFor='email' className=''>
                       Email{' '}
                       {emailError && (
                         <span className='text-red-500 text-xs before:content-["*"]'>
@@ -128,7 +127,7 @@ export default function LoginPageView(): JSX.Element {
                     />
                   </div>
                   <div className='flex flex-col items-start justify-center gap-4'>
-                    <label htmlFor='password' className='dark:text-white'>
+                    <label htmlFor='password' className=''>
                       Password{' '}
                       {passwordError && (
                         <span className='text-red-500 text-xs before:content-["*"]'>
@@ -150,7 +149,7 @@ export default function LoginPageView(): JSX.Element {
                 <div className='flex flex-col items-center justify-center gap-4'>
                   <button
                     type='submit'
-                    className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-400 hover:bg-gray-300 disabled:bg-gray-200/30 dark:text-white'
+                    className='w-96 h-12 px-4 rounded-md border-2 border-gray-300 focus:outline-none focus:border-yellow-400 hover:bg-gray-300 disabled:bg-gray-200/30'
                     disabled={loading}
                   >
                     Login
@@ -162,8 +161,8 @@ export default function LoginPageView(): JSX.Element {
         </div>
         <div className='hidden md:!block w-1/2 bg-black min-h-screen'>
           <img
-            className='h-full -z-10 w-screen object-cover'
-            src={background}
+            className='h-full -z-10 w-screen object-cover object-top'
+            src={volei}
             alt=''
           />
         </div>

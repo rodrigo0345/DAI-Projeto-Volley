@@ -6,6 +6,7 @@ import com.example.application.controller.Auth.Wrappers.AuthenticationResponse;
 import com.example.application.controller.Auth.Wrappers.RegisterRequest;
 import com.example.application.model.Token.Token;
 import com.example.application.model.Token.TokenType;
+import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
 import com.example.application.repository.TokenRepository;
@@ -102,5 +103,25 @@ public class AuthenticationService {
       token.setRevoked(true);
     });
     tokenRepository.saveAll(validUserTokens);
+  }
+
+  public static LoginUser convertToLoginUser(User user, Token token) {
+    if (token == null) {
+      return new LoginUser(
+          user.getId(),
+          user.getFirstname(),
+          user.getLastname(),
+          user.getEmail(),
+          user.getAge(),
+          user.getRole().toString(), null);
+    }
+    return new LoginUser(
+        user.getId(),
+        user.getFirstname(),
+        user.getLastname(),
+        user.getEmail(),
+        user.getAge(),
+        user.getRole().toString(),
+        token.getToken());
   }
 }

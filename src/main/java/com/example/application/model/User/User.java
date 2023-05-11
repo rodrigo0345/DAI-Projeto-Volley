@@ -48,6 +48,8 @@ public class User implements UserDetails {
 
   private LocalDate dataNascimento;
 
+  private Integer age;
+
   @Enumerated(EnumType.STRING) private Roles role;
 
   @OneToMany(mappedBy = "user") private List<Token> tokens;

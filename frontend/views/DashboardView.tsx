@@ -1,5 +1,5 @@
 import RegisterRequest from 'Frontend/generated/com/example/application/controller/Auth/Wrappers/RegisterRequest';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import SidePanel, {
   AsideContent,
 } from 'Frontend/components/sidePanel/SidePanel';
@@ -82,7 +82,7 @@ export default function DashboardView() {
   ];
 
   return (
-    <main className='min-h-screen flex flex-col md:!flex-row relative z-10 bg-white'>
+    <main className='min-h-screen flex flex-col md:!flex-row relative z-10 bg-white shadow-lg'>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
       <div className='relative flex-1'>
         <img
@@ -95,7 +95,12 @@ export default function DashboardView() {
             <h1 className='text-3xl font-bold'>Dashboard</h1>
             <div className='w-full max-w-full grid md:!grid-cols-4 sm:!grid-cols-2 grid-cols-1 grid-rows-4 gap-x-4 gap-y-10 self-center'>
               {!(user?.role?.toUpperCase() === Roles.SECCTIONIST) && (
-                <Box className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/team';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Equipa
                   </h2>
@@ -240,7 +245,7 @@ export default function DashboardView() {
                 { label: 'Pessoal', value: 'pessoal' },
               ]}
             />
-            <Scheduler type={calendarType}></Scheduler>
+            <CalendarView></CalendarView>
           </div>
         )}
       </div>

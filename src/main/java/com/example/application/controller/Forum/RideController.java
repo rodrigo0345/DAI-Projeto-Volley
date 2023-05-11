@@ -1,13 +1,17 @@
-package com.example.application.controller.Forum;
+ package com.example.application.controller.Forum;
 
+import com.example.application.controller.Forum.Wrappers.PostType;
 import com.example.application.model.Ride;
+import com.example.application.model.User.LoginUser;
 import com.example.application.repository.RideRepository;
+import com.example.application.service.RideService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Endpoint
 @AnonymousAllowed
@@ -76,14 +80,35 @@ public class RideController {
         return ride;
     }
 
-    /*
-     * public void addClick(Long id) throws Exception {
-     * Ride ride = rides.findById(id);
-     * if (ride == null)
-     * return;
-     * ride.setClicks(ride.getClicks() + 1);
-     * rides.save(ride);
-     * }
-     */
+    public boolean addPassenger(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type.equals("news"))
+            return false;
+        Ride ride = post.ride;
+        if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)
+                || RideService.verifyIfUserIsDriver(ride, user))
+            return false;
+        ride.addPassenger(user.getId());
+        rides.save(ride);
+        return true;
+    }
+
+    public boolean removePassenger(PostType post, LoginUser user) {
+        String type = post.getType();
+        if (post == null || type == "news")
+            return false;
+        Ride ride = post.ride;
+        if (!RideService.verifyPassengerInRide(ride, user))
+            return false;
+        ride.removePassenger(user.getId());
+        rides.save(ride);
+        return true;
+    }
+
+    public boolean checkPassengerInRide(Ride ride, LoginUser user) {
+        if (Ride.containsPassenger(ride.getPassengers(), user))
+            return true;
+        return false;
+    }
 
 }
