@@ -163,6 +163,7 @@ export default function AdminPanelView() {
       firstName: firstnameValue,
       lastName: lastnameValue,
       roles: roleString,
+      age: Number.parseInt(idade ?? '0'),
     };
 
     if (!user || !user.role?.includes('ADMIN')) {

@@ -105,6 +105,14 @@ public class AuthenticationController {
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
 
+        if (request.getAge() < 3 || request.getAge() > 120) {
+            var response = new ResponseType<LoginUser>();
+            response.error("Idade inválida");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        user.setAge(request.getAge());
+
         if (!(request.getRoles() == null)) {
             Roles role = Roles.valueOf(request.getRoles());
             user.setRole(role);
@@ -143,7 +151,7 @@ public class AuthenticationController {
 
         RegisterRequest request = new RegisterRequest(user.getFirstname(), user.getLastname(), user.getUsername(),
                 user.getEmail(),
-                user.getPassword(), user.getRole().toString());
+                user.getPassword(), user.getRole().toString(), user.getAge());
 
         AuthenticationRequest authRequest = new AuthenticationRequest(user.getEmail(), user.getPassword());
 
