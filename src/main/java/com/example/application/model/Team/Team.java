@@ -36,5 +36,5 @@ public class Team {
     private User manager;
 
     @ElementCollection
-    private List<User> players;
+    private List<Integer> players;
 }

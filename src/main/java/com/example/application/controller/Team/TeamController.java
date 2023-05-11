@@ -20,6 +20,9 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import dev.hilla.Endpoint;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
@@ -66,6 +69,11 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
+    public Team findAll() {
+        List<Team> teams = teamRepository.findAll();
+        return teams.get(0);
+    }
+
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
             List<Integer> jogadores,
             String escalaoI,
@@ -106,14 +114,14 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
-                                                                  List<Integer> equipa,
-                                                                  String escalaoI,
-                                                                  String name) {
-        //Integer managerId
+            List<Integer> equipa,
+            String escalaoI,
+            String name) {
+        // Integer managerId
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
 
         User user = usersRepository.findById(loginUser.getId()).get();
-        //User manager = usersRepository.findById(managerId).get();
+        // User manager = usersRepository.findById(managerId).get();
 
         if (!(user.getRole().equals((Roles.ADMIN)))) {
             var response = new ResponseType<Team>();

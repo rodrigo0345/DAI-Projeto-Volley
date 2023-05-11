@@ -37,6 +37,8 @@ public class Convocatorias {
     @ManyToOne
     private User managerID;
 
+    // mudar para lista de Integers
+    // n é OneToMany segundo o David 
     @OneToMany(mappedBy = "id")
     private List<User> players;
 }

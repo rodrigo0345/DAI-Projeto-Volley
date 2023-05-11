@@ -2,7 +2,6 @@ package com.example.application.controller.Forum;
 
 import com.example.application.model.User.LoginUser;
 
-import com.example.application.repository.CalendarRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
@@ -48,7 +47,6 @@ public class PostController {
     private final RideRepository ridesRepository;
     private final NewsRepository newsRepository;
     private final UserRepository usersRepository;
-    private final CalendarRepository calendarRepository;
 
     private List<PostType> mixPosts(List<News> news, List<Ride> rides, Comparator<? super PostType> cmp) {
         List<PostType> posts = new ArrayList<>();
@@ -222,7 +220,6 @@ public class PostController {
 
             try {
                 post.ride.setId(rideId);
-                CalendarService.createEvent(calendarRepository, post);
             } catch (Exception e) {
                 var response = new ResponseType<PostType>();
                 response.error(e.getMessage());

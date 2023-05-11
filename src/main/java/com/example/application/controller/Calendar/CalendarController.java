@@ -23,8 +23,6 @@ public class CalendarController {
 
     private final UserRepository usersRepository;
 
-    private final CalendarRepository calendarRepository;
-
     public CalendarController(RideRepository ridesRepository, NewsRepository newsRepository,
             UserRepository usersRepository, CalendarRepository calendarRepository) {
         this.ridesRepository = ridesRepository;
@@ -34,6 +32,7 @@ public class CalendarController {
     }
 
     public List<CalendarEvent> getAllEvents() {
-        return CalendarService.getAllEvents(calendarRepository);
+        
+        return 
     }
 }
