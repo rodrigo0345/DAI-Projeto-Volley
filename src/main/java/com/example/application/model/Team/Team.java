@@ -3,6 +3,7 @@ package com.example.application.model.Team;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -34,6 +35,6 @@ public class Team {
     @ManyToOne
     private User manager;
 
-    @OneToMany(mappedBy = "id")
+    @ElementCollection
     private List<User> players;
 }

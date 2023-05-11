@@ -42,7 +42,7 @@ public class Ride {
     // @JoinColumn(name = "user_id", nullable = true)
     private List<Integer> passengers;
 
-        public void addPassenger(Integer userID) {
+    public void addPassenger(Integer userID) {
         passengers.add(userID);
         freeSeats--;
     }
