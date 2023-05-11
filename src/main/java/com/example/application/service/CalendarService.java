@@ -13,6 +13,11 @@ import com.example.application.model.Ride;
 import com.example.application.model.News.News;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
+import com.example.application.repository.AppointmentRepository;
+import com.example.application.repository.GameRepository;
+import com.example.application.repository.NewsRepository;
+import com.example.application.repository.PracticeRepository;
+import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
 
 public class CalendarService {
@@ -23,9 +28,50 @@ public class CalendarService {
         public LocalDateTime date;
     }
 
-    public static List<Event> getAllEvents() {
-        List<PostType> posts = fetchPosts();
+    public static List<Event> getAllEvents(RideRepository rideRepo, NewsRepository newsRepo,
+            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
+
+        List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
+        posts.forEach(el -> {
+            var event = new Event();
+            PostSavedType type = el.getType();
+
+            switch (type) {
+                case RIDE:
+                    Ride ride = el.returnType();
+                    event.title = ride.getOrigin() + " -> " + ride.getDestination();
+                    event.url = "/ride/" + ride.getId();
+                    event.date = ride.getStartDate();
+                    break;
+                case GAME:
+                    // TODO ACABAR ISTO
+                    Game game = el.returnType();
+                    event.title = "Matosinhos contra Odivelas";
+                    event.url = "/game/" + 0;
+                    event.date = null;
+                    break;
+                case PRACTICE:
+                    // TODO ACABAR ISTO
+                    Practice practice = el.returnType();
+                    event.title = "Treino " + practice.getTeam();
+                    event.url = "/practice/" + practice.getId();
+                    event.date = practice.getStartDate();
+                    break;
+                default:
+                    break;
+            }
+            events.add(event);
+        });
+
+        return events;
+    }
+
+    public List<Event> getEventsByUser(Integer id, RideRepository rideRepo, NewsRepository newsRepo,
+            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
+        List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
+        List<Event> events = new ArrayList<>();
+
         posts.forEach(el -> {
             var event = new Event();
             PostSavedType type = el.getType();
@@ -35,6 +81,9 @@ public class CalendarService {
                     break;
                 case RIDE:
                     Ride ride = el.returnType();
+                    if (ride.getDriverID() != id || ride.getPassengers().contains(id)) {
+                        break;
+                    }
                     event.title = ride.getOrigin() + " -> " + ride.getDestination();
                     event.url = "/ride/" + ride.getId();
                     event.date = ride.getStartDate();
@@ -42,18 +91,21 @@ public class CalendarService {
                 case GAME:
                     // ACABAR ISTO
                     Game game = el.returnType();
+                    // TODO CHECK IF USER IS IN THE GAME
                     event.title = "Matosinhos contra Odivelas";
                     event.url = "/game/" + 0;
                     event.date = null;
                     break;
                 case PRACTICE:
                     Practice practice = el.returnType();
+                    // TODO CHECK IF USER IS IN THE PRACTICE
                     event.title = "Treino " + practice.getTeam();
                     event.url = "/practice/" + practice.getId();
                     event.date = practice.getStartDate();
                     break;
                 case APPOINTMENT:
                     Appointment appointment = el.returnType();
+                    // TODO CHECK IF USER IS IN THE APPOINTMENT
                     event.title = "Consulta " + "Dr. " + "Joao";
                     event.url = "/appointment/" + 0;
                     event.date = null;
@@ -68,8 +120,125 @@ public class CalendarService {
     }
 
     // nada eficiente
-    private static List<PostType> fetchPosts() {
+    private static List<PostType> fetchPosts(RideRepository rideRepo, NewsRepository newsRepo,
+            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
         // fetch all the data
+
+        RetrieveNews news = new RetrieveNews();
+        news.run();
+
+        RetrieveRides rides = new RetrieveRides();
+        rides.run();
+
+        RetrieveGames games = new RetrieveGames();
+        games.run();
+
+        RetrievePractices practices = new RetrievePractices();
+        practices.run();
+
+        RetrieveAppointments appointments = new RetrieveAppointments();
+        appointments.run();
+
+        List<PostType> posts = new ArrayList<>();
+
+        try {
+            news.join();
+            rides.join();
+            games.join();
+            practices.join();
+            appointments.join();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        posts.addAll(news.getResult());
+        posts.addAll(rides.getResult());
+        posts.addAll(games.getResult());
+        posts.addAll(practices.getResult());
+        posts.addAll(appointments.getResult());
+
+        return posts;
+    }
+
+    public static class RetrieveNews extends Thread {
+        List<PostType> result = new ArrayList<>();
+
+        public void run(NewsRepository newsRepository) {
+            newsRepository.findAll().forEach(el -> {
+                var post = new PostType();
+                post.news = el;
+                result.add(post);
+            });
+        }
+
+        public List<PostType> getResult() {
+            return this.result;
+        }
+    }
+
+    public static class RetrieveRides extends Thread {
+        List<PostType> result = new ArrayList<>();
+
+        public void run(RideRepository rideRepository) {
+            rideRepository.findAll().forEach(el -> {
+                var post = new PostType();
+                post.ride = el;
+                result.add(post);
+            });
+        }
+
+        public List<PostType> getResult() {
+            return this.result;
+        }
+    }
+
+    public static class RetrieveGames extends Thread {
+        List<PostType> result = new ArrayList<>();
+
+        public void run(GameRepository gameRepository) {
+            gameRepository.findAll().forEach(el -> {
+                var post = new PostType();
+                post.game = el;
+                result.add(post);
+            });
+        }
+
+        public List<PostType> getResult() {
+            return this.result;
+        }
+    }
+
+    public static class RetrievePractices extends Thread {
+        List<PostType> result = new ArrayList<>();
+
+        public void run(PracticeRepository practiceRepository) {
+            practiceRepository.findAll().forEach(el -> {
+                var post = new PostType();
+                post.practice = el;
+                result.add(post);
+            });
+        }
+
+        public List<PostType> getResult() {
+            return this.result;
+        }
+    }
+
+    public static class RetrieveAppointments extends Thread {
+        List<PostType> result = new ArrayList<>();
+
+        public void run(AppointmentRepository appointmentRepository) {
+            appointmentRepository.findAll().forEach(el -> {
+                var post = new PostType();
+                post.appointment = el;
+                result.add(post);
+            });
+        }
+
+        public List<PostType> getResult() {
+            return this.result;
+        }
     }
 
 }

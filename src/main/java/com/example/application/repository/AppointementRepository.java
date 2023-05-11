@@ -8,13 +8,13 @@ import javax.persistence.Table;
 
 import org.springframework.data.repository.CrudRepository;
 
+import com.example.application.model.Appointment;
 import com.example.application.model.Convocatorias;
-import com.example.application.model.Practice;
 
-@Table(name = "prectices")
-public interface PracticeRepository extends CrudRepository<Practice, Integer> {
+@Table(name = "convocatorias")
+public interface AppointementRepository extends CrudRepository<Appointment, Integer> {
 
-    public List<Practice> findAll();
+    public List<Appointment> findAll();
 
     public Convocatorias findById(Long id);
 
