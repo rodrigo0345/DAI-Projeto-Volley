@@ -5,127 +5,123 @@ import com.example.application.model.Convocatorias;
 import com.example.application.model.User.User;
 import com.example.application.repository.ConvocatoriasRepository;
 import com.example.application.repository.UserRepository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class CallsService {
-    private static UserRepository usersRepository;
+  private static UserRepository usersRepository;
 
-    public static ResponseType<Convocatorias> createCall(ConvocatoriasRepository convocatoriasRepository,
-            List<Long> equipa,
-            String titulo,
-            String description,
-            LocalDateTime date,
-            Long managerId) {
+  public static ResponseType<Convocatorias>
+  createCall(ConvocatoriasRepository convocatoriasRepository, List<Long> equipa,
+             String titulo, String description, LocalDateTime date,
+             Long managerId) {
 
-        List<User> atletas = null;
+    List<User> atletas = null;
 
-        for (Long elemento : equipa) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.add(atleta);
-        }
-
-        User manager = usersRepository.findById(managerId).get();
-        // managerId no model é user???
-
-        Convocatorias call = new Convocatorias();
-        call.setTitle(titulo);
-        call.setDescription(description);
-        call.setDate(date);
-        call.setManagerID(manager);
-        call.setPlayers(atletas);
-
-        convocatoriasRepository.save(call);
-
-        var response = new ResponseType<Convocatorias>();
-        response.success(call);
-        return response;
+    for (Long elemento : equipa) {
+      User atleta = usersRepository.findById(elemento).get();
+      atletas.add(atleta);
     }
 
-    public static ResponseType<Convocatorias> editCall(ConvocatoriasRepository convocatoriasRepository,
-            Long callId,
-            String titulo,
-            String description,
-            LocalDateTime date,
-            Long managerId,
-            List<Long> equipa) {
+    User manager = usersRepository.findById(managerId).get();
+    // managerId no model é user???
 
-        List<User> atletas = null;
+    Convocatorias call = new Convocatorias();
+    call.setTitle(titulo);
+    call.setDescription(description);
+    call.setDate(date);
+    call.setManagerID(manager);
+    call.setPlayers(atletas);
 
-        for (Long elemento : equipa) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.add(atleta);
-        }
+    convocatoriasRepository.save(call);
 
-        User manager = usersRepository.findById(managerId).get();
+    var response = new ResponseType<Convocatorias>();
+    response.success(call);
+    return response;
+  }
 
-        Convocatorias call = convocatoriasRepository.findById(callId);
+  public static ResponseType<Convocatorias>
+  editCall(ConvocatoriasRepository convocatoriasRepository, Long callId,
+           String titulo, String description, LocalDateTime date,
+           Long managerId, List<Long> equipa) {
 
-        call.setTitle(titulo);
-        call.setDescription(description);
-        call.setDate(date);
-        call.setManagerID(manager);
-        call.setPlayers(atletas);
+    List<User> atletas = null;
 
-        convocatoriasRepository.save(call);
-
-        var response = new ResponseType<Convocatorias>();
-        response.success(call);
-        return response;
+    for (Long elemento : equipa) {
+      User atleta = usersRepository.findById(elemento).get();
+      atletas.add(atleta);
     }
 
-    public static ResponseType<Convocatorias> removeCall(ConvocatoriasRepository convocatoriasRepository,
-            Long callId) {
+    User manager = usersRepository.findById(managerId).get();
 
-        Convocatorias call = convocatoriasRepository.findById(callId);
+    Convocatorias call = convocatoriasRepository.findById(callId);
 
-        convocatoriasRepository.delete(call);
+    call.setTitle(titulo);
+    call.setDescription(description);
+    call.setDate(date);
+    call.setManagerID(manager);
+    call.setPlayers(atletas);
 
-        var response = new ResponseType<Convocatorias>();
-        response.success(call);
-        return response;
+    convocatoriasRepository.save(call);
+
+    var response = new ResponseType<Convocatorias>();
+    response.success(call);
+    return response;
+  }
+
+  public static ResponseType<Convocatorias>
+  removeCall(ConvocatoriasRepository convocatoriasRepository, Long callId) {
+
+    Convocatorias call = convocatoriasRepository.findById(callId);
+
+    convocatoriasRepository.delete(call);
+
+    var response = new ResponseType<Convocatorias>();
+    response.success(call);
+    return response;
+  }
+
+  public static ResponseType<Convocatorias>
+  addPlayers(List<Long> atletasID, Long convocatoriaID,
+             ConvocatoriasRepository convocatoriasRepository) {
+
+    Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
+
+    List<User> atletas = call.getPlayers();
+
+    for (Long elemento : atletasID) {
+      User atleta = usersRepository.findById(elemento).get();
+      atletas.add(atleta);
     }
 
-    public static ResponseType<Convocatorias> addPlayers(List<Long> atletasID, Long convocatoriaID,
-            ConvocatoriasRepository convocatoriasRepository) {
+    call.setPlayers(atletas);
 
-        Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
+    convocatoriasRepository.save(call);
 
-        List<User> atletas = call.getPlayers();
+    var response = new ResponseType<Convocatorias>();
+    response.success(call);
+    return response;
+  }
 
-        for (Long elemento : atletasID) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.add(atleta);
-        }
+  public static ResponseType<Convocatorias>
+  removePlayers(List<Long> atletasID, Long convocatoriaID,
+                ConvocatoriasRepository convocatoriasRepository) {
 
-        call.setPlayers(atletas);
+    Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
 
-        convocatoriasRepository.save(call);
+    List<User> atletas = call.getPlayers();
 
-        var response = new ResponseType<Convocatorias>();
-        response.success(call);
-        return response;
+    for (Long elemento : atletasID) {
+      User atleta = usersRepository.findById(elemento).get();
+      atletas.remove(atleta);
     }
 
-    public static ResponseType<Convocatorias> removePlayers(List<Long> atletasID, Long convocatoriaID,
-            ConvocatoriasRepository convocatoriasRepository) {
+    call.setPlayers(atletas);
 
-        Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
+    convocatoriasRepository.save(call);
 
-        List<User> atletas = call.getPlayers();
-
-        for (Long elemento : atletasID) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.remove(atleta);
-        }
-
-        call.setPlayers(atletas);
-
-        convocatoriasRepository.save(call);
-
-        var response = new ResponseType<Convocatorias>();
-        response.success(call);
-        return response;
-    }
+    var response = new ResponseType<Convocatorias>();
+    response.success(call);
+    return response;
+  }
 }

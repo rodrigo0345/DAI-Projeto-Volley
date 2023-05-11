@@ -14,7 +14,6 @@ import dev.hilla.Endpoint;
 import dev.hilla.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 
 @Endpoint
@@ -28,11 +27,13 @@ public class UserController {
     this.service = service;
   }
 
-  public @Nonnull ResponseEntity<ResponseType<Iterable<LoginUser>>> findAll() throws Exception {
+  public @Nonnull ResponseEntity<ResponseType<Iterable<LoginUser>>> findAll()
+      throws Exception {
     Iterable<User> usersAux = users.findAll();
     List<LoginUser> loginUserList = new ArrayList<>();
     for (User user : usersAux) {
-      LoginUser aux = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(),
+      LoginUser aux = new LoginUser(
+          user.getId(), user.getFirstname(), user.getLastname(),
           user.getEmail(), user.getAge(), user.getRole().toString(), null);
       loginUserList.add(aux);
     }
@@ -43,12 +44,14 @@ public class UserController {
     return ResponseEntity.ok().body(response);
   }
 
-  public ResponseEntity<ResponseType<LoginUser>> findById(Integer id) throws Exception {
+  public ResponseEntity<ResponseType<LoginUser>> findById(Integer id)
+      throws Exception {
     if (id == null)
       return null;
     User user = users.findById(id).get();
-    LoginUser loginUser = new LoginUser(user.getId(), user.getFirstname(), user.getLastname(),
-        user.getEmail(), user.getAge(), user.getRole().toString(), null);
+    LoginUser loginUser = new LoginUser(
+        user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
+        user.getAge(), user.getRole().toString(), null);
 
     var response = new ResponseType<LoginUser>();
     response.success(loginUser);
@@ -56,14 +59,17 @@ public class UserController {
     return ResponseEntity.ok().body(response);
   }
 
-  public ResponseEntity<ResponseType<LoginUser>> deleteUser(Integer id, LoginUser user) throws Exception {
+  public ResponseEntity<ResponseType<LoginUser>> deleteUser(Integer id,
+                                                            LoginUser user)
+      throws Exception {
 
     if (!user.getRole().equals("ADMIN")) {
       return null;
     }
 
     User dbUser = users.findById(id).get();
-    LoginUser loginUser = new LoginUser(dbUser.getId(), dbUser.getFirstname(), dbUser.getLastname(),
+    LoginUser loginUser = new LoginUser(
+        dbUser.getId(), dbUser.getFirstname(), dbUser.getLastname(),
         dbUser.getEmail(), user.getAge(), dbUser.getRole().toString(), null);
     users.deleteById(id);
 
@@ -74,9 +80,11 @@ public class UserController {
   }
 
   public ResponseEntity<ResponseType<LoginUser>> editUser(LoginUser currentUser,
-      User user) throws Exception {
+                                                          User user)
+      throws Exception {
 
-    var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
+    var isValidToken = TokenService.validateToken(
+        currentUser, currentUser.getStringToken(), service);
     if (!isValidToken) {
       var response = new ResponseType<LoginUser>();
       response.error("Token inválida");
@@ -87,7 +95,8 @@ public class UserController {
       response.error("Utilizador não existe");
       return ResponseEntity.badRequest().body(response);
     }
-    if (!currentUser.getRole().toString().equals("ADMIN") && !currentUser.getId().equals(user.getId())) {
+    if (!currentUser.getRole().toString().equals("ADMIN") &&
+        !currentUser.getId().equals(user.getId())) {
       var response = new ResponseType<LoginUser>();
       response.error("Você não tem permissão para editar o utilizador");
       return ResponseEntity.badRequest().body(response);
@@ -104,9 +113,9 @@ public class UserController {
     users.save(aux);
 
     var response = new ResponseType<LoginUser>();
-    response.success(new LoginUser(user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
+    response.success(new LoginUser(
+        user.getId(), user.getFirstname(), user.getLastname(), user.getEmail(),
         user.getAge(), user.getRole().toString(), ""));
     return ResponseEntity.ok().body(response);
   }
-
 }
