@@ -91,7 +91,7 @@ public class PracticeController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (!(user.getId().equals(practice.getTeam().getManager().getId()))) {
+        if (!(user.getId().equals(practice.getTeam().getManagerID()))) {
             var response = new ResponseType<Practice>();
             response.error("Não é o autor do treino");
             return ResponseEntity.badRequest().body(response);
@@ -137,7 +137,7 @@ public class PracticeController {
         User user = userRepository.findById(loginUser.getId()).get();
 
         if (!(user.getRole().equals(Roles.MANAGER) ||
-                user.getId().equals(practice.getTeam().getManager().getId()))) {
+                user.getId().equals(practice.getTeam().getManagerID()))) {
             var response = new ResponseType<Practice>();
             response.error("Não tem permissoes");
             return ResponseEntity.badRequest().body(response);

@@ -29,16 +29,15 @@ public class TeamService {
     }
 
     public ResponseType<Team> criarEquipa(TeamRepository teamRepository,
-                                                 User user,
-                                                 List<Integer> equipa,
-                                                 Escalao escalao,
-                                                 String name) {
-
+            User user,
+            List<Integer> equipa,
+            Escalao escalao,
+            String name) {
 
         Team team = new Team();
         team.setEscalao(escalao);
         team.setName(name);
-        team.setManager(user);
+        team.setManagerID(user.id);
         team.setPlayers(equipa);
 
         try {
@@ -61,13 +60,12 @@ public class TeamService {
             String name) {
         List<User> atletas = null;
 
-
         User manager = users.findById(managerId).get();
 
         // fazer update da equipa
         Team team = teamRepository.findById(teamId).get();
         team.setName(name);
-        team.setManager(manager);
+        team.setManagerID(manager.id);
         team.setPlayers(equipa);
 
         teamRepository.save(team);
@@ -128,7 +126,7 @@ public class TeamService {
             Integer teamId,
             Integer managerId) {
         Team team = teamRepository.findById(teamId).get();
-        team.setManager(users.findById(managerId).get());
+        team.setManagerID(managerId);
 
         teamRepository.save(team);
 
@@ -180,7 +178,7 @@ public class TeamService {
         }
 
         List<User> jogadoresEmEquipas = new ArrayList<>();
-        for(Integer i : jogadoresEmEquipa){
+        for (Integer i : jogadoresEmEquipa) {
             User atleta = users.findById(i).get();
             jogadoresEmEquipas.add(atleta);
         }

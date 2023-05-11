@@ -12,24 +12,22 @@ import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.TeamService;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.example.application.service.TokenService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import dev.hilla.Endpoint;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Endpoint
 @AnonymousAllowed
@@ -68,9 +66,9 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public Team findAll() {
+    public List<Team> findAll() {
         List<Team> teams = teamRepository.findAll();
-        return teams.get(0);
+        return teams;
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
@@ -117,29 +115,20 @@ public class TeamController {
             List<Integer> equipa,
             String escalaoI,
             String name) {
-        // Integer managerId
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
 
         User user = usersRepository.findById(loginUser.getId()).get();
-        // User manager = usersRepository.findById(managerId).get();
 
         if (!(user.getRole().equals((Roles.ADMIN)))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");
-            // return ResponseEntity.badRequest().body(response);
-            return null;
+            return ResponseEntity.badRequest().body(response);
         }
+
         if (equipa == null) {
             var response = new ResponseType<Team>();
-            response.error("A equipa esta vazia");
-            // return ResponseEntity.badRequest().body(response);
-            return null;
-        }
-        if (escalao == null) {
-            var response = new ResponseType<Team>();
-            response.error("O escalão não existe");
-            // return ResponseEntity.badRequest().body(response);
-            return null;
+            response.error("A equipa está vazia");
+            return ResponseEntity.badRequest().body(response);
         }
 
         Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
@@ -166,7 +155,7 @@ public class TeamController {
         Team team = teamRepository.findById(teamId).get();
         // verificar se currentUser é admin ou treinador da equipa
         if (!currentUser.getRole().toString().equals("ADMIN")
-                && !currentUser.getId().equals(team.getManager().getId())) {
+                && !currentUser.getId().equals(team.getManagerID())) {
             var response = new ResponseType<Team>();
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
@@ -207,7 +196,7 @@ public class TeamController {
             Integer teamId) {
         User user = usersRepository.findById(loginUser.getId()).get();
 
-        if (!(user.getId().equals(teamRepository.findById(teamId).get().getManager().getId())
+        if (!(user.getId().equals(teamRepository.findById(teamId).get().getManagerID())
                 || user.getRole().equals(Roles.ADMIN))) {
             var response = new ResponseType<Team>();
             response.error = ("Não tem permissoes para remover equipas");
