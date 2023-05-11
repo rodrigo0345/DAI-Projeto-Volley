@@ -34,8 +34,8 @@ public class CallsController {
         this.teamController = teamController;
     }
 
-    public ResponseEntity<ResponseType<Convocatorias>> createCall(List<Long> atletas,
-            String titulo, String description, LocalDateTime date, Long idManager) {
+    public ResponseEntity<ResponseType<Convocatorias>> createCall(List<Integer> atletas,
+            String titulo, String description, LocalDateTime date, Integer idManager) {
 
         // verificar quem ta a fazer ?? permissoes ns
 
@@ -65,11 +65,11 @@ public class CallsController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Convocatorias>> editCall(List<Long> atletas,
+    public ResponseEntity<ResponseType<Convocatorias>> editCall(List<Integer> atletas,
             String titulo,
             String description,
             LocalDateTime date,
-            Long idManager,
+            Integer idManager,
             Long callId) {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(callId);
@@ -140,7 +140,7 @@ public class CallsController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Convocatorias>> addPlayer(List<Long> atletas, Long convocatoriaID,
+    public ResponseEntity<ResponseType<Convocatorias>> addPlayer(List<Integer> atletas, Long convocatoriaID,
             LoginUser loginUser) {
 
         Convocatorias convocatoria = convocatoriasRepository.findById(convocatoriaID);
@@ -172,7 +172,7 @@ public class CallsController {
     }
 
     public ResponseEntity<ResponseType<Convocatorias>> removePlayer(LoginUser loginUser,
-            Long convocatoriaId, List<Long> atletasId) {
+            Long convocatoriaId, List<Integer> atletasId) {
 
         Convocatorias convocatorias = convocatoriasRepository.findById(convocatoriaId);
         User user = userRepository.findById(loginUser.getId()).get();
@@ -184,7 +184,7 @@ public class CallsController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        for (Long elemento : atletasId) {
+        for (Integer elemento : atletasId) {
             User jogador = userRepository.findById(elemento).get();
             aRemover.add(jogador);
         }

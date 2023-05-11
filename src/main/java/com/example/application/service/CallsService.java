@@ -5,6 +5,7 @@ import com.example.application.model.Convocatorias;
 import com.example.application.model.User.User;
 import com.example.application.repository.ConvocatoriasRepository;
 import com.example.application.repository.UserRepository;
+import io.swagger.models.auth.In;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,15 +14,15 @@ public class CallsService {
     private static UserRepository usersRepository;
 
     public static ResponseType<Convocatorias> createCall(ConvocatoriasRepository convocatoriasRepository,
-            List<Long> equipa,
+            List<Integer> equipa,
             String titulo,
             String description,
             LocalDateTime date,
-            Long managerId) {
+            Integer managerId) {
 
         List<User> atletas = null;
 
-        for (Long elemento : equipa) {
+        for (Integer elemento : equipa) {
             User atleta = usersRepository.findById(elemento).get();
             atletas.add(atleta);
         }
@@ -48,12 +49,12 @@ public class CallsService {
             String titulo,
             String description,
             LocalDateTime date,
-            Long managerId,
-            List<Long> equipa) {
+            Integer managerId,
+            List<Integer> equipa) {
 
         List<User> atletas = null;
 
-        for (Long elemento : equipa) {
+        for (Integer elemento : equipa) {
             User atleta = usersRepository.findById(elemento).get();
             atletas.add(atleta);
         }
@@ -87,14 +88,14 @@ public class CallsService {
         return response;
     }
 
-    public static ResponseType<Convocatorias> addPlayers(List<Long> atletasID, Long convocatoriaID,
+    public static ResponseType<Convocatorias> addPlayers(List<Integer> atletasID, Long convocatoriaID,
             ConvocatoriasRepository convocatoriasRepository) {
 
         Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
 
         List<User> atletas = call.getPlayers();
 
-        for (Long elemento : atletasID) {
+        for (Integer elemento : atletasID) {
             User atleta = usersRepository.findById(elemento).get();
             atletas.add(atleta);
         }
@@ -108,14 +109,14 @@ public class CallsService {
         return response;
     }
 
-    public static ResponseType<Convocatorias> removePlayers(List<Long> atletasID, Long convocatoriaID,
-            ConvocatoriasRepository convocatoriasRepository) {
+    public static ResponseType<Convocatorias> removePlayers(List<Integer> atletasID, Long convocatoriaID,
+                                                            ConvocatoriasRepository convocatoriasRepository) {
 
         Convocatorias call = convocatoriasRepository.findById(convocatoriaID);
 
         List<User> atletas = call.getPlayers();
 
-        for (Long elemento : atletasID) {
+        for (Integer elemento : atletasID) {
             User atleta = usersRepository.findById(elemento).get();
             atletas.remove(atleta);
         }

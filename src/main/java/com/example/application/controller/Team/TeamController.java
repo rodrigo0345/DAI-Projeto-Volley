@@ -78,6 +78,7 @@ public class TeamController {
             List<Integer> jogadores,
             String escalaoI,
             String name) {
+
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
         User user = usersRepository.findById(loginUser.getId()).get();
         if (!(user.getRole().equals((Roles.MANAGER)))) {
@@ -246,29 +247,25 @@ public class TeamController {
         }
 
         // verificar se o jogador já pertence a outra equipa
-        Set<User> jogadoresEmEquipas = new HashSet<>();
+        Set<Integer> jogadoresEmEquipas = new HashSet<>();
         List<Team> todasEquipas = teamRepository.findAll();
 
         for (Team t : todasEquipas) {
             jogadoresEmEquipas.addAll(t.getPlayers());
         }
 
-        List<User> atletas = null;
+        User atleta = new User();
 
-        for (Integer elemento : equipa) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.add(atleta);
-        }
-
-        for (User user : atletas) {
+        for (Integer user : equipa) {
             if (jogadoresEmEquipas.contains(user)) {
+                atleta = usersRepository.findById(user).get();
                 var response = new ResponseType<Team>();
-                response.error(user.getFirstname() + " " + user.getLastname() + " já pertence a outra equipa");
+                response.error(atleta.getFirstname() + " " + atleta.getLastname() + " já pertence a outra equipa");
                 return ResponseEntity.badRequest().body(response);
             }
         }
 
-        Team addedPlayerTeam = teamService.adicionarJogador(teamRepository, teamId, atletas).success;
+        Team addedPlayerTeam = teamService.adicionarJogador(teamRepository, teamId, equipa).success;
 
         var response = new ResponseType<Team>();
         response.success(addedPlayerTeam);
@@ -352,16 +349,16 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(List<Long> atletas) {
+    public ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(List<Integer> atletas) {
 
         List<User> atleta = null;
 
-        for (Long elemento : atletas) {
+        for (Integer elemento : atletas) {
             User jogador = usersRepository.findById(elemento).get();
             atleta.add(jogador);
         }
 
-        Set<User> jogadoresEmEquipas = new HashSet<User>();
+        Set<Integer> jogadoresEmEquipas = new HashSet<Integer>();
         List<Team> todasEquipas = teamRepository.findAll();
 
         for (Team t : todasEquipas) {
