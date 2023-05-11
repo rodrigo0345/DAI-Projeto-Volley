@@ -28,7 +28,7 @@ export default function Context({ children }: React.PropsWithChildren<{}>) {
   const [user, setUser] = useState<LoginUser | undefined>();
 
   async function validateUser() {
-    
+
   }
 
   async function getUserFromStorage() {
