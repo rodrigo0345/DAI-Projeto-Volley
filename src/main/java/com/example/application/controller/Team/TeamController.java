@@ -54,7 +54,13 @@ public class TeamController {
         List<Team> teams = teamRepository.findAll();
 
         for (Team t : teams) {
-            players.removeAll(t.getPlayers());
+            Iterable<User> users = usersRepository.findAllById(t.getPlayers());
+            List<User> usersList = new ArrayList<User>();
+            for (User user : users) {
+                usersList.add(user);
+            }
+
+            players.removeAll(usersList);
         }
 
         var response = new ResponseType<List<LoginUser>>();

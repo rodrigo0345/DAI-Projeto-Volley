@@ -86,7 +86,8 @@ export default function TeamView() {
       return;
     }
 
-    toast.success(result?.body.success);
+    toast.success('Equipa criada com sucesso!');
+    setTeams((teams) => [...(teams ?? []), result?.body.success]);
     setOpen(false);
   }
 
@@ -116,12 +117,12 @@ export default function TeamView() {
     loadManagers();
 
     const loadTeams = async () => {
-      try{
+      try {
         const teams = await findAllTeams();
-      } catch(e: any){
+      } catch (e: any) {
         toast.error(e.message);
       }
-      
+
       console.log({ teams });
       //setTeams(teams);
     };
