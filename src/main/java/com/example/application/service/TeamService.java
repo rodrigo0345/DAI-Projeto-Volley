@@ -8,6 +8,7 @@ import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
+import io.swagger.models.auth.In;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -28,23 +29,16 @@ public class TeamService {
     }
 
     public ResponseType<Team> criarEquipa(TeamRepository teamRepository,
-                                                 User user,
-                                                 List<Integer> equipa,
-                                                 Escalao escalao,
-                                                 String name) {
-
-        List<User> atletas = new ArrayList<>();
-
-        for (Integer elemento : equipa) {
-            User atleta = users.findById(elemento).get();
-            atletas.add(atleta);
-        }
+            User user,
+            List<Integer> equipa,
+            Escalao escalao,
+            String name) {
 
         Team team = new Team();
         team.setEscalao(escalao);
         team.setName(name);
-        team.setManager(user);
-        team.setPlayers(atletas);
+        team.setManagerID(user.id);
+        team.setPlayers(equipa);
 
         try {
             teamRepository.save(team);
@@ -66,17 +60,13 @@ public class TeamService {
             String name) {
         List<User> atletas = null;
 
-        for (Integer elemento : equipa) {
-            User atleta = users.findById(elemento).get();
-            atletas.add(atleta);
-        }
         User manager = users.findById(managerId).get();
 
         // fazer update da equipa
         Team team = teamRepository.findById(teamId).get();
         team.setName(name);
-        team.setManager(manager);
-        team.setPlayers(atletas);
+        team.setManagerID(manager.id);
+        team.setPlayers(equipa);
 
         teamRepository.save(team);
 
@@ -100,7 +90,7 @@ public class TeamService {
 
     public ResponseType<Team> adicionarJogador(TeamRepository teamRepository,
             Integer teamId,
-            List<User> atletas) {
+            List<Integer> atletas) {
 
         Team team = teamRepository.findById(teamId).get();
         team.getPlayers().addAll(atletas);
@@ -136,7 +126,7 @@ public class TeamService {
             Integer teamId,
             Integer managerId) {
         Team team = teamRepository.findById(teamId).get();
-        team.setManager(users.findById(managerId).get());
+        team.setManagerID(managerId);
 
         teamRepository.save(team);
 
@@ -179,12 +169,20 @@ public class TeamService {
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
-        List<User> jogadoresEmEquipas = new ArrayList<>();
+        List<Integer> jogadoresEmEquipa = new ArrayList<>();
         List<Team> todasEquipas = teamRepository.findAll();
 
         for (Team t : todasEquipas) {
-            jogadoresEmEquipas.addAll(t.getPlayers());
+            User atleta = new User();
+            jogadoresEmEquipa.addAll(t.getPlayers());
         }
+
+        List<User> jogadoresEmEquipas = new ArrayList<>();
+        for (Integer i : jogadoresEmEquipa) {
+            User atleta = users.findById(i).get();
+            jogadoresEmEquipas.add(atleta);
+        }
+
         // suposto ser pra encontrar todos os atletas
         List<User> todosJogadores = new ArrayList<>();
         for (User user : users.findAll()) {

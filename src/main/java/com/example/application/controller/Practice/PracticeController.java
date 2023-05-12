@@ -2,7 +2,6 @@ package com.example.application.controller.Practice;
 
 import com.example.application.controller.Team.TeamController;
 import com.example.application.controller.Wrapper.ResponseType;
-import com.example.application.model.Convocatorias;
 import com.example.application.model.Practice;
 import com.example.application.model.Team.Team;
 import com.example.application.model.User.LoginUser;
@@ -11,7 +10,6 @@ import com.example.application.model.User.User;
 import com.example.application.repository.PracticeRepository;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
-import com.example.application.service.CallsService;
 import com.example.application.service.PracticeService;
 
 import org.springframework.http.ResponseEntity;
@@ -29,8 +27,8 @@ public class PracticeController {
     private final PracticeRepository practiceRepository;
 
     public PracticeController(PracticeRepository practiceRepository,
-                              TeamRepository teamRepository,
-                              UserRepository userRepository, TeamController teamController) {
+            TeamRepository teamRepository,
+            UserRepository userRepository, TeamController teamController) {
 
         this.practiceRepository = practiceRepository;
         this.teamRepository = teamRepository;
@@ -39,8 +37,7 @@ public class PracticeController {
     }
 
     public ResponseEntity<ResponseType<Practice>> createPractice(Long teamID,
-                                                                 String local, LocalDateTime startDate, LocalDateTime endDate) {
-
+            String local, LocalDateTime startDate, LocalDateTime endDate) {
 
         if (teamID == null || local.trim().isEmpty()) {
             var response = new ResponseType<Practice>();
@@ -50,25 +47,23 @@ public class PracticeController {
 
         Team team = teamRepository.findById(teamID);
 
-        if(team == null){
+        if (team == null) {
             var response = new ResponseType<Practice>();
             response.error("A equipa não existe ");
             return ResponseEntity.badRequest().body(response);
         }
 
-
         List<Practice> allPratice = (List<Practice>) practiceRepository.findAll();
 
-        for(Practice p : allPratice){
-            if(p.getLocal().equals(local)){
-                if(doesLocalOverlap(p,startDate,endDate)){
+        for (Practice p : allPratice) {
+            if (p.getLocal().equals(local)) {
+                if (doesLocalOverlap(p, startDate, endDate)) {
                     var response = new ResponseType<Practice>();
                     response.error("Local ocupado ");
                     return ResponseEntity.badRequest().body(response);
                 }
             }
         }
-
 
         Practice newPractice = PracticeService.createPractice(practiceRepository, team, local, startDate,
                 endDate).success;
@@ -79,12 +74,12 @@ public class PracticeController {
     }
 
     public ResponseEntity<ResponseType<Practice>> editPractice(LoginUser loginUser,
-                                                               String local, LocalDateTime startDate, LocalDateTime endDate, Long practiceID) {
+            String local, LocalDateTime startDate, LocalDateTime endDate, Long practiceID) {
 
         Practice practice = practiceRepository.findById(practiceID);
         User user = userRepository.findById(loginUser.getId()).get();
 
-        if(user.getRole().equals(Roles.MANAGER)){
+        if (user.getRole().equals(Roles.MANAGER)) {
             var response = new ResponseType<Practice>();
             response.error("Não é treinador");
             return ResponseEntity.badRequest().body(response);
@@ -96,13 +91,13 @@ public class PracticeController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (!(user.getId().equals(practice.getTeam().getManager().getId()))) {
+        if (!(user.getId().equals(practice.getTeam().getManagerID()))) {
             var response = new ResponseType<Practice>();
             response.error("Não é o autor do treino");
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (local.trim().isEmpty()  || practiceID == null) {
+        if (local.trim().isEmpty() || practiceID == null) {
             var response = new ResponseType<Practice>();
             response.error("Campos em branco");
             return ResponseEntity.badRequest().body(response);
@@ -110,9 +105,9 @@ public class PracticeController {
 
         List<Practice> allPratice = (List<Practice>) practiceRepository.findAll();
 
-        for(Practice p : allPratice){
-            if(p.getLocal().equals(local)){
-                if(doesLocalOverlap(p,startDate,endDate)){
+        for (Practice p : allPratice) {
+            if (p.getLocal().equals(local)) {
+                if (doesLocalOverlap(p, startDate, endDate)) {
                     var response = new ResponseType<Practice>();
                     response.error("Local ocupado ");
                     return ResponseEntity.badRequest().body(response);
@@ -120,9 +115,8 @@ public class PracticeController {
             }
         }
 
-
-
-        Practice editedCall = PracticeService.editPratice(practiceRepository, practice, local, startDate, endDate ).success;
+        Practice editedCall = PracticeService.editPratice(practiceRepository, practice, local, startDate,
+                endDate).success;
 
         var response = new ResponseType<Practice>();
         response.success(editedCall);
@@ -130,7 +124,7 @@ public class PracticeController {
     }
 
     public ResponseEntity<ResponseType<Practice>> removePractice(Long practiceID,
-                                                             LoginUser loginUser) {
+            LoginUser loginUser) {
 
         Practice practice = practiceRepository.findById(practiceID);
 
@@ -143,7 +137,7 @@ public class PracticeController {
         User user = userRepository.findById(loginUser.getId()).get();
 
         if (!(user.getRole().equals(Roles.MANAGER) ||
-                user.getId().equals(practice.getTeam().getManager().getId()))) {
+                user.getId().equals(practice.getTeam().getManagerID()))) {
             var response = new ResponseType<Practice>();
             response.error("Não tem permissoes");
             return ResponseEntity.badRequest().body(response);
@@ -157,8 +151,9 @@ public class PracticeController {
         return ResponseEntity.ok().body(response);
     }
 
-    public boolean doesLocalOverlap(Practice other, LocalDateTime startDate, LocalDateTime endDate ){
-        return !startDate.isAfter(other.getEndDate()) && !endDate.isBefore(other.getStartDate()) && (!startDate.isEqual(other.getStartDate()) || !endDate.isEqual(other.getEndDate()));
+    public boolean doesLocalOverlap(Practice other, LocalDateTime startDate, LocalDateTime endDate) {
+        return !startDate.isAfter(other.getEndDate()) && !endDate.isBefore(other.getStartDate())
+                && (!startDate.isEqual(other.getStartDate()) || !endDate.isEqual(other.getEndDate()));
     }
 
 }

@@ -65,11 +65,19 @@ const NewsPost = ({
 
   async function likePost() {
     if (!userLiked) {
-      await addLike({ news: post }, user);
+      const result = await addLike({ news: post }, user);
+      if (result?.body?.error) {
+        toast.error(result?.body?.error);
+        return;
+      }
       setLikes(likes + 1);
       setUserLiked(true);
     } else {
-      await removeLike({ news: post }, user);
+      const result = await removeLike({ news: post }, user);
+      if (result?.body?.error) {
+        toast.error(result?.body?.error);
+        return;
+      }
       setLikes(likes - 1);
       setUserLiked(false);
     }

@@ -49,16 +49,16 @@ public class News {
         likesID.add(userID);
         likes++;
     }
-    
+
     public void removeLike(Integer userID) {
         likesID.remove(userID);
         likes--;
     }
 
     public static boolean hasLiked(List<Integer> likesID, LoginUser user) {
-        if (likesID.contains(user.getId())) return true;
+        if (likesID.contains(user.getId()))
+            return true;
         return false;
     }
-
 
 }

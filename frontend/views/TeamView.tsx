@@ -12,6 +12,7 @@ import {
   createTeamWithManager,
   getPlayersWithoutTeam,
   isPlayerInTeam,
+  findAll as findAllTeams,
 } from 'Frontend/generated/TeamController';
 import Escalao from 'Frontend/generated/com/example/application/model/Team/Escalao';
 import { toast } from 'react-toastify';
@@ -113,6 +114,18 @@ export default function TeamView() {
       setManagers(managers);
     };
     loadManagers();
+
+    const loadTeams = async () => {
+      try{
+        const teams = await findAllTeams();
+      } catch(e: any){
+        toast.error(e.message);
+      }
+      
+      console.log({ teams });
+      //setTeams(teams);
+    };
+    loadTeams();
   }, []);
 
   return (
@@ -212,6 +225,14 @@ export default function TeamView() {
           Criar Equipa
         </button>
       </Group>
+
+      {teams?.map((team) => {
+        return (
+          <div>
+            <h1 className='bg-black'>{team.name}</h1>
+          </div>
+        );
+      })}
     </div>
   );
 }
