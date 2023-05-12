@@ -2,6 +2,7 @@ package com.example.application.controller.Forum;
 
 import com.example.application.controller.Forum.Wrappers.PostSavedType;
 import com.example.application.controller.Forum.Wrappers.PostType;
+import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.News.News;
 import com.example.application.model.User.LoginUser;
 import com.example.application.repository.NewsRepository;
@@ -13,6 +14,8 @@ import dev.hilla.Nonnull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 
 @Endpoint
 @AnonymousAllowed
@@ -115,28 +118,43 @@ public class NewsController {
         return news.getLikes();
     }
 
-    public boolean addLike(PostType post, LoginUser user) {
+    public ResponseEntity<ResponseType<Boolean>> addLike(PostType post, LoginUser user) {
+        var response = new ResponseType<Boolean>();
         PostSavedType type = post.getType();
-        if (post == null || type.equals(PostSavedType.NEWS))
-            return false;
+        if (post == null || type.equals(PostSavedType.RIDE)) {
+            response.error("Não pode gostar de um post que não seja uma notícia");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         News news = post.news;
-        if (NewsService.verifyUserHasLiked(news, user))
-            return false;
+        if (NewsService.verifyUserHasLiked(news.getId(), user, newsRepository)) {
+            response.error("O utilizador já deu gosto!");
+            return ResponseEntity.badRequest().body(response);
+        }
         news.addLike(user.getId());
         newsRepository.save(news);
-        return true;
+
+        response.success(true);
+        return ResponseEntity.ok().body(response);
     }
 
-    public boolean removeLike(PostType post, LoginUser user) {
+    public ResponseEntity<ResponseType<Boolean>> removeLike(PostType post, LoginUser user) {
+        var response = new ResponseType<Boolean>();
         PostSavedType type = post.getType();
-        if (post == null || type.equals(PostSavedType.NEWS))
-            return false;
+        if (type.equals(PostSavedType.RIDE)) {
+            response.error("Não pode remover um gosto de um post que não seja uma notícia");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         News news = post.news;
-        if (!NewsService.verifyUserHasLiked(news, user))
-            return false;
+        if (!NewsService.verifyUserHasLiked(news.getId(), user, newsRepository)) {
+            response.error("O utilizador nunca chegou a dar gosto!");
+            return ResponseEntity.badRequest().body(response);
+        }
         news.removeLike(user.getId());
         newsRepository.save(news);
-        return true;
+        response.success(true);
+        return ResponseEntity.ok().body(response);
     }
 
     public boolean checkUserHasLiked(News news, LoginUser user) {

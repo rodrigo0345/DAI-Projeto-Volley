@@ -81,7 +81,7 @@ public class CalendarService {
                     break;
                 case RIDE:
                     Ride ride = el.returnType();
-                    if (ride.getDriverID() != id || ride.getPassengers().contains(id)) {
+                    if (ride.getDriverID() != id && !ride.getPassengers().contains(id)) {
                         break;
                     }
                     event.title = ride.getOrigin() + " -> " + ride.getDestination();
