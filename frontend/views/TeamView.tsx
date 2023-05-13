@@ -39,7 +39,9 @@ export default function TeamView() {
   const [rows, setRows] = useState<readonly any[]>();
   const [usersSelected, setUsersSelected] = useState<number[]>([]);
   const [managers, setManagers] = useState<(LoginUser | undefined)[]>([]);
-  const [teams, setTeams] = useState<Team[]>();
+  const [teams, setTeams] = useState<(undefined | Team)[] | undefined>(
+    undefined
+  );
 
   const teamNameRef = React.useRef<HTMLInputElement>(null);
   const escalaoRef = React.useRef<HTMLInputElement>(null);
@@ -117,20 +119,21 @@ export default function TeamView() {
     loadManagers();
 
     const loadTeams = async () => {
+      let teams: (Team | undefined)[] | undefined = undefined;
       try {
-        const teams = await findAllTeams();
+        teams = await findAllTeams();
       } catch (e: any) {
         toast.error(e.message);
       }
 
       console.log({ teams });
-      //setTeams(teams);
+      setTeams(teams);
     };
     loadTeams();
   }, []);
 
   return (
-    <div className='min-h-screen flex items-center justify-center z-10 bg-white relative shadow-lg'>
+    <div className='min-h-screen flex pt-44 justify-center z-10 bg-white relative shadow-lg'>
       <ModalBox title='Criar equipa' openModal={opened} setOpenModal={setOpen}>
         <div className='mb-4 flex flex-col'>
           <label htmlFor='' className='text-sm text-gray-500'>
@@ -214,26 +217,89 @@ export default function TeamView() {
         </button>
       </ModalBox>
 
-      <Group position='center'>
-        <button
-          onClick={() => {
-            setOpen(true);
-          }}
-          className='
-         bg-zinc-200 p-2 rounded-md hover:bg-zinc-300
-        '
-        >
-          Criar Equipa
-        </button>
-      </Group>
+      <div className='w-full'>
+        {teams?.map((team) => {
+          return <TeamComponent team={team} />;
+        })}
+      </div>
+    </div>
+  );
+}
 
-      {teams?.map((team) => {
-        return (
-          <div>
-            <h1 className='bg-black'>{team.name}</h1>
-          </div>
-        );
-      })}
+function TeamComponent({ team }: { team: Team | undefined }) {
+  const [manager, setManager] = useState<LoginUser | undefined>(undefined);
+  const [players, setPlayers] = useState<LoginUser[] | undefined>(undefined);
+
+  useEffect(() => {
+    const loadManager = async () => {
+      if (!team?.managerID) return;
+      const result = await findById(team?.managerID);
+      if (result?.body.error) {
+        return;
+      }
+      const manager = result?.body.success as LoginUser;
+      setManager(manager);
+    };
+    loadManager();
+
+    const loadPlayers = () => {
+      team?.players?.map(async (player) => {
+        const result = await findById(player);
+        if (result?.body.error) {
+          return;
+        }
+        console.log(result?.body.success);
+        const p = result?.body.success as LoginUser;
+        setPlayers((pList) => [...(pList ?? []), p]);
+      });
+    };
+
+    loadPlayers();
+
+    return () => {
+      setPlayers(undefined);
+      setManager(undefined);
+    };
+  }, []);
+
+  return (
+    <div>
+      <div className='w-full relative'>
+        <div className='bg-gray-200 w-full px-10'>
+          <h1 className='py-2 m-0'>{team?.name}</h1>
+          <p className='m-0 pb-2'>
+            Treinador:{' '}
+            {manager && team?.managerID ? (
+              <a href={'/profiles/' + team?.managerID}>
+                {manager.firstname + ' ' + manager.lastname}
+              </a>
+            ) : (
+              <span className='text-red-600'>Sem treinador!</span>
+            )}
+          </p>
+        </div>
+        <div className='p-4 relative'>
+          {
+            <DataGrid
+              editMode='row'
+              rows={
+                players?.map((user: LoginUser) => {
+                  return {
+                    id: user.id,
+                    lastName: user.lastname,
+                    firstName: user.firstname,
+                    age: user.age,
+                  };
+                }) ?? []
+              }
+              onRowSelectionModelChange={(e: any) => {
+                window.location.href = '/profiles/' + e[0];
+              }}
+              columns={columns}
+            />
+          }
+        </div>
+      </div>
     </div>
   );
 }
