@@ -21,11 +21,11 @@ import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 import Team from 'Frontend/generated/com/example/application/model/Team/Team';
 
 const columns: GridColDef[] = [
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
+  { field: 'firstName', headerName: 'Primeiro nome', width: 130 },
+  { field: 'lastName', headerName: 'Último nome', width: 130 },
   {
     field: 'age',
-    headerName: 'Age',
+    headerName: 'Idade',
     type: 'number',
     width: 90,
   },
@@ -217,7 +217,19 @@ export default function TeamView() {
         </button>
       </ModalBox>
 
-      <div className='w-full'>
+      <div className='w-full flex flex-col gap-4'>
+        <Group position='right'>
+          <button
+            onClick={() => {
+              setOpen(true);
+            }}
+            className='mr-10
+         bg-zinc-200 p-2 rounded-md hover:bg-zinc-300
+        '
+          >
+            Criar Equipa
+          </button>
+        </Group>
         {teams?.map((team) => {
           return <TeamComponent team={team} />;
         })}
