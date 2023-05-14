@@ -73,8 +73,7 @@ public class TeamController {
     }
 
     public List<Team> findAll() {
-        List<Team> teams = teamRepository.findAll();
-        return teams;
+        return teamRepository.findAll();
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
