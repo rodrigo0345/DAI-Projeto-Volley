@@ -78,13 +78,13 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
-            List<Integer> jogadores,
-            String escalaoI,
-            String name) {
+                                                                    List<Integer> jogadores,
+                                                                    String escalaoI,
+                                                                    String name) {
 
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
-        User user = usersRepository.findById(loginUser.getId()).get();
-        if (!(user.getRole().equals((Roles.MANAGER)))) {
+
+        if (!(loginUser.getRole().equals("MANAGER"))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");
             return ResponseEntity.badRequest().body(response);
@@ -110,7 +110,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team createdTeam = teamService.criarEquipa(teamRepository, user, jogadores, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, loginUser.getId(), jogadores, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -118,18 +118,18 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
-            List<Integer> equipa,
-            String escalaoI,
-            String name) {
+                                                                  List<Integer> equipa,
+                                                                  String escalaoI,
+                                                                  String name,
+                                                                  Integer managerId) {
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
 
-        User user = usersRepository.findById(loginUser.getId()).get();
-
-        if (!(user.getRole().equals((Roles.ADMIN)))) {
+        if(!(loginUser.getRole().equals("ADMIN"))){
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");
             return ResponseEntity.badRequest().body(response);
         }
+
 
         if (equipa == null) {
             var response = new ResponseType<Team>();
@@ -137,7 +137,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, managerId, equipa, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
