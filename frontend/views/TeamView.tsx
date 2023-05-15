@@ -26,6 +26,8 @@ import {
   AiOutlineUserSwitch,
 } from 'react-icons/ai';
 import AlertDialog from 'Frontend/components/alertDialog/AlertDialog';
+import { motion } from 'framer-motion';
+import NoTeam from 'Frontend/assets/svgs/no_team.svg';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'Primeiro nome', width: 130 },
@@ -57,8 +59,13 @@ export default function TeamView() {
   async function createTeam() {
     const escalao = escalaoRef.current?.value;
     const teamName = teamNameRef.current?.value;
-    const manager = managerRef.current?.value;
-    const playersSelected = usersSelected;
+    let manager = managerRef.current?.value;
+
+    // retrieve the manager id
+    manager = manager?.split('id:')?.[1];
+
+    // convert to number
+    const managerID = parseInt(manager ?? '');
 
     if (teamName === undefined || teamName.trim() === '') {
       teamNameRef.current?.focus();
@@ -80,7 +87,8 @@ export default function TeamView() {
         user,
         usersSelected,
         escalao,
-        teamName
+        teamName,
+        managerID
       );
     } catch (e: any) {
       toast.error(e.message);
@@ -175,7 +183,12 @@ export default function TeamView() {
             placeholder='Treinador'
             radius='lg'
             data={managers.map(
-              (manager) => manager?.firstname + ' ' + manager?.lastname
+              (manager) =>
+                manager?.firstname +
+                ' ' +
+                manager?.lastname +
+                ' id:' +
+                manager?.id
             )}
             className='rounded-md'
           />
@@ -236,9 +249,16 @@ export default function TeamView() {
             Criar Equipa
           </button>
         </Group>
-        {teams?.map((team) => {
-          return <TeamComponent team={team} currUser={user} />;
-        })}
+        {teams ? (
+          teams?.map((team) => {
+            return <TeamComponent team={team} currUser={user} />;
+          })
+        ) : (
+          <div className='flex justify-center items-center'>
+            <h1>Sem equipas</h1>
+            <img src={NoTeam} alt='Sem equipas criadas de momento' />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -253,6 +273,7 @@ function TeamComponent({
 }) {
   const [manager, setManager] = useState<LoginUser | undefined>(undefined);
   const [players, setPlayers] = useState<LoginUser[] | undefined>(undefined);
+  const [enabledEditMode, setEnabledEditMode] = useState(false);
 
   async function deleteTeam() {
     const result = await removeTeam(currUser, team?.id);
@@ -306,6 +327,9 @@ function TeamComponent({
         >
           <div className=''>
             <h1 className='py-2 m-0'>{team?.name}</h1>
+            <p className='m-0'>
+              Escalão: <span className='font-bold'>{team?.escalao}</span>
+            </p>
             <p className='m-0 pb-2'>
               Treinador:{' '}
               {manager && team?.managerID ? (
@@ -317,30 +341,54 @@ function TeamComponent({
               )}
             </p>
           </div>
-          <div className='flex gap-4'>
+          <motion.div layout className='flex gap-4 items-center'>
             <AiOutlineUserSwitch
+              title='Trocar Treinador'
               size={30}
               className='hover:text-yellow-400 cursor-pointer'
             ></AiOutlineUserSwitch>
-            <AiOutlineEdit
-              size={30}
-              className='hover:text-yellow-400 cursor-pointer'
-            ></AiOutlineEdit>
+            {!enabledEditMode ? (
+              <AiOutlineEdit
+                title='Editar Equipa'
+                onClick={() => {
+                  setEnabledEditMode(!enabledEditMode);
+                }}
+                size={30}
+                className={
+                  'hover:text-yellow-400 cursor-pointer' +
+                  (enabledEditMode ? ' bg-white rounded-md' : '')
+                }
+              ></AiOutlineEdit>
+            ) : (
+              <motion.button
+                title='Guardar Alterações'
+                layout
+                className='bg-green-500 py-1 px-2 rounded-md text-white hover:bg-green-600'
+                onClick={() => {
+                  setEnabledEditMode(!enabledEditMode);
+                }}
+              >
+                Save
+              </motion.button>
+            )}
             <AlertDialog
               customMessage='Tem a certeza de que deseja eliminar esta equipa?'
               customFunction={deleteTeam}
             >
               <AiOutlineDelete
+                title='Eliminar Equipa'
                 size={30}
                 className='hover:text-yellow-400 cursor-pointer'
               ></AiOutlineDelete>
             </AlertDialog>
-          </div>
+          </motion.div>
         </div>
 
         <div className='p-4 relative'>
           {
             <DataGrid
+              checkboxSelection={enabledEditMode}
+              rowSelection={enabledEditMode}
               editMode='row'
               rows={
                 players?.map((user: LoginUser) => {
@@ -352,9 +400,16 @@ function TeamComponent({
                   };
                 }) ?? []
               }
-              onRowSelectionModelChange={(e: any) => {
-                window.location.href = '/profiles/' + e[0];
+              onRowClick={(e: any) => {
+                if (!enabledEditMode)
+                  window.location.href = '/profiles/' + e.id;
               }}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 5 },
+                },
+              }}
+              onRowSelectionModelChange={(e: any) => {}}
               columns={columns}
             />
           }

@@ -1,5 +1,5 @@
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { editPost, getPost } from 'Frontend/generated/PostController';
+import { addClick, editPost, getPost } from 'Frontend/generated/PostController';
 import { findById } from 'Frontend/generated/UserController';
 import PostType from 'Frontend/generated/com/example/application/controller/Forum/Wrappers/PostType';
 import News from 'Frontend/generated/com/example/application/model/News/News';
@@ -143,7 +143,9 @@ export default function PostView() {
 
         const author = await findById(post?.ride?.driverID ?? 0);
         setAuthor(author?.body.success);
-      } // [2]
+      }
+
+      addClick(post); // [2]
     })();
   }, []);
   //
