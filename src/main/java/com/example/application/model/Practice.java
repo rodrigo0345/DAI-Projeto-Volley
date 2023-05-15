@@ -33,6 +33,6 @@ public class Practice {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    private Integer teamId;
+    private String team;
 
 }
