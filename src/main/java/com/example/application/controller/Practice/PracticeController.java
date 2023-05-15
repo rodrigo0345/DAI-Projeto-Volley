@@ -20,6 +20,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +50,18 @@ public class PracticeController {
 
         // TODO parse the startDate (LocalDateTime) and endDate
 
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+        try {
+            startDateTime = LocalDateTime.parse(startDate, formatter);
+            endDateTime = LocalDateTime.parse(endDate, formatter);
+        } catch (DateTimeParseException e) {
+            var response = new ResponseType<Practice>();
+            response.error("Invalid date format");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         if (teamID == null || local.trim().isEmpty()) {
             var response = new ResponseType<Practice>();
             response.error("Campos em branco ");
@@ -61,11 +75,11 @@ public class PracticeController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        List<Practice> allPratice = (List<Practice>) practiceRepository.findAll();
+        List<Practice> allPratice = practiceRepository.findAll();
 
         for (Practice p : allPratice) {
             if (p.getLocal().equals(local)) {
-                if (doesLocalOverlap(p, startDate, endDate)) {
+                if (doesLocalOverlap(p, startDateTime, endDateTime)) {
                     var response = new ResponseType<Practice>();
                     response.error("Local ocupado ");
                     return ResponseEntity.badRequest().body(response);
@@ -74,8 +88,8 @@ public class PracticeController {
         }
         String team = teamRepository.findById(teamID).get().getName();
 
-        Practice newPractice = PracticeService.createPractice(practiceRepository, team, local, startDate,
-                endDate).success;
+        Practice newPractice = PracticeService.createPractice(practiceRepository, team, local, startDateTime,
+                endDateTime).success;
 
         var response = new ResponseType<Practice>();
         response.success(newPractice);
