@@ -254,9 +254,16 @@ export default function TeamView() {
             return <TeamComponent team={team} currUser={user} />;
           })
         ) : (
-          <div className='flex justify-center items-center'>
+          <div className='flex flex-col justify-center items-center'>
             <h1>Sem equipas</h1>
-            <img src={NoTeam} alt='Sem equipas criadas de momento' />
+            <motion.img
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+              src={NoTeam}
+              className='aspect-auto w-1/4'
+              alt='Sem equipas criadas de momento'
+            />
           </div>
         )}
       </div>
