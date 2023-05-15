@@ -3,6 +3,7 @@ package com.example.application.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.example.application.controller.Forum.Wrappers.PostSavedType;
 import com.example.application.controller.Forum.Wrappers.PostType;
@@ -33,6 +34,7 @@ public class CalendarService {
 
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
+
         posts.forEach(el -> {
             var event = new Event();
             PostSavedType type = el.getType();
@@ -62,6 +64,31 @@ public class CalendarService {
                     break;
             }
             events.add(event);
+        });
+
+        return events;
+    }
+
+    public static List<Event> getAllTrainingEvents(RideRepository rideRepo, NewsRepository newsRepo,
+                                            GameRepository gameRepo, PracticeRepository practiceRepo,
+                                            AppointmentRepository appointmentRepo) {
+
+        List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
+        List<Event> events = new ArrayList<>();
+
+        posts.forEach(el -> {
+            var event = new Event();
+            PostSavedType type = el.getType();
+
+            if (Objects.requireNonNull(type) == PostSavedType.PRACTICE) {
+                Practice practice = el.returnType();
+                // TODO CHECK IF USER IS IN THE PRACTICE
+                event.title = "Treino " + practice.getTeam();
+                event.url = "post/practice/" + practice.getId();
+                event.date = practice.getStartDate();
+                events.add(event);
+            }
+
         });
 
         return events;

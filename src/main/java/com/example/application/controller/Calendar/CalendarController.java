@@ -1,8 +1,10 @@
 package com.example.application.controller.Calendar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.application.config.RequiredArgsConstructor;
+import com.example.application.model.Practice;
 import com.example.application.repository.AppointmentRepository;
 import com.example.application.repository.GameRepository;
 import com.example.application.repository.NewsRepository;
@@ -50,8 +52,9 @@ public class CalendarController {
         return events;
     }
 
-    public List<Event> getAllTrainingEvents() {
-        // TODO
-        return null;
+    public List<Event> getAllTrainingEvents(Practice practice) {
+        List<Event> events = CalendarService.getAllTrainingEvents(ridesRepository, newsRepository, gameRepository,
+                practiceRepository, appointmentRepository);
+        return events;
     }
 }
