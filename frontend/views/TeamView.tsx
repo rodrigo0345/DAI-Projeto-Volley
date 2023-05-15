@@ -13,12 +13,19 @@ import {
   getPlayersWithoutTeam,
   isPlayerInTeam,
   findAll as findAllTeams,
+  removeTeam,
 } from 'Frontend/generated/TeamController';
 import Escalao from 'Frontend/generated/com/example/application/model/Team/Escalao';
 import { toast } from 'react-toastify';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 import Team from 'Frontend/generated/com/example/application/model/Team/Team';
+import {
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineUserSwitch,
+} from 'react-icons/ai';
+import AlertDialog from 'Frontend/components/alertDialog/AlertDialog';
 
 const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'Primeiro nome', width: 130 },
@@ -68,7 +75,6 @@ export default function TeamView() {
     // todo: criar equipa
     let result: ResponseEntity | undefined = undefined;
 
-    console.log(usersSelected, escalao, teamName);
     try {
       result = await createTeamWithAdmin(
         user,
@@ -231,16 +237,33 @@ export default function TeamView() {
           </button>
         </Group>
         {teams?.map((team) => {
-          return <TeamComponent team={team} />;
+          return <TeamComponent team={team} currUser={user} />;
         })}
       </div>
     </div>
   );
 }
 
-function TeamComponent({ team }: { team: Team | undefined }) {
+function TeamComponent({
+  team,
+  currUser,
+}: {
+  team: Team | undefined;
+  currUser: LoginUser | undefined;
+}) {
   const [manager, setManager] = useState<LoginUser | undefined>(undefined);
   const [players, setPlayers] = useState<LoginUser[] | undefined>(undefined);
+
+  async function deleteTeam() {
+    const result = await removeTeam(currUser, team?.id);
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+    }
+
+    toast.success('Equipa foi removida com sucesso!');
+    window.location.reload();
+  }
 
   useEffect(() => {
     const loadManager = async () => {
@@ -275,21 +298,46 @@ function TeamComponent({ team }: { team: Team | undefined }) {
   }, []);
 
   return (
-    <div>
+    <div className='pb-20'>
       <div className='w-full relative'>
-        <div className='bg-gray-200 w-full px-10'>
-          <h1 className='py-2 m-0'>{team?.name}</h1>
-          <p className='m-0 pb-2'>
-            Treinador:{' '}
-            {manager && team?.managerID ? (
-              <a href={'/profiles/' + team?.managerID}>
-                {manager.firstname + ' ' + manager.lastname}
-              </a>
-            ) : (
-              <span className='text-red-600'>Sem treinador!</span>
-            )}
-          </p>
+        <div
+          className='bg-gray-200 w-full px-10 flex items-center justify-between
+        '
+        >
+          <div className=''>
+            <h1 className='py-2 m-0'>{team?.name}</h1>
+            <p className='m-0 pb-2'>
+              Treinador:{' '}
+              {manager && team?.managerID ? (
+                <a href={'/profiles/' + team?.managerID}>
+                  {manager.firstname + ' ' + manager.lastname}
+                </a>
+              ) : (
+                <span className='text-red-600'>Sem treinador!</span>
+              )}
+            </p>
+          </div>
+          <div className='flex gap-4'>
+            <AiOutlineUserSwitch
+              size={30}
+              className='hover:text-yellow-400 cursor-pointer'
+            ></AiOutlineUserSwitch>
+            <AiOutlineEdit
+              size={30}
+              className='hover:text-yellow-400 cursor-pointer'
+            ></AiOutlineEdit>
+            <AlertDialog
+              customMessage='Tem a certeza de que deseja eliminar esta equipa?'
+              customFunction={deleteTeam}
+            >
+              <AiOutlineDelete
+                size={30}
+                className='hover:text-yellow-400 cursor-pointer'
+              ></AiOutlineDelete>
+            </AlertDialog>
+          </div>
         </div>
+
         <div className='p-4 relative'>
           {
             <DataGrid
