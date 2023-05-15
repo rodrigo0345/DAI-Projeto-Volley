@@ -1,5 +1,6 @@
 package com.example.application.controller.Practice;
 
+import com.example.application.config.RequiredArgsConstructor;
 import com.example.application.controller.Team.TeamController;
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Practice;
@@ -11,8 +12,10 @@ import com.example.application.repository.PracticeRepository;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.PracticeService;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import dev.hilla.Endpoint;
+import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 
@@ -22,6 +25,9 @@ import java.util.List;
 import java.util.Set;
 
 @Endpoint
+@AnonymousAllowed
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class PracticeController {
 
     private final TeamRepository teamRepository;
@@ -37,18 +43,10 @@ public class PracticeController {
         }
     }
 
-    public PracticeController(PracticeRepository practiceRepository,
-            TeamRepository teamRepository,
-            UserRepository userRepository, TeamController teamController) {
-
-        this.practiceRepository = practiceRepository;
-        this.teamRepository = teamRepository;
-        this.userRepository = userRepository;
-        this.teamController = teamController;
-    }
-
     public ResponseEntity<ResponseType<Practice>> createPractice(Integer teamID,
-            String local, LocalDateTime startDate, LocalDateTime endDate) {
+            String local, String startDate, String endDate) {
+
+        // TODO parse the startDate (LocalDateTime) and endDate
 
         if (teamID == null || local.trim().isEmpty()) {
             var response = new ResponseType<Practice>();
@@ -56,7 +54,8 @@ public class PracticeController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (teamRepository.findById(teamID).isPresent() || teamRepository.findById(teamID).get().getManagerID() == null || teamRepository.findById(teamID).get().getManagerID() == null ) {
+        if (teamRepository.findById(teamID).isPresent() || teamRepository.findById(teamID).get().getManagerID() == null
+                || teamRepository.findById(teamID).get().getManagerID() == null) {
             var response = new ResponseType<Practice>();
             response.error("A equipa não existe/não é ilgível para treinar");
             return ResponseEntity.badRequest().body(response);
