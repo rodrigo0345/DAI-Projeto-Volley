@@ -26,6 +26,13 @@ public class PracticeController {
     private final TeamController teamController;
     private final PracticeRepository practiceRepository;
 
+    public List<Practice> findAll() {
+        try {
+            return practiceRepository.findAll();
+        } catch (Exception e) {
+            return null;
+        }
+    }
     public PracticeController(PracticeRepository practiceRepository,
             TeamRepository teamRepository,
             UserRepository userRepository, TeamController teamController) {
@@ -155,5 +162,21 @@ public class PracticeController {
         return !startDate.isAfter(other.getEndDate()) && !endDate.isBefore(other.getStartDate())
                 && (!startDate.isEqual(other.getStartDate()) || !endDate.isEqual(other.getEndDate()));
     }
+
+        /*public ResponseEntity<ResponseType<List<Practice>>> getPracticesByTeam(Long teamID) {
+        Team team = teamRepository.findById(teamID);
+
+        if (team == null) {
+            var response = new ResponseType<List<Practice>>();
+            response.error("A equipa não existe ");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        List<Practice> practices = practiceRepository.findByTeam(team);
+
+        var response = new ResponseType<List<Practice>>();
+        response.success(practices);
+        return ResponseEntity.ok().body(response);
+    }*/
 
 }
