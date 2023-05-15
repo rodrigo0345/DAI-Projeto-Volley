@@ -12,6 +12,8 @@ import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.PracticeService;
 
+import dev.hilla.Endpoint;
+
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Endpoint
 public class PracticeController {
 
     private final TeamRepository teamRepository;
@@ -33,6 +36,7 @@ public class PracticeController {
             return null;
         }
     }
+
     public PracticeController(PracticeRepository practiceRepository,
             TeamRepository teamRepository,
             UserRepository userRepository, TeamController teamController) {
@@ -163,20 +167,23 @@ public class PracticeController {
                 && (!startDate.isEqual(other.getStartDate()) || !endDate.isEqual(other.getEndDate()));
     }
 
-        /*public ResponseEntity<ResponseType<List<Practice>>> getPracticesByTeam(Long teamID) {
-        Team team = teamRepository.findById(teamID);
-
-        if (team == null) {
-            var response = new ResponseType<List<Practice>>();
-            response.error("A equipa não existe ");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        List<Practice> practices = practiceRepository.findByTeam(team);
-
-        var response = new ResponseType<List<Practice>>();
-        response.success(practices);
-        return ResponseEntity.ok().body(response);
-    }*/
+    /*
+     * public ResponseEntity<ResponseType<List<Practice>>> getPracticesByTeam(Long
+     * teamID) {
+     * Team team = teamRepository.findById(teamID);
+     * 
+     * if (team == null) {
+     * var response = new ResponseType<List<Practice>>();
+     * response.error("A equipa não existe ");
+     * return ResponseEntity.badRequest().body(response);
+     * }
+     * 
+     * List<Practice> practices = practiceRepository.findByTeam(team);
+     * 
+     * var response = new ResponseType<List<Practice>>();
+     * response.success(practices);
+     * return ResponseEntity.ok().body(response);
+     * }
+     */
 
 }

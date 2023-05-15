@@ -281,6 +281,7 @@ function TeamComponent({
   const [manager, setManager] = useState<LoginUser | undefined>(undefined);
   const [players, setPlayers] = useState<LoginUser[] | undefined>(undefined);
   const [enabledEditMode, setEnabledEditMode] = useState(false);
+  const [enableSwitchManager, setEnableSwitchManager] = useState(false);
 
   async function deleteTeam() {
     const result = await removeTeam(currUser, team?.id);
@@ -349,11 +350,20 @@ function TeamComponent({
             </p>
           </div>
           <motion.div layout className='flex gap-4 items-center'>
-            <AiOutlineUserSwitch
-              title='Trocar Treinador'
-              size={30}
-              className='hover:text-yellow-400 cursor-pointer'
-            ></AiOutlineUserSwitch>
+            <ModalBox
+              openModal={enableSwitchManager}
+              setOpenModal={setEnableSwitchManager}
+            >
+              <AiOutlineUserSwitch
+                onClick={() => {
+                  setEnableSwitchManager(true);
+                }}
+                title='Trocar Treinador'
+                size={30}
+                className='hover:text-yellow-400 cursor-pointer'
+              ></AiOutlineUserSwitch>
+            </ModalBox>
+
             {!enabledEditMode ? (
               <AiOutlineEdit
                 title='Editar Equipa'

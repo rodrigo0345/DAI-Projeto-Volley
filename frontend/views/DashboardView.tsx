@@ -215,8 +215,16 @@ export default function DashboardView() {
                   ></HiOutlineDocumentText>
                 </Box>
               )}
-              {!(user?.role?.toUpperCase() === Roles.SECCTIONIST) && (
-                <Box className='bg-gradient-to-tr from-teal-400/100 to-teal-700/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+              {!(
+                user?.role?.toUpperCase() === Roles.SECCTIONIST ||
+                user?.role?.toUpperCase() === Roles.ADMIN
+              ) && (
+                <Box
+                  className='bg-gradient-to-tr from-teal-400/100 to-teal-700/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/training';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Treinos
                   </h2>

@@ -49,4 +49,9 @@ public class CalendarController {
                 appointmentRepository);
         return events;
     }
+
+    public List<Event> getAllTrainingEvents() {
+        // TODO
+        return null;
+    }
 }
