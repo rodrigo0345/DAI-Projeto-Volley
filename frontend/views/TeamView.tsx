@@ -249,7 +249,7 @@ export default function TeamView() {
             Criar Equipa
           </button>
         </Group>
-        {teams ? (
+        {teams && teams?.length !== 0 ? (
           teams?.map((team) => {
             return <TeamComponent team={team} currUser={user} />;
           })
