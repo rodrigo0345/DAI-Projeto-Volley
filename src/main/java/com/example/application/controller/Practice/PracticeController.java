@@ -48,8 +48,8 @@ public class PracticeController {
     public ResponseEntity<ResponseType<Practice>> createPractice(Integer teamID,
             String local, String startDate, String endDate) {
 
-        // TODO parse the startDate (LocalDateTime) and endDate
-
+        String day = startDate.split("T")[0];
+        endDate = day + "T" + endDate;
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime startDateTime;
         LocalDateTime endDateTime;
