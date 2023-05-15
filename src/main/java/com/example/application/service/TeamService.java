@@ -29,7 +29,7 @@ public class TeamService {
     }
 
     public ResponseType<Team> criarEquipa(TeamRepository teamRepository,
-            User user,
+            Integer managerId,
             List<Integer> equipa,
             Escalao escalao,
             String name) {
@@ -37,7 +37,7 @@ public class TeamService {
         Team team = new Team();
         team.setEscalao(escalao);
         team.setName(name);
-        team.setManagerID(user.id);
+        team.setManagerID(managerId);
         team.setPlayers(equipa);
 
         try {
