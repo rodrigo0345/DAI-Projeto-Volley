@@ -26,27 +26,23 @@ export default function TrainingView() {
   );
 
   useEffect(() => {
-    console.log('Constructed');
     (async () => {
       const result = await findAll();
 
       const team = result?.filter((team) => team?.managerID === user?.id);
       setTeams(team);
     })();
-
-    return () => {
-      console.log('Unmounted');
-    };
   }, [user]);
 
   async function createTraining() {
     const local = localRef.current?.value;
     const startDate = startDateRef.current?.value;
     const endDate = endDateRef.current?.value;
-    let team = teamIDRef.current?.value;
-
-    team = team?.split('id:')[1];
-    const teamID = parseInt(team ?? '');
+    const team = teamIDRef.current?.value;
+    // parse to number
+    const teamID = Number(team ?? '');
+    const startDateParsed = startDate?.toString();
+    const endDateParsed = endDate?.toString();
 
     if (!local) {
       toast.error('Local não pode estar vazio');
@@ -62,12 +58,22 @@ export default function TrainingView() {
       return;
     }
 
-    const result = await createPractice(teamID, local, startDate, endDate);
+    console.log(teamID, local, startDateParsed, endDateParsed);
+    const result = await createPractice(
+      teamID,
+      local,
+      startDateParsed,
+      endDateParsed
+    );
 
     if (result?.body.error) {
       toast.error(result?.body.error);
       return;
     }
+
+    toast.success('Treino criado com sucesso');
+    setOpen(false);
+    window.location.reload();
   }
 
   return (
@@ -109,68 +115,34 @@ export default function TrainingView() {
 
           <div className='mb-4 flex flex-col'>
             <label htmlFor='' className='text-sm text-gray-500'>
-              Escalão*
-            </label>
-            {/* <Autocomplete
-              placeholder='Escalão'
-              withAsterisk
-              radius='lg'
-              className='rounded-md'
-            /> */}
-          </div>
-
-          <div className='mb-4 flex flex-col'>
-            <label htmlFor='' className='text-sm text-gray-500'>
-              Treinador
-            </label>
-            {/* <Autocomplete
-              placeholder='Treinador'
-              radius='lg'
-              data={managers.map(
-                (manager) =>
-                  manager?.firstname +
-                  ' ' +
-                  manager?.lastname +
-                  ' id:' +
-                  manager?.id
-              )}
-              className='rounded-md'
-            /> */}
-          </div>
-
-          <div className='mb-4 flex flex-col'>
-            <label htmlFor='' className='text-sm text-gray-500'>
-              Filtrar utilizadores
+              Hora e dia de começo
             </label>
             <input
-              type='text'
-              onChange={(e) => {}}
-              className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+              type='datetime-local'
+              name='hora de começo'
+              ref={startDateRef}
             />
           </div>
 
-          {/* <DataGrid
-            rows={
-              rows?.filter((value) => {
-                if (filterByName === '') return true;
-                return (
-                  value.firstName?.includes(filterByName) ||
-                  value.lastName?.includes(filterByName) ||
-                  value.age?.toString().includes(filterByName)
-                );
-              }) ?? []
-            }
-            rowSelection={true}
-            columns={columns}
-            onRowSelectionModelChange={(e: any) => {
-              setUsersSelected(e);
-            }} 
-            checkboxSelection
-          />*/}
+          <div className='mb-4 flex flex-col'>
+            <label htmlFor='' className='text-sm text-gray-500'>
+              Hora de fim
+            </label>
+            <input type='time' name='hora de fim' ref={endDateRef} />
+          </div>
+
+          <div className='mb-4 flex flex-col'>
+            <label htmlFor='' className='text-sm text-gray-500'>
+              Local
+            </label>
+            <input type='text' name='local' ref={localRef} />
+          </div>
 
           <button
             className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
-            onClick={() => {}}
+            onClick={() => {
+              createTraining();
+            }}
           >
             Criar
           </button>
