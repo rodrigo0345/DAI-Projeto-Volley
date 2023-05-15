@@ -73,7 +73,11 @@ public class TeamController {
     }
 
     public List<Team> findAll() {
-        return teamRepository.findAll();
+        try {
+            return teamRepository.findAll();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
@@ -200,9 +204,8 @@ public class TeamController {
     public ResponseEntity<ResponseType<Team>> removeTeam(LoginUser loginUser,
             Integer teamId) {
         User user = usersRepository.findById(loginUser.getId()).get();
-
         if (!(user.getId().equals(teamRepository.findById(teamId).get().getManagerID())
-                || user.getRole().equals(Roles.ADMIN))) {
+                || user.getRole().equals(Roles.ADMIN)) || teamRepository.findById(teamId).get() == null) {
             var response = new ResponseType<Team>();
             response.error = ("Não tem permissoes para remover equipas");
             return ResponseEntity.ok().body(response);
