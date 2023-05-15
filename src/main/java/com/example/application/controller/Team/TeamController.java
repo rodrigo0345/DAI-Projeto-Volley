@@ -13,10 +13,7 @@ import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.TeamService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.example.application.service.TokenService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -204,10 +201,23 @@ public class TeamController {
     public ResponseEntity<ResponseType<Team>> removeTeam(LoginUser loginUser,
             Integer teamId) {
         User user = usersRepository.findById(loginUser.getId()).get();
-        if (!(user.getId().equals(teamRepository.findById(teamId).get().getManagerID())
-                || user.getRole().equals(Roles.ADMIN)) || teamRepository.findById(teamId).get() == null) {
+
+        Team team = teamRepository.findById(teamId).get();
+        boolean teamExists = teamRepository.existsById(teamId);
+
+        if (!teamExists) {
             var response = new ResponseType<Team>();
-            response.error = ("Não tem permissoes para remover equipas");
+            response.error = "Equipa não encontrada";
+            return ResponseEntity.ok().body(response);
+        }
+
+        boolean isManager = user.getId().equals(team.getManagerID());
+        boolean isAdmin = user.getRole().equals(Roles.ADMIN);
+        boolean isManagerIdNull = team.getManagerID() == null;
+
+        if (!isManager && !isAdmin && !isManagerIdNull) {
+            var response = new ResponseType<Team>();
+            response.error = "Não tem permissões para remover equipas";
             return ResponseEntity.ok().body(response);
         }
 
