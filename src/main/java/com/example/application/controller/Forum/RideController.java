@@ -109,7 +109,7 @@ public class RideController {
 
     public ResponseEntity<Boolean> addPassenger(PostType post, LoginUser user) {
         PostSavedType type = post.getType();
-        if (post == null || type.equals(PostSavedType.NEWS))
+         if (post == null || type.equals(PostSavedType.NEWS))
             return ResponseEntity.badRequest().body(false);
         Ride ride = post.ride;
         if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)

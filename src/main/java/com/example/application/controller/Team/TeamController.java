@@ -198,15 +198,14 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Team>> removeTeam(LoginUser loginUser,
-            Integer teamId) {
+    public ResponseEntity<ResponseType<Boolean>> removeTeam(LoginUser loginUser,
+            Long teamId) {
         User user = usersRepository.findById(loginUser.getId()).get();
 
-        Team team = teamRepository.findById(teamId).get();
-        boolean teamExists = teamRepository.existsById(teamId);
+        Team team = teamRepository.findById(teamId);
 
-        if (!teamExists) {
-            var response = new ResponseType<Team>();
+        if (team == null) {
+            var response = new ResponseType<Boolean>();
             response.error = "Equipa não encontrada";
             return ResponseEntity.ok().body(response);
         }
@@ -216,15 +215,15 @@ public class TeamController {
         boolean isManagerIdNull = team.getManagerID() == null;
 
         if (!isManager && !isAdmin && !isManagerIdNull) {
-            var response = new ResponseType<Team>();
+            var response = new ResponseType<Boolean>();
             response.error = "Não tem permissões para remover equipas";
             return ResponseEntity.ok().body(response);
         }
 
         Team deletedTeam = teamService.removerEquipa(teamRepository, teamId).success;
 
-        var response = new ResponseType<Team>();
-        response.success(deletedTeam);
+        var response = new ResponseType<Boolean>();
+        response.success(true);
         return ResponseEntity.ok().body(response);
     }
 

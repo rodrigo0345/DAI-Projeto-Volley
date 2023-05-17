@@ -102,9 +102,11 @@ export default function TeamView() {
       return;
     }
 
+    
     toast.success('Equipa criada com sucesso!');
     setTeams((teams) => [...(teams ?? []), result?.body.success]);
     setOpen(false);
+    window.location.reload();
   }
 
   useEffect(() => {

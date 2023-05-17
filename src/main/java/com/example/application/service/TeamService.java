@@ -76,9 +76,9 @@ public class TeamService {
     }
 
     public ResponseType<Team> removerEquipa(TeamRepository teamRepository,
-            Integer teamId) {
+            Long teamId) {
 
-        Team team = teamRepository.findById(teamId).get();
+        Team team = teamRepository.findById(teamId);
 
         teamRepository.delete(team);
 
