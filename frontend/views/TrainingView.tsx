@@ -1,5 +1,6 @@
 import { Accordion, Autocomplete } from '@mantine/core';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
+import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { createPractice } from 'Frontend/generated/PracticeController';
 import { findAll } from 'Frontend/generated/TeamController';
@@ -9,7 +10,7 @@ import React, { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 export default function TrainingView() {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
 
   // String local
   const localRef = React.useRef<HTMLInputElement>(null);
@@ -148,18 +149,24 @@ export default function TrainingView() {
           </button>
         </ModalBox>
       </div>
-      <motion.main layout className='w-[30em]'>
-        <Accordion variant='separated' radius='md' defaultValue='customization'>
-          {teams?.map((team) => (
-            <Accordion.Item value='customization'>
-              <Accordion.Control>{team?.name}</Accordion.Control>
-              <Accordion.Panel>
-                <div></div>
-              </Accordion.Panel>
-            </Accordion.Item>
-          ))}
-        </Accordion>
-      </motion.main>
+      <div className='flex'>
+        {teams?.map((team) => (<motion.main layout className='w-[30em]'>
+          <Accordion
+            variant='separated'
+            radius='md'
+            defaultValue='customization'
+          >
+            {teams?.map((team) => (
+              <Accordion.Item value='customization'>
+                <Accordion.Control>{team?.name}</Accordion.Control>
+                <Accordion.Panel>
+                  <div></div>
+                </Accordion.Panel>
+              </Accordion.Item>
+            ))}
+          </Accordion>
+        </motion.main>))}
+      </div>
     </div>
   );
 }

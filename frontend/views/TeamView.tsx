@@ -102,7 +102,6 @@ export default function TeamView() {
       return;
     }
 
-    
     toast.success('Equipa criada com sucesso!');
     setTeams((teams) => [...(teams ?? []), result?.body.success]);
     setOpen(false);
@@ -253,7 +252,7 @@ export default function TeamView() {
         </Group>
         {teams && teams?.length !== 0 ? (
           teams?.map((team) => {
-            return <TeamComponent team={team} currUser={user} />;
+            return <TeamComponent user={user} team={team} currUser={user} />;
           })
         ) : (
           <div className='flex flex-col justify-center items-center'>
@@ -276,9 +275,11 @@ export default function TeamView() {
 function TeamComponent({
   team,
   currUser,
+  user,
 }: {
   team: Team | undefined;
   currUser: LoginUser | undefined;
+  user?: LoginUser;
 }) {
   const [manager, setManager] = useState<LoginUser | undefined>(undefined);
   const [players, setPlayers] = useState<LoginUser[] | undefined>(undefined);
@@ -366,40 +367,46 @@ function TeamComponent({
               ></AiOutlineUserSwitch>
             </ModalBox>
 
-            {!enabledEditMode ? (
-              <AiOutlineEdit
-                title='Editar Equipa'
-                onClick={() => {
-                  setEnabledEditMode(!enabledEditMode);
-                }}
-                size={30}
-                className={
-                  'hover:text-yellow-400 cursor-pointer' +
-                  (enabledEditMode ? ' bg-white rounded-md' : '')
-                }
-              ></AiOutlineEdit>
-            ) : (
-              <motion.button
-                title='Guardar Alterações'
-                layout
-                className='bg-green-500 py-1 px-2 rounded-md text-white hover:bg-green-600'
-                onClick={() => {
-                  setEnabledEditMode(!enabledEditMode);
-                }}
-              >
-                Save
-              </motion.button>
+            {(manager?.id === user?.id || user?.role === Roles.ADMIN) && (
+              <div>
+                {!enabledEditMode ? (
+                  <AiOutlineEdit
+                    title='Editar Equipa'
+                    onClick={() => {
+                      setEnabledEditMode(!enabledEditMode);
+                    }}
+                    size={30}
+                    className={
+                      'hover:text-yellow-400 cursor-pointer' +
+                      (enabledEditMode ? ' bg-white rounded-md' : '')
+                    }
+                  ></AiOutlineEdit>
+                ) : (
+                  <motion.button
+                    title='Guardar Alterações'
+                    layout
+                    className='bg-green-500 py-1 px-2 rounded-md text-white hover:bg-green-600'
+                    onClick={() => {
+                      setEnabledEditMode(!enabledEditMode);
+                    }}
+                  >
+                    Save
+                  </motion.button>
+                )}
+              </div>
             )}
-            <AlertDialog
-              customMessage='Tem a certeza de que deseja eliminar esta equipa?'
-              customFunction={deleteTeam}
-            >
-              <AiOutlineDelete
-                title='Eliminar Equipa'
-                size={30}
-                className='hover:text-yellow-400 cursor-pointer'
-              ></AiOutlineDelete>
-            </AlertDialog>
+            {user?.role === Roles.ADMIN && (
+              <AlertDialog
+                customMessage='Tem a certeza de que deseja eliminar esta equipa?'
+                customFunction={deleteTeam}
+              >
+                <AiOutlineDelete
+                  title='Eliminar Equipa'
+                  size={30}
+                  className='hover:text-yellow-400 cursor-pointer'
+                ></AiOutlineDelete>
+              </AlertDialog>
+            )}
           </motion.div>
         </div>
 
