@@ -79,7 +79,7 @@ export default function TrainingView() {
 
   return (
     <div className='min-h-screen flex flex-col pt-44 justify-start z-10 bg-white relative shadow-lg items-center w-full'>
-      <div className='flex justify-between items-center w-full'>
+      <div className='flex justify-around items-center w-full mb-10'>
         <h1 className='pl-10 m-0'>Treinos</h1>
         <button
           onClick={() => {
@@ -150,22 +150,42 @@ export default function TrainingView() {
         </ModalBox>
       </div>
       <div className='flex'>
-        {teams?.map((team) => (<motion.main layout className='w-[30em]'>
+        <motion.main layout className='w-[30em]'>
           <Accordion
             variant='separated'
             radius='md'
             defaultValue='customization'
           >
             {teams?.map((team) => (
-              <Accordion.Item value='customization'>
+              <Accordion.Item value={String(team?.id) ?? ''}>
                 <Accordion.Control>{team?.name}</Accordion.Control>
                 <Accordion.Panel>
-                  <div></div>
+                  <div className='overflow-hidden relative w-full'>
+                    <h1 className='text-xl m-4'>Próximos Treinos</h1>
+                    <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
+                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
+                        <p>Dia 4 às 16:40</p>
+                      </article>
+                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 min-w-44 w-44 h-44 p-1 rounded-md shadow-md'>
+                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
+                        <p>Dia 4 às 16:40</p>
+                      </article>
+                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
+                        <p>Dia 4 às 16:40</p>
+                      </article>
+                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
+                        <p>Dia 4 às 16:40</p>
+                      </article>
+                    </div>
+                  </div>
                 </Accordion.Panel>
               </Accordion.Item>
             ))}
           </Accordion>
-        </motion.main>))}
+        </motion.main>
       </div>
     </div>
   );
