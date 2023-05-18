@@ -81,10 +81,11 @@ public class Appointment {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Appointment newAppointment = AppointmetService.createAppointment(doutor, paciente, date, data);
+        // Appointment newAppointment = AppointmetService.createAppointment(doutor,
+        // paciente, date, data);
 
         var response = new ResponseType<Appointment>();
-        response.success(newAppointment);
+        response.success(null);
         return ResponseEntity.ok().body(response);
     }
 

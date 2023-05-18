@@ -54,7 +54,7 @@ public class TeamService {
     }
 
     public ResponseType<Team> editarEquipa(TeamRepository teamRepository,
-            Long teamId,
+            Integer teamId,
             Integer managerId,
             List<Integer> equipa,
             String name) {
@@ -63,7 +63,7 @@ public class TeamService {
         User manager = users.findById(managerId).get();
 
         // fazer update da equipa
-        Team team = teamRepository.findById(teamId);
+        Team team = teamRepository.findById(teamId.longValue()).get();
         team.setName(name);
         team.setManagerID(manager.id);
         team.setPlayers(equipa);
@@ -76,9 +76,9 @@ public class TeamService {
     }
 
     public ResponseType<Team> removerEquipa(TeamRepository teamRepository,
-            Long teamId) {
+            Integer teamId) {
 
-        Team team = teamRepository.findById(teamId);
+        Team team = teamRepository.findById(teamId.longValue()).get();
 
         teamRepository.delete(team);
 
@@ -92,7 +92,7 @@ public class TeamService {
             Integer teamId,
             List<Integer> atletas) {
 
-        Team team = teamRepository.findById(teamId).get();
+        Team team = teamRepository.findById(teamId.longValue()).get();
         team.getPlayers().addAll(atletas);
 
         teamRepository.save(team);
@@ -112,7 +112,7 @@ public class TeamService {
             jogadores.add(atleta);
         }
 
-        Team team = teamRepository.findById(teamId).get();
+        Team team = teamRepository.findById(teamId.longValue()).get();
         team.getPlayers().removeAll(jogadores);
 
         teamRepository.save(team);
@@ -125,7 +125,7 @@ public class TeamService {
     public ResponseType<Team> trocarTreinador(TeamRepository teamRepository,
             Integer teamId,
             Integer managerId) {
-        Team team = teamRepository.findById(teamId).get();
+        Team team = teamRepository.findById(teamId.longValue()).get();
         team.setManagerID(managerId);
 
         teamRepository.save(team);
