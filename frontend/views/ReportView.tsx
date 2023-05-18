@@ -43,7 +43,7 @@ export default function ReportView() {
             Guardar
           </button>
         </div>
-        <div className='flex flex-col   overflow-y-auto'>
+        <div className='flex flex-col  overflow-y-auto'>
           <h1 className='text-4xl font-bold text-gray-800'>Relatórios</h1>
         </div>
       </div>
