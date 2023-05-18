@@ -29,7 +29,6 @@ import java.util.Set;
 public class GameController {
 
     private final GameRepository gameRepository;
-    private final GameService gameService;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
     private final TeamController teamController;
