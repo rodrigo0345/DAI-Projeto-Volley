@@ -16,5 +16,6 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String roles;
-    private Integer age;
+    @Builder.Default
+    private Integer age = null;
 }
