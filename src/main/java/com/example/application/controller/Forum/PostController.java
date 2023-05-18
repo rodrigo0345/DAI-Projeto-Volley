@@ -331,5 +331,4 @@ public class PostController {
             ridesRepository.save(ride);
         }
     }
-
 }

@@ -23,11 +23,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "games")
 public class Game {
-    
+
     @Id
     @GeneratedValue
     private Integer id;
     private LocalDateTime date;
+    private String team;
     @ElementCollection
     private List<User> gameCall;
     private String opponent;
