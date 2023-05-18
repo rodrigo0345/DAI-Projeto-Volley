@@ -58,7 +58,6 @@ public class TeamService {
             Integer managerId,
             List<Integer> equipa,
             String name) {
-        List<User> atletas = null;
 
         User manager = users.findById(managerId).get();
 
