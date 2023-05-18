@@ -54,7 +54,7 @@ public class TeamService {
     }
 
     public ResponseType<Team> editarEquipa(TeamRepository teamRepository,
-            Integer teamId,
+            Long teamId,
             Integer managerId,
             List<Integer> equipa,
             String name) {
@@ -63,7 +63,7 @@ public class TeamService {
         User manager = users.findById(managerId).get();
 
         // fazer update da equipa
-        Team team = teamRepository.findById(teamId).get();
+        Team team = teamRepository.findById(teamId);
         team.setName(name);
         team.setManagerID(manager.id);
         team.setPlayers(equipa);
