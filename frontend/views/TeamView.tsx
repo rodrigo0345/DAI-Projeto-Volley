@@ -1,6 +1,6 @@
 import { useDisclosure } from '@mantine/hooks';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Modal, Group, Button, Autocomplete } from '@mantine/core';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Crud } from '@hilla/react-components/Crud';
@@ -14,6 +14,8 @@ import {
   isPlayerInTeam,
   findAll as findAllTeams,
   removeTeam,
+  addPlayer,
+  editTeam,
 } from 'Frontend/generated/TeamController';
 import Escalao from 'Frontend/generated/com/example/application/model/Team/Escalao';
 import { toast } from 'react-toastify';
@@ -239,20 +241,29 @@ export default function TeamView() {
 
       <div className='w-full flex flex-col gap-4'>
         <Group position='right'>
-          <button
-            onClick={() => {
-              setOpen(true);
-            }}
-            className='mr-10
+          {user?.role === Roles.ADMIN && (
+            <button
+              onClick={() => {
+                setOpen(true);
+              }}
+              className='mr-10
          bg-zinc-200 p-2 rounded-md hover:bg-zinc-300
         '
-          >
-            Criar Equipa
-          </button>
+            >
+              Criar Equipa
+            </button>
+          )}
         </Group>
         {teams && teams?.length !== 0 ? (
           teams?.map((team) => {
-            return <TeamComponent user={user} team={team} currUser={user} />;
+            return (
+              <TeamComponent
+                user={user}
+                team={team}
+                currUser={user}
+                playersWithoutTeam={rows}
+              />
+            );
           })
         ) : (
           <div className='flex flex-col justify-center items-center'>
@@ -276,15 +287,20 @@ function TeamComponent({
   team,
   currUser,
   user,
+  playersWithoutTeam,
 }: {
   team: Team | undefined;
   currUser: LoginUser | undefined;
   user?: LoginUser;
+  playersWithoutTeam: readonly any[] | undefined;
 }) {
   const [manager, setManager] = useState<LoginUser | undefined>(undefined);
   const [players, setPlayers] = useState<LoginUser[] | undefined>(undefined);
   const [enabledEditMode, setEnabledEditMode] = useState(false);
   const [enableSwitchManager, setEnableSwitchManager] = useState(false);
+  const [addPlayerModal, setAddPlayerModal] = useState(false);
+  const [newPlayersID, setNewPLayersID] = useState<number[] | undefined>([]);
+  const newTeamName = useRef<HTMLInputElement>(null);
 
   async function deleteTeam() {
     const result = await removeTeam(currUser, team?.id);
@@ -294,6 +310,23 @@ function TeamComponent({
     }
 
     toast.success('Equipa foi removida com sucesso!');
+    window.location.reload();
+  }
+
+  async function saveEditTeam() {
+    const teamName = newTeamName?.current?.value ?? team?.name;
+    const newTeam = [...(newPlayersID ?? [])];
+    players?.map((player) => {
+      newTeam.push(player?.id ?? 0);
+    });
+    const result = await editTeam(
+      currUser,
+      team?.id,
+      manager?.id,
+      newTeam,
+      teamName
+    );
+
     window.location.reload();
   }
 
@@ -411,34 +444,66 @@ function TeamComponent({
         </div>
 
         <div className='p-4 relative'>
-          {
-            <DataGrid
-              checkboxSelection={enabledEditMode}
-              rowSelection={enabledEditMode}
-              editMode='row'
-              rows={
-                players?.map((user: LoginUser) => {
-                  return {
-                    id: user.id,
-                    lastName: user.lastname,
-                    firstName: user.firstname,
-                    age: user.age,
-                  };
-                }) ?? []
-              }
-              onRowClick={(e: any) => {
-                if (!enabledEditMode)
-                  window.location.href = '/profiles/' + e.id;
-              }}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 5 },
-                },
-              }}
-              onRowSelectionModelChange={(e: any) => {}}
-              columns={columns}
-            />
-          }
+          <DataGrid
+            checkboxSelection={enabledEditMode}
+            rowSelection={enabledEditMode}
+            editMode='row'
+            rows={
+              players?.map((user: LoginUser) => {
+                return {
+                  id: user.id,
+                  lastName: user.lastname,
+                  firstName: user.firstname,
+                  age: user.age,
+                };
+              }) ?? []
+            }
+            onRowClick={(e: any) => {
+              if (!enabledEditMode) window.location.href = '/profiles/' + e.id;
+            }}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 },
+              },
+            }}
+            onRowSelectionModelChange={(e: any) => {}}
+            columns={columns}
+          />
+          {enabledEditMode && (
+            <div>
+              <button
+                onClick={() => {
+                  setAddPlayerModal(!addPlayerModal);
+                }}
+                className='bg-gray-100 hover:bg-gray-200 p-2 radius-md mt-2'
+              >
+                Adicionar jogador
+              </button>
+              <ModalBox
+                openModal={addPlayerModal}
+                setOpenModal={setAddPlayerModal}
+              >
+                <DataGrid
+                  rows={playersWithoutTeam ?? []}
+                  rowSelection={true}
+                  columns={columns}
+                  onRowSelectionModelChange={(e: any) => {
+                    setNewPLayersID(e.id);
+                  }}
+                  checkboxSelection
+                />
+
+                <button
+                  className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
+                  onClick={() => {
+                    saveEditTeam();
+                  }}
+                >
+                  Salvar
+                </button>
+              </ModalBox>
+            </div>
+          )}
         </div>
       </div>
     </div>
