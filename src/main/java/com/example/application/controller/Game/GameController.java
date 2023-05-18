@@ -38,15 +38,16 @@ public class GameController {
             String team, List<Integer> gameCall,
             String opponent, String local, LoginUser user) {
 
-        if (!(user.getRole().equals((Roles.ADMIN)))) {
+        if (!user.getRole().equals("ADMIN")) {
             var response = new ResponseType<Game>();
             response.error("Não tem permissões para criar jogo");
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (gameCall.isEmpty() || team.trim().isEmpty() ||
-                opponent.trim().equals(null)
-                || local.trim().equals(null)) {
+        if (gameCall.isEmpty()
+                || team.trim().isEmpty()
+                || opponent.trim().isEmpty()
+                || local.trim().isEmpty()) {
             var response = new ResponseType<Game>();
             response.error("Campos em branco");
             return ResponseEntity.badRequest().body(response);
@@ -87,14 +88,14 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (!(user.getRole().equals((Roles.ADMIN)))) {
+        if (!user.getRole().equals("ADMIN")) {
             var response = new ResponseType<Game>();
-            response.error("Não tem permissões para editar jogo");
+            response.error("Não tem permissões para criar jogo");
             return ResponseEntity.badRequest().body(response);
         }
 
         if (gameCall.isEmpty() || team.trim().isEmpty() ||
-                opponent.trim().equals(null) || local.trim().equals(null)) {
+                opponent.trim().isEmpty() || local.trim().isEmpty()) {
             var response = new ResponseType<Game>();
             response.error("Campos em branco");
             return ResponseEntity.badRequest().body(response);
