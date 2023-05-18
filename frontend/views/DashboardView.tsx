@@ -204,7 +204,12 @@ export default function DashboardView() {
               )}
               {(user?.role?.toUpperCase() === Roles.ADMIN ||
                 user?.role?.toUpperCase() === Roles.MANAGER) && (
-                <Box className='bg-gradient-to-tr from-pink-600/100 to-pink-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-tr from-pink-600/100 to-pink-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/report';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Relatórios{' '}
                   </h2>

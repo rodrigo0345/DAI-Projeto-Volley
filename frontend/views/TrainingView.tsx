@@ -2,7 +2,10 @@ import { Accordion, Autocomplete } from '@mantine/core';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { createPractice } from 'Frontend/generated/PracticeController';
+import {
+  createPractice,
+  removePractice,
+} from 'Frontend/generated/PracticeController';
 import { findAll } from 'Frontend/generated/TeamController';
 import Practice from 'Frontend/generated/com/example/application/model/Practice';
 import Team from 'Frontend/generated/com/example/application/model/Team/Team';
@@ -83,6 +86,18 @@ export default function TrainingView() {
 
     toast.success('Treino criado com sucesso');
     setOpen(false);
+    window.location.reload();
+  }
+
+  async function deleteTraining(id: number) {
+    const result = await removePractice(id, user);
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    toast.success('Treino eliminado com sucesso');
     window.location.reload();
   }
 
@@ -193,6 +208,14 @@ export default function TrainingView() {
                                 'HH:mm'
                               )}
                             </p>
+                            <button
+                              className='bg-red-300 p-1 rounded-md hover:bg-red-400 text-red-700'
+                              onClick={(e) => {
+                                deleteTraining(training?.id ?? 0);
+                              }}
+                            >
+                              Delete
+                            </button>
                           </article>
                         ))}
                     </div>
