@@ -47,7 +47,7 @@ public class AuthenticationController {
             @RequestBody LoginUser currentUser,
             @RequestBody RegisterRequest request) throws Exception {
 
-        // verificar se currentUser é admin
+        // verificar se token é valido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
         if (!isValidToken) {
             var response = new ResponseType<LoginUser>();

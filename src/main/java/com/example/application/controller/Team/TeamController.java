@@ -156,8 +156,7 @@ public class TeamController {
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
-        Team team;
-
+        Team team = null;
         try {
             team = teamRepository.findById(teamId.longValue()).get();
         } catch (Exception e) {
@@ -167,11 +166,12 @@ public class TeamController {
         }
 
         // verificar se currentUser é admin ou treinador da equipa
-        if (!currentUser.getRole().equals("ADMIN") || !currentUser.getId().equals(team.getManagerID())) {
+        if ( !currentUser.getRole().equals("ADMIN") || currentUser.getId().equals(team.getManagerID())) {
             var response = new ResponseType<Team>();
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
         }
+
         // verificar se o nome da equipa é válido (nao vazio)
         if (name.trim().isEmpty()) {
             var response = new ResponseType<Team>();
@@ -179,7 +179,8 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se o nome da equipa editada já existe (overlap)
-        if (!(teamRepository.findByName(name) == null)) {
+        Team existingTeam = teamRepository.findByName(name);
+        if(existingTeam != null && !existingTeam.getId().equals(teamId.longValue())) {
             var response = new ResponseType<Team>();
             response.error("O nome da equipa já existe");
             return ResponseEntity.badRequest().body(response);
@@ -201,7 +202,11 @@ public class TeamController {
 
         User atleta = new User();
 
-        for (Integer user : equipa) {
+        List<Integer> jogadoresNovos = new ArrayList<>();
+        jogadoresNovos.addAll(equipa);
+        jogadoresNovos.removeAll(team.getPlayers());
+
+        for (Integer user : jogadoresNovos) {
             if (jogadoresEmEquipas.contains(user)) {
                 atleta = usersRepository.findById(user).get();
                 var response = new ResponseType<Team>();
@@ -219,20 +224,28 @@ public class TeamController {
 
     public ResponseEntity<ResponseType<Boolean>> removeTeam(LoginUser loginUser,
             Integer teamId) {
-        User user = usersRepository.findById(loginUser.getId()).get();
 
-        Team team = teamRepository.findById(teamId.longValue()).get();
+        User user;
+        Team team;
+        try {
+            team = teamRepository.findById(teamId.longValue()).get();
+            user = usersRepository.findById(loginUser.getId()).get();
+        } catch (Exception e) {
+            var response = new ResponseType<Boolean>();
+            response.error("A equipa não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
 
         if (team == null) {
             var response = new ResponseType<Boolean>();
-            response.error = "Equipa não encontrada";
+            response.error("Equipa não encontrada");
             return ResponseEntity.ok().body(response);
         }
 
         if ((!user.getId().equals(team.getManagerID()) || !user.getRole().equals(Roles.ADMIN))
                 && team.getManagerID() == null) {
             var response = new ResponseType<Boolean>();
-            response.error = "Não tem permissões para remover equipas";
+            response.error("Não tem permissões para remover equipas");
             return ResponseEntity.ok().body(response);
         }
 
@@ -286,7 +299,10 @@ public class TeamController {
 
         User atleta = new User();
 
-        for (Integer user : equipa) {
+        List <Integer> jogadoresNovos = equipa;
+        jogadoresNovos.removeAll(team.getPlayers());
+
+        for (Integer user : jogadoresNovos) {
             if (jogadoresEmEquipas.contains(user)) {
                 atleta = usersRepository.findById(user).get();
                 var response = new ResponseType<Team>();
