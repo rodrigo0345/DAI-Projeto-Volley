@@ -6,10 +6,11 @@ import com.example.application.model.User.User;
 import com.example.application.repository.GameRepository;
 import com.example.application.repository.UserRepository;
 import io.swagger.models.auth.In;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Service
 public class GameService {
 
     private static UserRepository usersRepository;
