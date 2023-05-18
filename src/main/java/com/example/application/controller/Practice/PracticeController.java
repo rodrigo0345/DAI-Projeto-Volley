@@ -45,7 +45,7 @@ public class PracticeController {
         }
     }
 
-    public ResponseEntity<ResponseType<Practice>> createPractice(Integer teamID,
+    public ResponseEntity<ResponseType<Practice>> createPractice(Long teamID,
             String local, String startDate, String endDate) {
 
         String day = startDate.split("T")[0];
@@ -68,8 +68,8 @@ public class PracticeController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team team = teamRepository.findById(teamID).get();
-        if (!teamRepository.findById(teamID).isPresent()
+        Team team = teamRepository.findById(teamID);
+        if (team == null
                 || team.getManagerID() == null
                 || team.getPlayers() == null
                 || team.getPlayers().isEmpty()) {
@@ -77,7 +77,7 @@ public class PracticeController {
             response.error("A equipa não existe");
             return ResponseEntity.badRequest().body(response);
         }
-        boolean teamHasManager = teamRepository.findById(teamID).get().getManagerID() != null;
+        boolean teamHasManager = teamRepository.findById(teamID).getManagerID() != null;
         if (!teamHasManager) {
             var response = new ResponseType<Practice>();
             response.error("A equipa não tem treinador");
@@ -96,7 +96,7 @@ public class PracticeController {
                 }
             }
         }
-        String teamName = teamRepository.findById(teamID).get().getName();
+        String teamName = teamRepository.findById(teamID).getName();
 
         Practice newPractice = PracticeService.createPractice(practiceRepository, teamName, local, startDateTime,
                 endDateTime).success;

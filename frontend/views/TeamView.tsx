@@ -300,7 +300,12 @@ function TeamComponent({
   const [enableSwitchManager, setEnableSwitchManager] = useState(false);
   const [addPlayerModal, setAddPlayerModal] = useState(false);
   const [newPlayersID, setNewPLayersID] = useState<number[] | undefined>([]);
-  const newTeamName = useRef<HTMLInputElement>(null);
+  const [selectedTeamPlayersID, setSelectedTeamPlayersID] = useState<
+    number[] | undefined
+  >([]);
+  const [newTeamName, setNewTeamName] = useState<string | undefined>(
+    team?.name
+  );
 
   async function deleteTeam() {
     const result = await removeTeam(currUser, team?.id);
@@ -314,18 +319,35 @@ function TeamComponent({
   }
 
   async function saveEditTeam() {
-    const teamName = newTeamName?.current?.value ?? team?.name;
     const newTeam = [...(newPlayersID ?? [])];
     players?.map((player) => {
+      if (selectedTeamPlayersID?.includes(player?.id ?? 0)) return;
       newTeam.push(player?.id ?? 0);
     });
+    console.log(
+      'user: ',
+      currUser,
+      'team id: ',
+      team?.id,
+      'manager id',
+      manager?.id,
+      'team: ',
+      newTeam,
+      'team name: ',
+      newTeamName
+    );
     const result = await editTeam(
       currUser,
       team?.id,
       manager?.id,
       newTeam,
-      teamName
+      newTeamName
     );
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
 
     window.location.reload();
   }
@@ -370,7 +392,15 @@ function TeamComponent({
         '
         >
           <div className=''>
-            <h1 className='py-2 m-0'>{team?.name}</h1>
+            <input
+              type='text '
+              className='py-1 px-2 m-0 bg-transparent font-3xl border rounded-md border-1 border-gray-100 disabled:border-0 text-3xl'
+              value={newTeamName ?? ''}
+              disabled={!enabledEditMode}
+              onChange={(e) => {
+                setNewTeamName(e.target.value);
+              }}
+            ></input>
             <p className='m-0'>
               Escalão: <span className='font-bold'>{team?.escalao}</span>
             </p>
@@ -421,6 +451,7 @@ function TeamComponent({
                     className='bg-green-500 py-1 px-2 rounded-md text-white hover:bg-green-600'
                     onClick={() => {
                       setEnabledEditMode(!enabledEditMode);
+                      saveEditTeam();
                     }}
                   >
                     Save
@@ -466,19 +497,33 @@ function TeamComponent({
                 paginationModel: { page: 0, pageSize: 5 },
               },
             }}
-            onRowSelectionModelChange={(e: any) => {}}
+            onRowSelectionModelChange={(e: any) => {
+              setSelectedTeamPlayersID(e);
+            }}
             columns={columns}
           />
           {enabledEditMode && (
-            <div>
-              <button
+            <div className='flex gap-4'>
+              <motion.button
+                layout
                 onClick={() => {
                   setAddPlayerModal(!addPlayerModal);
                 }}
                 className='bg-gray-100 hover:bg-gray-200 p-2 radius-md mt-2'
               >
                 Adicionar jogador
-              </button>
+              </motion.button>
+              {(selectedTeamPlayersID?.length ?? 0) > 0 && (
+                <motion.button
+                  layout
+                  onClick={() => {
+                    saveEditTeam();
+                  }}
+                  className='bg-red-100 hover:bg-red-200 p-2 radius-md mt-2 text-red-500'
+                >
+                  Remover jogador
+                </motion.button>
+              )}
               <ModalBox
                 openModal={addPlayerModal}
                 setOpenModal={setAddPlayerModal}
@@ -488,7 +533,7 @@ function TeamComponent({
                   rowSelection={true}
                   columns={columns}
                   onRowSelectionModelChange={(e: any) => {
-                    setNewPLayersID(e.id);
+                    setNewPLayersID(e);
                   }}
                   checkboxSelection
                 />

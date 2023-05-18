@@ -3,6 +3,7 @@ package com.example.application.model.User;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -48,7 +49,8 @@ public class User implements UserDetails {
 
   private LocalDate dataNascimento;
 
-  private Integer age;
+  @Builder.Default
+  private Integer age = null;
 
   @Enumerated(EnumType.STRING) private Roles role;
 

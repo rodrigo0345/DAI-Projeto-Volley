@@ -24,6 +24,7 @@ const PostView = lazy(() => import('./views/PostView'));
 const TeamView = lazy(() => import('./views/TeamView'));
 const NotFound = lazy(() => import('./views/404'));
 const TrainingView = lazy(() => import('./views/TrainingView'));
+const ReportView = lazy(() => import('./views/ReportView'));
 
 const router = createBrowserRouter([
   {
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
           { path: '/post/:type/:id', element: <PostView /> },
           { path: '/team', element: <TeamView /> },
           { path: '/training', element: <TrainingView /> },
+          { path: '/report', element: <ReportView /> },
         ],
       },
       {
