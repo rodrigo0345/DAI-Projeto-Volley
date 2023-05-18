@@ -105,8 +105,7 @@ public class AuthenticationController {
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
         
-        if(request.getAge() == 0) request.setAge(null);
-        if (request.getAge() < 3 || request.getAge() > 120 && request.getAge() != null) {
+        if (request.getAge() < 0 || request.getAge() > 120) {
             var response = new ResponseType<LoginUser>();
             response.error("Idade inválida");
             return ResponseEntity.badRequest().body(response);
