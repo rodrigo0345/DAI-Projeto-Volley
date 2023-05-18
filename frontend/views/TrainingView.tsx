@@ -4,10 +4,13 @@ import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import { createPractice } from 'Frontend/generated/PracticeController';
 import { findAll } from 'Frontend/generated/TeamController';
+import Practice from 'Frontend/generated/com/example/application/model/Practice';
 import Team from 'Frontend/generated/com/example/application/model/Team/Team';
 import { motion } from 'framer-motion';
 import React, { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { findAll as findAllPractices } from '../generated/PracticeController';
+import { format } from 'date-fns';
 
 export default function TrainingView() {
   const { user, logout } = useContext(UserContext);
@@ -25,6 +28,9 @@ export default function TrainingView() {
   const [teams, setTeams] = React.useState<(Team | undefined)[] | undefined>(
     undefined
   );
+  const [trainings, setTrainings] = React.useState<
+    (Practice | undefined)[] | undefined
+  >(undefined);
 
   useEffect(() => {
     (async () => {
@@ -32,6 +38,9 @@ export default function TrainingView() {
 
       const team = result?.filter((team) => team?.managerID === user?.id);
       setTeams(team);
+
+      const trainings = await findAllPractices();
+      setTrainings(trainings);
     })();
   }, [user]);
 
@@ -163,22 +172,29 @@ export default function TrainingView() {
                   <div className='overflow-hidden relative w-full'>
                     <h1 className='text-xl m-4'>Próximos Treinos</h1>
                     <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
-                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
-                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
-                        <p>Dia 4 às 16:40</p>
-                      </article>
-                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 min-w-44 w-44 h-44 p-1 rounded-md shadow-md'>
-                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
-                        <p>Dia 4 às 16:40</p>
-                      </article>
-                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
-                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
-                        <p>Dia 4 às 16:40</p>
-                      </article>
-                      <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
-                        <h2 className='text-lg mt-2'>Treino em Barcelos</h2>
-                        <p>Dia 4 às 16:40</p>
-                      </article>
+                      {trainings
+                        ?.filter((training) => {
+                          return training?.team === team?.name;
+                        })
+                        .map((training) => (
+                          <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                            <h2 className='text-lg mt-2'>
+                              Treino em {training?.local}
+                            </h2>
+                            <p className='text-sm'>
+                              Dia{' '}
+                              {format(
+                                new Date(training?.startDate ?? '24/4/2023'),
+                                'dd/MM/yyyy HH:mm'
+                              )}{' '}
+                              -{' '}
+                              {format(
+                                new Date(training?.endDate ?? '24/4/2023'),
+                                'HH:mm'
+                              )}
+                            </p>
+                          </article>
+                        ))}
                     </div>
                   </div>
                 </Accordion.Panel>
