@@ -20,7 +20,11 @@ import com.example.application.repository.NewsRepository;
 import com.example.application.repository.PracticeRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class CalendarService {
 
     public static class Event {
@@ -70,8 +74,8 @@ public class CalendarService {
     }
 
     public static List<Event> getAllTrainingEvents(RideRepository rideRepo, NewsRepository newsRepo,
-                                            GameRepository gameRepo, PracticeRepository practiceRepo,
-                                            AppointmentRepository appointmentRepo) {
+            GameRepository gameRepo, PracticeRepository practiceRepo,
+            AppointmentRepository appointmentRepo) {
 
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
