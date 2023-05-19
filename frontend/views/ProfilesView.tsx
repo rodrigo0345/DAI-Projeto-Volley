@@ -77,7 +77,7 @@ export default function ProfilesView() {
       return;
     }
 
-    toast.success('Profile updated');
+    toast.success('Utilizador editado com sucesso');
     setEditable(false);
     return;
   }

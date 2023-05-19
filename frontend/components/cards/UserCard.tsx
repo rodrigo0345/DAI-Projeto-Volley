@@ -50,9 +50,9 @@ export default function UserCard({
             (async () => {
               const result = await deleteUser(userSubject?.id, user);
               if (!result) {
-                toast.error('Error deleting user');
+                toast.error('Erro ao eliminar jogador');
               }
-              toast.success('User deleted');
+              toast.success('Utilizador eliminado com sucesso');
               // reload window
               window.location.reload();
             })();
