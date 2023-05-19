@@ -158,7 +158,7 @@ public class TeamController {
         }
         Team team = null;
         try {
-            team = teamRepository.findById(teamId.longValue()).get();
+            team = teamRepository.findById(teamId.longValue());
         } catch (Exception e) {
             var response = new ResponseType<Team>();
             response.error("A equipa não existe");
@@ -228,7 +228,7 @@ public class TeamController {
         User user;
         Team team;
         try {
-            team = teamRepository.findById(teamId.longValue()).get();
+            team = teamRepository.findById(teamId.longValue());
             user = usersRepository.findById(loginUser.getId()).get();
         } catch (Exception e) {
             var response = new ResponseType<Boolean>();
@@ -270,7 +270,7 @@ public class TeamController {
         // verificar se currentUser é admin ou treinador da equipa
         Team team;
         try {
-            team = teamRepository.findById(teamId.longValue()).get();
+            team = teamRepository.findById(teamId.longValue());
         } catch (Exception e) {
             var response = new ResponseType<Team>();
             response.error("A equipa não existe");
@@ -338,7 +338,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se a equipa é válida
-        if (teamRepository.existsById(teamId.longValue())) {
+        if (teamRepository.existsById(teamId)) {
             var response = new ResponseType<Team>();
             response.error("Sem equipa selecionada");
             return ResponseEntity.badRequest().body(response);
@@ -350,7 +350,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se os jogadores pertencem à equipa
-        if (teamRepository.findById(teamId.longValue()).get().getPlayers().contains(jogadoresRemovidos)) {
+        if (teamRepository.findById(teamId.longValue()).getPlayers().contains(jogadoresRemovidos)) {
             var response = new ResponseType<Team>();
             response.error("Os atletas nao pertecem a esta equipa");
             return ResponseEntity.badRequest().body(response);
@@ -366,7 +366,7 @@ public class TeamController {
     public ResponseEntity<ResponseType<Team>> switchManager(LoginUser currentUser,
             Integer teamId,
             Integer managerId) {
-        Team team = teamRepository.findById(teamId.longValue()).get();
+        Team team = teamRepository.findById(teamId.longValue());
 
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
@@ -398,13 +398,6 @@ public class TeamController {
 
     public ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(List<Integer> atletas) {
 
-        List<User> atleta = null;
-
-        for (Integer elemento : atletas) {
-            User jogador = usersRepository.findById(elemento).get();
-            atleta.add(jogador);
-        }
-
         Set<Integer> jogadoresEmEquipas = new HashSet<Integer>();
         List<Team> todasEquipas = teamRepository.findAll();
 
@@ -412,7 +405,7 @@ public class TeamController {
             jogadoresEmEquipas.addAll(t.getPlayers());
         }
 
-        if (!(jogadoresEmEquipas.contains(atleta))) {
+        if (!(jogadoresEmEquipas.contains(atletas))) {
             var response = new ResponseType<Boolean>();
             response.success(true);
             return ResponseEntity.badRequest().body(response);
