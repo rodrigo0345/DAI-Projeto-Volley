@@ -160,7 +160,12 @@ export default function DashboardView() {
                 ></CgProfile>
               </Box>
               {!(user?.role?.toUpperCase() === Roles.ADMIN) && (
-                <Box className='bg-gradient-to-tl from-green-500/100 to-green-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-tl from-green-500/100 to-green-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/health';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Saúde
                   </h2>

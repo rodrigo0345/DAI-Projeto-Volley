@@ -125,6 +125,9 @@ export default function RidePost({
           <h2 className='mb-1 text-xl font-semibold text-gray-800'>
             {post?.origin + ' - ' + post?.destination}
           </h2>
+          <p className='text-sm text-gray-800'>
+            Começo: {format(new Date(post?.startDate ?? 0), 'dd/MM/yyyy HH:mm')}
+          </p>
           <p className='text-sm text-gray-800'>{post?.description}</p>
         </div>
         <div className='flex flex-wrap justify-between'>

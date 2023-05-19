@@ -324,18 +324,6 @@ function TeamComponent({
       if (selectedTeamPlayersID?.includes(player?.id ?? 0)) return;
       newTeam.push(player?.id ?? 0);
     });
-    console.log(
-      'user: ',
-      currUser,
-      'team id: ',
-      team?.id,
-      'manager id',
-      manager?.id,
-      'team: ',
-      newTeam,
-      'team name: ',
-      newTeamName
-    );
     const result = await editTeam(
       currUser,
       team?.id,
