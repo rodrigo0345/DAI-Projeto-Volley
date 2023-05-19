@@ -12,6 +12,7 @@ import com.example.application.model.Game;
 import com.example.application.model.Practice;
 import com.example.application.model.Ride;
 import com.example.application.model.News.News;
+import com.example.application.model.Team.Team;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
 import com.example.application.repository.AppointmentRepository;
@@ -19,6 +20,7 @@ import com.example.application.repository.GameRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.PracticeRepository;
 import com.example.application.repository.RideRepository;
+import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 
 public class CalendarService {
@@ -95,7 +97,8 @@ public class CalendarService {
     }
 
     public static List<Event> getEventsByUser(Integer id, RideRepository rideRepo, NewsRepository newsRepo,
-            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
+            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo,
+            UserRepository usersRepo, TeamRepository teamRepo) {
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
 
@@ -118,14 +121,19 @@ public class CalendarService {
                 case GAME:
                     // ACABAR ISTO
                     Game game = el.returnType();
-                    // TODO CHECK IF USER IS IN THE GAME
+                    
+                    if( !(game.getGameCall().contains(id)) ) break;
+                    
                     event.title = "Matosinhos contra Odivelas";
                     event.url = "post/game/" + 0;
                     event.date = null;
                     break;
                 case PRACTICE:
                     Practice practice = el.returnType();
-                    // TODO CHECK IF USER IS IN THE PRACTICE
+                    Team team = teamRepo.findById(practice.getTeam());
+                    
+                    if( !(team.getPlayers().contains(id)) ) break;
+
                     event.title = "Treino " + practice.getTeam();
                     event.url = "post/practice/" + practice.getId();
                     event.date = practice.getStartDate();

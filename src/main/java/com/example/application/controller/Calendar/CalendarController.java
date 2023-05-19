@@ -10,6 +10,7 @@ import com.example.application.repository.GameRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.PracticeRepository;
 import com.example.application.repository.RideRepository;
+import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.CalendarService;
 import com.example.application.service.CalendarService.Event;
@@ -38,6 +39,8 @@ public class CalendarController {
 
     private final GameRepository gameRepository;
 
+    private final TeamRepository teamRepository;
+
     public List<Event> getAllEvents() {
         var events = CalendarService.getAllEvents(ridesRepository, newsRepository, calendarRepository,
                 practiceRepository,
@@ -47,8 +50,7 @@ public class CalendarController {
 
     public List<Event> getEventsByPerson(Integer id) {
         var events = CalendarService.getEventsByUser(id, ridesRepository, newsRepository, gameRepository,
-                practiceRepository,
-                appointmentRepository);
+                practiceRepository, appointmentRepository, usersRepository, teamRepository);
         return events;
     }
 

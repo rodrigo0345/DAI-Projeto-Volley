@@ -68,7 +68,7 @@ public class PracticeController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team team = teamRepository.findById(teamID.longValue()).get();
+        Team team = teamRepository.findById(teamID.longValue());
         if (team == null
                 || team.getManagerID() == null
                 || team.getPlayers() == null
@@ -77,7 +77,7 @@ public class PracticeController {
             response.error("A equipa não existe");
             return ResponseEntity.badRequest().body(response);
         }
-        boolean teamHasManager = teamRepository.findById(teamID.longValue()).get().getManagerID() != null;
+        boolean teamHasManager = teamRepository.findById(teamID.longValue()).getManagerID() != null;
         if (!teamHasManager) {
             var response = new ResponseType<Practice>();
             response.error("A equipa não tem treinador");
@@ -95,9 +95,9 @@ public class PracticeController {
                 }
             }
         }
-        String teamName = teamRepository.findById(teamID.longValue()).get().getName();
+        String teamName = teamRepository.findById(teamID.longValue()).getName();
 
-        Practice newPractice = PracticeService.createPractice(practiceRepository, teamName, local, startDateTime,
+        Practice newPractice = PracticeService.createPractice(practiceRepository, teamID.longValue(), local, startDateTime,
                 endDateTime).success;
 
         var response = new ResponseType<Practice>();
@@ -123,7 +123,7 @@ public class PracticeController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (!(user.getId().equals(teamRepository.findByName(practice.getTeam()).getManagerID()))) {
+        if (!(user.getId().equals(teamRepository.findById(practice.getTeam()).getManagerID()))) {
             var response = new ResponseType<Practice>();
             response.error("Não é o autor do treino");
             return ResponseEntity.badRequest().body(response);
@@ -169,7 +169,7 @@ public class PracticeController {
         User user = userRepository.findById(loginUser.getId()).get();
 
         if (!(user.getRole().equals(Roles.MANAGER) ||
-                user.getId().equals(teamRepository.findByName(practice.getTeam()).getManagerID()))) {
+                user.getId().equals(teamRepository.findById(practice.getTeam()).getManagerID()))) {
             var response = new ResponseType<Practice>();
             response.error("Não tem permissoes");
             return ResponseEntity.badRequest().body(response);

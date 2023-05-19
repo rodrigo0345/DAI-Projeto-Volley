@@ -30,7 +30,7 @@ public class Game {
     private LocalDateTime date;
     private String team;
     @ElementCollection
-    private List<User> gameCall;
+    private List<Integer> gameCall;
     private String opponent;
     private String local;
 }

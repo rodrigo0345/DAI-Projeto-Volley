@@ -22,17 +22,10 @@ public class GameService {
             LocalDateTime date,
             String local) {
 
-        List<User> atletas = null;
-
-        for (Integer elemento : gamecall) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.add(atleta);
-        }
-
         Game game = new Game();
         game.setDate(date);
         game.setTeam(team);
-        game.setGameCall(atletas);
+        game.setGameCall(gamecall);
         game.setOpponent(opponent);
         game.setLocal(local);
 
@@ -51,18 +44,11 @@ public class GameService {
             String local,
             List<Integer> gamecall) {
 
-        List<User> atletas = null;
-
-        for (Integer elemento : gamecall) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.add(atleta);
-        }
-
         Game game = gameRepository.findById(gameId).get();
 
         game.setDate(date);
         game.setTeam(team);
-        game.setGameCall(atletas);
+        game.setGameCall(gamecall);
         game.setOpponent(opponent);
         game.setLocal(local);
 
