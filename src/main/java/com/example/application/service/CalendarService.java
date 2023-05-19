@@ -123,12 +123,11 @@ public class CalendarService {
                     event.date = ride.getStartDate();
                     break;
                 case GAME:
-                    // ACABAR ISTO
                     Game game = el.returnType();
                     
                     if( !(game.getGameCall().contains(id)) ) break;
                     
-                    event.title = "Matosinhos contra Odivelas";
+                    event.title = "Jogo contra" + game.getOpponent();
                     event.url = "post/game/" + 0;
                     event.date = null;
                     break;
@@ -144,7 +143,9 @@ public class CalendarService {
                     break;
                 case APPOINTMENT:
                     Appointment appointment = el.returnType();
-                    // TODO CHECK IF USER IS IN THE APPOINTMENT
+                    
+                    if( !(appointment.getPatient().equals(id)) ) break;
+
                     event.title = "Consulta " + "Dr. " + "Joao";
                     event.url = "post/appointment/" + 0;
                     event.date = null;
@@ -158,7 +159,7 @@ public class CalendarService {
         return events;
     }
 
-    // nada eficiente
+    // nada eficiente, threads?
     private static List<PostType> fetchPosts(RideRepository rideRepo, NewsRepository newsRepo,
             GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
         // fetch all the data
