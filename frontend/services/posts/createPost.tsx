@@ -6,7 +6,7 @@ import { PostController } from 'Frontend/generated/endpoints';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
 import { toast } from 'react-toastify';
 
-export async function criarNoticia(
+export async function createNews(
   noticia: {
     titulo: React.MutableRefObject<HTMLInputElement | null>;
     descricao: React.MutableRefObject<HTMLTextAreaElement | null>;
@@ -56,7 +56,7 @@ export async function criarNoticia(
   setOpenModal(false);
 }
 
-export async function criarBoleia(
+export async function createRide(
   boleia: {
     destino: React.RefObject<HTMLInputElement>;
     dataPartida: React.RefObject<HTMLInputElement>;

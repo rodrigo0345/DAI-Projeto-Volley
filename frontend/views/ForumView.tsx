@@ -40,7 +40,6 @@ import {
   fetchPostsByOldest,
   loadMore,
 } from 'Frontend/services/posts/fetchPosts';
-import { criarNoticia } from 'Frontend/services/posts/createPost';
 import FilterContent from 'Frontend/components/filterContent/FilterContent';
 import CreatePost from 'Frontend/components/posts/CreatePost';
 import { CgProfile } from 'react-icons/cg';
