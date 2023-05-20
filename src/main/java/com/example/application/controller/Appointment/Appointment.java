@@ -2,7 +2,7 @@ package com.example.application.controller.Appointment;
 
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.User.User;
-import com.example.application.repository.AppointmentRepository;
+import com.example.application.repository.PhysicalAppointmentRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 
@@ -12,7 +12,7 @@ import java.time.format.DateTimeParseException;
 
 public class Appointment {
 
-    AppointmentRepository appointmentRepository;
+    PhysicalAppointmentRepository appointmentRepository;
 
     UserRepository userRepository;
 

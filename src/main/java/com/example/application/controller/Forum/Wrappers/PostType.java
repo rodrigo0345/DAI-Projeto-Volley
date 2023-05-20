@@ -2,7 +2,7 @@ package com.example.application.controller.Forum.Wrappers;
 
 import com.example.application.model.Ride;
 import com.example.application.model.News.News;
-import com.example.application.model.Appointment;
+// import com.example.application.model.Appointment;
 import com.example.application.model.Game;
 import com.example.application.model.Practice;
 
@@ -12,7 +12,7 @@ public class PostType implements Comparable<PostType> {
     public Ride ride;
     public Game game;
     public Practice practice;
-    public Appointment appointment;
+    //public Appointment appointment;
 
     public PostType() {
     }
@@ -26,9 +26,9 @@ public class PostType implements Comparable<PostType> {
             return PostSavedType.GAME;
         } else if (practice != null) {
             return PostSavedType.PRACTICE;
-        } else if (appointment != null) {
+        } /*else if (appointment != null) {
             return PostSavedType.APPOINTMENT;
-        }
+        }*/
         return null;
     }
 
@@ -41,9 +41,9 @@ public class PostType implements Comparable<PostType> {
             return (T) game;
         } else if (practice != null) {
             return (T) practice;
-        } else if (appointment != null) {
+        } /*else if (appointment != null) {
             return (T) appointment;
-        }
+        } */
         return null;
     }
 

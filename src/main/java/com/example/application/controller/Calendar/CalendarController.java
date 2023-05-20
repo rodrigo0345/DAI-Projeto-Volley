@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.example.application.config.RequiredArgsConstructor;
 import com.example.application.model.Practice;
-import com.example.application.repository.AppointmentRepository;
+import com.example.application.repository.PhysicalAppointmentRepository;
 import com.example.application.repository.GameRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.PracticeRepository;
@@ -35,7 +35,7 @@ public class CalendarController {
 
     private final PracticeRepository practiceRepository;
 
-    private final AppointmentRepository appointmentRepository;
+    private final PhysicalAppointmentRepository appointmentRepository;
 
     private final GameRepository gameRepository;
 

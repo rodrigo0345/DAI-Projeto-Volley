@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import com.example.application.controller.Forum.Wrappers.PostSavedType;
 import com.example.application.controller.Forum.Wrappers.PostType;
-import com.example.application.model.Appointment;
+import com.example.application.model.Appointments.PhysicalAppointment;
 import com.example.application.model.Game;
 import com.example.application.model.Practice;
 import com.example.application.model.Ride;
@@ -15,7 +15,7 @@ import com.example.application.model.News.News;
 import com.example.application.model.Team.Team;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.User;
-import com.example.application.repository.AppointmentRepository;
+import com.example.application.repository.PhysicalAppointmentRepository;
 import com.example.application.repository.GameRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.PracticeRepository;
@@ -36,7 +36,7 @@ public class CalendarService {
     }
 
     public static List<Event> getAllEvents(RideRepository rideRepo, NewsRepository newsRepo,
-            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
+            GameRepository gameRepo, PracticeRepository practiceRepo, PhysicalAppointmentRepository appointmentRepo) {
 
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
@@ -77,7 +77,7 @@ public class CalendarService {
 
     public static List<Event> getAllTrainingEvents(RideRepository rideRepo, NewsRepository newsRepo,
             GameRepository gameRepo, PracticeRepository practiceRepo,
-            AppointmentRepository appointmentRepo) {
+            PhysicalAppointmentRepository appointmentRepo) {
 
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
@@ -101,7 +101,7 @@ public class CalendarService {
     }
 
     public static List<Event> getEventsByUser(Integer id, RideRepository rideRepo, NewsRepository newsRepo,
-            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo,
+            GameRepository gameRepo, PracticeRepository practiceRepo, PhysicalAppointmentRepository appointmentRepo,
             UserRepository usersRepo, TeamRepository teamRepo) {
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
@@ -141,7 +141,7 @@ public class CalendarService {
                     event.url = "post/practice/" + practice.getId();
                     event.date = practice.getStartDate();
                     break;
-                case APPOINTMENT:
+                /*case APPOINTMENT:
                     Appointment appointment = el.returnType();
                     
                     if( !(appointment.getPatient().equals(id)) ) break;
@@ -149,7 +149,7 @@ public class CalendarService {
                     event.title = "Consulta " + "Dr. " + "Joao";
                     event.url = "post/appointment/" + 0;
                     event.date = null;
-                    break;
+                    break; */
                 default:
                     break;
             }
@@ -161,7 +161,7 @@ public class CalendarService {
 
     // nada eficiente, threads?
     private static List<PostType> fetchPosts(RideRepository rideRepo, NewsRepository newsRepo,
-            GameRepository gameRepo, PracticeRepository practiceRepo, AppointmentRepository appointmentRepo) {
+            GameRepository gameRepo, PracticeRepository practiceRepo, PhysicalAppointmentRepository appointmentRepo) {
         // fetch all the data
 
         RetrieveNews news = new RetrieveNews();
@@ -176,8 +176,8 @@ public class CalendarService {
         RetrievePractices practices = new RetrievePractices();
         practices.run(practiceRepo);
 
-        RetrieveAppointments appointments = new RetrieveAppointments();
-        appointments.run(appointmentRepo);
+        /*RetrieveAppointments appointments = new RetrieveAppointments();
+        appointments.run(appointmentRepo); */
 
         List<PostType> posts = new ArrayList<>();
 
@@ -186,7 +186,7 @@ public class CalendarService {
             rides.join();
             games.join();
             practices.join();
-            appointments.join();
+           //appointments.join();
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -196,7 +196,7 @@ public class CalendarService {
         posts.addAll(rides.getResult());
         posts.addAll(games.getResult());
         posts.addAll(practices.getResult());
-        posts.addAll(appointments.getResult());
+        //posts.addAll(appointments.getResult());
 
         return posts;
     }
@@ -265,7 +265,7 @@ public class CalendarService {
         }
     }
 
-    public static class RetrieveAppointments extends Thread {
+    /*public static class RetrieveAppointments extends Thread {
         List<PostType> result = new ArrayList<>();
 
         public void run(AppointmentRepository appointmentRepository) {
@@ -279,6 +279,6 @@ public class CalendarService {
         public List<PostType> getResult() {
             return this.result;
         }
-    }
+    } */
 
 }
