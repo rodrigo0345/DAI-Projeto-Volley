@@ -26,6 +26,8 @@ const NotFound = lazy(() => import('./views/404'));
 const TrainingView = lazy(() => import('./views/TrainingView'));
 const ReportView = lazy(() => import('./views/ReportView'));
 const HealthView = lazy(() => import('./views/HealthView'));
+const GameView = lazy(() => import('./views/GameView'));
+const LivesView = lazy(() => import('./views/LivesView'));
 
 const router = createBrowserRouter([
   {
@@ -60,6 +62,8 @@ const router = createBrowserRouter([
           { path: '/training', element: <TrainingView /> },
           { path: '/report', element: <ReportView /> },
           { path: '/health', element: <HealthView /> },
+          { path: '/game', element: <GameView /> },
+          { path: '/lives', element: <LivesView /> },
         ],
       },
       {

@@ -5,6 +5,11 @@ import { motion } from 'framer-motion';
 import React, { useContext, useEffect, useRef } from 'react';
 import { CustomScrollbar } from './AdminPanelView';
 
+export enum ReportType {
+  Jogo,
+  Treino,
+}
+
 export default function ReportView() {
   const { user, logout } = useContext(UserContext);
   const [newReport, setNewReport] = React.useState(false);
@@ -37,10 +42,6 @@ export default function ReportView() {
     imagem: React.useRef<HTMLInputElement>(null),
   };
 
-  enum ReportType {
-    Jogo,
-    Treino,
-  }
   const reportTypeRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
@@ -72,6 +73,18 @@ export default function ReportView() {
       layout
       className='min-h-screen flex z-10 bg-white relative shadow-lg w-full'
     >
+      <div
+        className='absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80'
+        aria-hidden='true'
+      >
+        <div
+          className='relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-yellow-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]'
+          style={{
+            clipPath:
+              'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+          }}
+        ></div>
+      </div>
       <div className='flex flex-col items-center flex-wrap w-full pt-44'>
         <ModalBox openModal={newReport} setOpenModal={setNewReport}>
           <div className='flex flex-col justify-center items-center px-2 pb-8'>
@@ -126,13 +139,13 @@ export default function ReportView() {
         </div>
         <div className='w-2/3 mx-auto flex flex-col justify-start'>
           <div className='w-full flex flex-col justify-start h-96'>
-            <h1 className='text-xl'>Relatório de jogos</h1>
+            <h1 className='text-xl'>Relatórios de jogos</h1>
             <CustomScrollbar>
               {displayReportBy(ReportType.Jogo.toString())}
             </CustomScrollbar>
           </div>
           <div className='w-full flex flex-col justify-start h-96'>
-            <h1 className='text-xl'>Relatório de treinos</h1>
+            <h1 className='text-xl'>Relatórios de treinos</h1>
             <CustomScrollbar className='flex overflow-x-auto gap-4'>
               {displayReportBy(ReportType.Treino.toString())}
             </CustomScrollbar>

@@ -86,7 +86,7 @@ export default function DashboardView() {
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
       <div className='relative flex-1'>
         <div
-          className='absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-50'
+          className='fixed inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-50'
           aria-hidden='true'
         >
           <div
@@ -127,7 +127,12 @@ export default function DashboardView() {
                 </Box>
               )}
               {user?.role?.toUpperCase() === Roles.MANAGER && (
-                <Box className='bg-gradient-to-tl from-purple-500/100 to-purple-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-tl from-purple-500/100 to-purple-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/lives';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Lives
                   </h2>
@@ -207,7 +212,12 @@ export default function DashboardView() {
                 ></MdOutlineForum>
               </Box>
               {!(user?.role?.toUpperCase() === Roles.SECCTIONIST) && (
-                <Box className='bg-gradient-to-tr from-red-600/100 to-red-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-tr from-red-600/100 to-red-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/game';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Jogos{' '}
                   </h2>
