@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Appointment {
+public class AppointmentController {
 
     PhysicalAppointmentRepository appointmentRepository;
 
@@ -55,7 +55,7 @@ public class Appointment {
 
     }
 
-    public ResponseEntity<ResponseType<Appointment>> createAppointment(Integer doctor, Integer patient, String date,
+    public ResponseEntity<ResponseType<AppointmentType>> createAppointment(Integer doctor, Integer patient, String date,
             PatientData data) {
 
         User doutor = userRepository.findById(doctor).get();
@@ -63,7 +63,7 @@ public class Appointment {
         User paciente = userRepository.findById(patient).get();
 
         if (date == null || date.trim().isEmpty()) {
-            var response = new ResponseType<Appointment>();
+            var response = new ResponseType<AppointmentType>();
             response.error("Falta a data");
             return ResponseEntity.badRequest().body(response);
         }
@@ -76,7 +76,7 @@ public class Appointment {
             startDateTime = LocalDateTime.parse(date, formatter);
 
         } catch (DateTimeParseException e) {
-            var response = new ResponseType<Appointment>();
+            var response = new ResponseType<AppointmentType>();
             response.error("Invalid date format");
             return ResponseEntity.badRequest().body(response);
         }
@@ -84,9 +84,15 @@ public class Appointment {
         // Appointment newAppointment = AppointmetService.createAppointment(doutor,
         // paciente, date, data);
 
-        var response = new ResponseType<Appointment>();
+        var response = new ResponseType<AppointmentType>();
         response.success(null);
         return ResponseEntity.ok().body(response);
+    }
+
+    // just to get the type
+    // on the frontend
+    public AppointmentType dontUseThis() {
+        return null;
     }
 
 }

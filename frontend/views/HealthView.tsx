@@ -1,27 +1,23 @@
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import Appointment from 'Frontend/generated/com/example/application/model/Appointment';
+
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 import React, { useContext } from 'react';
 
 export default function HealthView() {
   const { user, logout } = useContext(UserContext);
 
-  enum AppointmentType {
-    FISIOTERAPIA,
-    NUTRICAO,
-    PSICOLOGIA,
-  }
-
-  const [appointments, setAppointments] = React.useState<
-    (Appointment | undefined)[] | undefined
+  /* const [appointments, setAppointments] = React.useState<
+    (AppointmentType | undefined)[] | undefined
   >(undefined);
+
+  
+  const [createAppointment, setCreateAppointment] = React.useState<
+    (Appointment | undefined)[] | undefined
+  >(undefined); */
 
   const [appointmentModal, setAppointmentModal] =
     React.useState<boolean>(false);
-  const [createAppointment, setCreateAppointment] = React.useState<
-    (Appointment | undefined)[] | undefined
-  >(undefined);
 
   return (
     <div className='min-h-screen flex justify-center items-center relative z-10 bg-white shadow-lg'>
