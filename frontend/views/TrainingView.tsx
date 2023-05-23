@@ -14,6 +14,12 @@ import React, { useContext, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { findAll as findAllPractices } from '../generated/PracticeController';
 import { format } from 'date-fns';
+import { RiUserSettingsFill } from 'react-icons/ri';
+
+enum Training {
+  Main,
+  Report,
+}
 
 export default function TrainingView() {
   const { user, logout } = useContext(UserContext);
@@ -34,6 +40,7 @@ export default function TrainingView() {
   const [trainings, setTrainings] = React.useState<
     (Practice | undefined)[] | undefined
   >(undefined);
+  const [menu, setMenu] = React.useState<Training>(Training.Main);
 
   useEffect(() => {
     (async () => {
@@ -102,130 +109,174 @@ export default function TrainingView() {
   }
 
   return (
-    <div className='min-h-screen flex flex-col pt-44 justify-start z-10 bg-white relative shadow-lg items-center w-full'>
-      <div className='flex justify-around items-center w-full mb-10'>
-        <h1 className='pl-10 m-0'>Treinos</h1>
-        <button
-          onClick={() => {
-            if (teams?.length === 0) {
-              toast.error('Não tem equipas para criar treinos');
-              return;
-            }
-            setOpen(true);
-          }}
-          className='mr-10
-         bg-zinc-200 p-2 rounded-md hover:bg-zinc-300 h-10 shadow-md
-        '
-        >
-          Agendar treino
-        </button>
-        <ModalBox
-          title='Criar treino'
-          openModal={opened}
-          setOpenModal={setOpen}
-        >
-          <div className='mb-4 flex flex-col'>
-            <label htmlFor='' className='text-sm text-gray-500'>
-              Equipa
-            </label>
-            <select
-              ref={teamIDRef}
-              className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+    <div className='min-h-screen flex justify-start z-10 bg-white relative shadow-lg items-center w-full'>
+      <SidePanel
+        key={user?.id}
+        user={user}
+        logout={logout}
+        content={[
+          {
+            id: 0,
+            icon: (
+              <RiUserSettingsFill
+                color={menu === Training.Main ? 'white' : 'black'}
+              />
+            ),
+            activator: {
+              setter: setMenu,
+              state: menu,
+            },
+            text: 'Página principal',
+            link: '/admin/users',
+            targetState: Training.Main,
+          },
+          {
+            id: 0,
+            icon: (
+              <RiUserSettingsFill
+                color={menu === Training.Report ? 'white' : 'black'}
+              />
+            ),
+            activator: {
+              setter: setMenu,
+              state: menu,
+            },
+            text: 'Relatórios',
+            link: '/admin/users',
+            targetState: Training.Report,
+          },
+        ]}
+      />
+      {menu === Training.Main && (
+        <div className='flex flex-col items-center flex-1'>
+          <div className='flex justify-around items-center w-full mb-10'>
+            <h1 className='pl-10 m-0'>Treinos</h1>
+            <button
+              onClick={() => {
+                if (teams?.length === 0) {
+                  toast.error('Não tem equipas para criar treinos');
+                  return;
+                }
+                setOpen(true);
+              }}
+              className='mr-10
+           bg-zinc-200 p-2 rounded-md hover:bg-zinc-300 h-10 shadow-md
+          '
             >
-              {teams?.map((team) => (
-                <option value={team?.id}>{team?.name}</option>
-              ))}
-            </select>
+              Agendar treino
+            </button>
+            <ModalBox
+              title='Criar treino'
+              openModal={opened}
+              setOpenModal={setOpen}
+            >
+              <div className='mb-4 flex flex-col'>
+                <label htmlFor='' className='text-sm text-gray-500'>
+                  Equipa
+                </label>
+                <select
+                  ref={teamIDRef}
+                  className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+                >
+                  {teams?.map((team) => (
+                    <option value={team?.id}>{team?.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className='mb-4 flex flex-col'>
+                <label htmlFor='' className='text-sm text-gray-500'>
+                  Hora e dia de começo
+                </label>
+                <input
+                  type='datetime-local'
+                  name='hora de começo'
+                  ref={startDateRef}
+                />
+              </div>
+              <div className='mb-4 flex flex-col'>
+                <label htmlFor='' className='text-sm text-gray-500'>
+                  Hora de fim
+                </label>
+                <input type='time' name='hora de fim' ref={endDateRef} />
+              </div>
+              <div className='mb-4 flex flex-col'>
+                <label htmlFor='' className='text-sm text-gray-500'>
+                  Local
+                </label>
+                <input type='text' name='local' ref={localRef} />
+              </div>
+              <button
+                className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
+                onClick={() => {
+                  createTraining();
+                }}
+              >
+                Criar
+              </button>
+            </ModalBox>
           </div>
-
-          <div className='mb-4 flex flex-col'>
-            <label htmlFor='' className='text-sm text-gray-500'>
-              Hora e dia de começo
-            </label>
-            <input
-              type='datetime-local'
-              name='hora de começo'
-              ref={startDateRef}
-            />
+          <div className='flex'>
+            <motion.main layout className='w-[30em]'>
+              <Accordion
+                variant='separated'
+                radius='md'
+                defaultValue='customization'
+              >
+                {teams?.map((team) => (
+                  <Accordion.Item value={String(team?.id) ?? ''}>
+                    <Accordion.Control>{team?.name}</Accordion.Control>
+                    <Accordion.Panel>
+                      <div className='overflow-hidden relative w-full'>
+                        <h1 className='text-xl m-4'>Próximos Treinos</h1>
+                        <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
+                          {trainings
+                            ?.filter((training) => {
+                              return training?.team === team?.name;
+                            })
+                            .map((training) => (
+                              <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                                <h2 className='text-lg mt-2'>
+                                  Treino em {training?.local}
+                                </h2>
+                                <p className='text-sm'>
+                                  Dia{' '}
+                                  {format(
+                                    new Date(
+                                      training?.startDate ?? '24/4/2023'
+                                    ),
+                                    'dd/MM/yyyy HH:mm'
+                                  )}{' '}
+                                  -{' '}
+                                  {format(
+                                    new Date(training?.endDate ?? '24/4/2023'),
+                                    'HH:mm'
+                                  )}
+                                </p>
+                                <button
+                                  className='bg-red-300 p-1 rounded-md hover:bg-red-400 text-red-700'
+                                  onClick={(e) => {
+                                    deleteTraining(training?.id ?? 0);
+                                  }}
+                                >
+                                  Delete
+                                </button>
+                              </article>
+                            ))}
+                        </div>
+                      </div>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                ))}
+              </Accordion>
+            </motion.main>
           </div>
-
-          <div className='mb-4 flex flex-col'>
-            <label htmlFor='' className='text-sm text-gray-500'>
-              Hora de fim
-            </label>
-            <input type='time' name='hora de fim' ref={endDateRef} />
-          </div>
-
-          <div className='mb-4 flex flex-col'>
-            <label htmlFor='' className='text-sm text-gray-500'>
-              Local
-            </label>
-            <input type='text' name='local' ref={localRef} />
-          </div>
-
-          <button
-            className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
-            onClick={() => {
-              createTraining();
-            }}
-          >
-            Criar
-          </button>
-        </ModalBox>
-      </div>
-      <div className='flex'>
-        <motion.main layout className='w-[30em]'>
-          <Accordion
-            variant='separated'
-            radius='md'
-            defaultValue='customization'
-          >
-            {teams?.map((team) => (
-              <Accordion.Item value={String(team?.id) ?? ''}>
-                <Accordion.Control>{team?.name}</Accordion.Control>
-                <Accordion.Panel>
-                  <div className='overflow-hidden relative w-full'>
-                    <h1 className='text-xl m-4'>Próximos Treinos</h1>
-                    <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
-                      {trainings
-                        ?.filter((training) => {
-                          return training?.team === team?.name;
-                        })
-                        .map((training) => (
-                          <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
-                            <h2 className='text-lg mt-2'>
-                              Treino em {training?.local}
-                            </h2>
-                            <p className='text-sm'>
-                              Dia{' '}
-                              {format(
-                                new Date(training?.startDate ?? '24/4/2023'),
-                                'dd/MM/yyyy HH:mm'
-                              )}{' '}
-                              -{' '}
-                              {format(
-                                new Date(training?.endDate ?? '24/4/2023'),
-                                'HH:mm'
-                              )}
-                            </p>
-                            <button
-                              className='bg-red-300 p-1 rounded-md hover:bg-red-400 text-red-700'
-                              onClick={(e) => {
-                                deleteTraining(training?.id ?? 0);
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </article>
-                        ))}
-                    </div>
-                  </div>
-                </Accordion.Panel>
-              </Accordion.Item>
-            ))}
-          </Accordion>
-        </motion.main>
-      </div>
+        </div>
+      )}
+      {menu === Training.Report && (
+        <div className='flex flex-col items-center flex-1'>
+          <h1>Relatórios de jogo</h1>
+        </div>
+      )}
     </div>
   );
 }

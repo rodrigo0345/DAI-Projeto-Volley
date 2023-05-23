@@ -24,7 +24,7 @@ enum Menu {
   CHAT = 'CHAT',
 }
 
-const CustomScrollbar = styled.div`
+export const CustomScrollbar = styled.div`
   '&::-webkit-scrollbar': {
     width: '0.5rem',
     background: '#fff',
@@ -246,21 +246,6 @@ export default function AdminPanelView() {
             text: 'Utilizadores',
             link: '/admin/users',
             targetState: Menu.USERS,
-          },
-          {
-            id: 1,
-            icon: (
-              <RiUserSettingsFill
-                color={menu === Menu.CHAT ? 'white' : 'black'}
-              />
-            ),
-            activator: {
-              setter: setMenu,
-              state: menu,
-            },
-            text: 'Chat',
-            link: '/admin/users',
-            targetState: Menu.CHAT,
           },
         ]}
       ></SidePanel>
