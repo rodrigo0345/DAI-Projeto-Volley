@@ -28,8 +28,8 @@ import java.util.Set;
 
 @Endpoint
 @AnonymousAllowed
-@RequiredArgsConstructor
 @AllArgsConstructor
+
 public class PracticeController {
 
     private final TeamRepository teamRepository;
@@ -106,12 +106,27 @@ public class PracticeController {
     }
 
     public ResponseEntity<ResponseType<Practice>> editPractice(LoginUser loginUser,
-            String local, LocalDateTime startDate, LocalDateTime endDate, Long practiceID) {
+            String local, String startDate, String endDate, Long practiceID) {
+
+        String day = startDate.split("T")[0];
+        endDate = day + "T" + endDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+        try {
+            startDateTime = LocalDateTime.parse(startDate, formatter);
+            endDateTime = LocalDateTime.parse(endDate, formatter);
+        } catch (DateTimeParseException e) {
+            var response = new ResponseType<Practice>();
+            response.error("Invalid date format");
+            return ResponseEntity.badRequest().body(response);
+        }
+
 
         Practice practice = practiceRepository.findById(practiceID);
         User user = userRepository.findById(loginUser.getId()).get();
 
-        if (user.getRole().equals(Roles.MANAGER)) {
+        if (!user.getRole().equals(Roles.MANAGER)) {
             var response = new ResponseType<Practice>();
             response.error("Não é treinador");
             return ResponseEntity.badRequest().body(response);
@@ -137,9 +152,11 @@ public class PracticeController {
 
         List<Practice> allPratice = (List<Practice>) practiceRepository.findAll();
 
+
+
         for (Practice p : allPratice) {
             if (p.getLocal().equals(local)) {
-                if (doesLocalOverlap(p, startDate, endDate)) {
+                if (doesLocalOverlap(p, startDateTime, endDateTime)) {
                     var response = new ResponseType<Practice>();
                     response.error("Local ocupado ");
                     return ResponseEntity.badRequest().body(response);
@@ -147,8 +164,8 @@ public class PracticeController {
             }
         }
 
-        Practice editedCall = PracticeService.editPratice(practiceRepository, practice, local, startDate,
-                endDate).success;
+        Practice editedCall = PracticeService.editPratice(practiceRepository, practice, local, startDateTime,
+                endDateTime).success;
 
         var response = new ResponseType<Practice>();
         response.success(editedCall);
