@@ -47,7 +47,7 @@ const NewsPost = ({
         }
         setAuthor(author?.body.success);
       } catch (e) {
-        console.log(e);
+        console.warn(e);
         await remove(post);
         return;
       }

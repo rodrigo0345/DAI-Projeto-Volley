@@ -141,7 +141,6 @@ export default function TeamView() {
         toast.error(e.message);
       }
 
-      console.log({ teams });
       setTeams(teams);
     };
     loadTeams();

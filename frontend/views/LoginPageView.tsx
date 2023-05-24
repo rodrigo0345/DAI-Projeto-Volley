@@ -62,7 +62,7 @@ export default function LoginPageView(): JSX.Element {
         password.current?.value
       );
     } catch (e) {
-      console.log(e);
+      console.warn(e);
     }
 
     if (response?.body.error) {

@@ -56,7 +56,6 @@ export default function CalendarView({
         return;
       }
       const events = await getAllEvents();
-      console.log({ events });
       setEvents(events);
     })();
   }, [calendarType]);
