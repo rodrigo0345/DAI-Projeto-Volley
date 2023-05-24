@@ -7,6 +7,7 @@ import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import {
   createGame,
+  editGame,
   getAllGames,
   removeGame,
 } from 'Frontend/generated/GameController';
@@ -73,6 +74,12 @@ export default function GameView() {
   const [editOpponent, setEditOpponent] = React.useState<string>('');
   const [editData, setEditData] = React.useState<string>('');
   const [editLocal, setEditLocal] = React.useState<string>('');
+  const [editPlayersToRemove, setEditPlayersToRemove] = React.useState<
+    (number | undefined)[]
+  >([]);
+  const [editPlayersToAdd, setEditPlayersToAdd] = React.useState<
+    (number | undefined)[]
+  >([]);
 
   const [newGameTeam, setNewGameTeam] = React.useState<string>('');
   const [newGameOpponent, setNewGameOpponent] = React.useState<string>('');
@@ -152,6 +159,38 @@ export default function GameView() {
     }
 
     toast.success('Treino eliminado com sucesso');
+    window.location.reload();
+  }
+
+  async function editGameft() {
+    let result;
+
+    const playersToAdd = editPlayersToAdd.filter(
+      (player) => !editPlayersToRemove.includes(player)
+    );
+
+    try {
+      result = await editGame(
+        playersToAdd,
+        modalFocusedGame?.team,
+        editOpponent,
+        editData,
+        editLocal,
+        modalFocusedGame?.id ?? 0,
+        user
+      );
+    } catch (e) {
+      toast.error('Não foi possível editar o treino');
+      return;
+    }
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    toast.success('Treino editado com sucesso');
+    setOpenGameModal(false);
     window.location.reload();
   }
 
@@ -316,6 +355,10 @@ export default function GameView() {
                                 onClick={() => {
                                   setOpenGameModal(true);
                                   setModalFocusedGame(game);
+                                  setEditOpponent(game?.opponent ?? '');
+                                  setEditLocal(game?.local ?? '');
+                                  setEditData(game?.date ?? '');
+                                  setEditPlayersToRemove(game?.gameCall ?? []);
                                 }}
                               >
                                 <AiOutlineEdit size={20}></AiOutlineEdit>
@@ -325,14 +368,9 @@ export default function GameView() {
                             <p className='text-sm'>
                               Dia{' '}
                               {format(
-                                new Date(game?.date ?? '24/4/2023'),
-                                'dd/MM/yyyy HH:mm'
+                                new Date(game?.date ?? '24/4/2023T14:55'),
+                                'dd/MM/yyyy hh:mm'
                               )}{' '}
-                              -{' '}
-                              {format(
-                                new Date(game?.date ?? '24/4/2023'),
-                                'HH:mm'
-                              )}
                             </p>
                           </article>
                         ))}
@@ -355,71 +393,130 @@ export default function GameView() {
                 {
                   variable: editOpponent,
                   html: (
-                    <div className='flex w-full'>
-                      <h1 className='w-fit my-2'>VSC vs </h1>
+                    <div>
+                      <label htmlFor=''>Oponente:</label>
                       <input
                         type='text'
-                        className='flex-none w-48 outline-0 border-0 text-3xl font-semibold text-center'
-                        value={modalFocusedGame?.opponent}
+                        className='w-full outline outline-1 outline-green-500 border-none border-collapse rounded-lg font-semibold'
+                        value={editOpponent}
+                        onChange={(e) => {
+                          setEditOpponent(e.target.value);
+                        }}
                       />
                     </div>
                   ),
                 },
                 {
-                  variable: editOpponent,
+                  variable: editLocal,
                   html: (
                     <div>
                       <label htmlFor=''>Local:</label>
                       <input
                         type='text'
-                        className='w-full outline-none border-none border-collapse focus:ring-0 rounded-lg font-semibold'
-                        value={modalFocusedGame?.local}
+                        className='w-full outline outline-1 outline-green-500 border-none border-collapse rounded-lg font-semibold'
+                        value={editLocal}
+                        onChange={(e) => {
+                          setEditLocal(e.target.value);
+                        }}
                       />
                     </div>
                   ),
                 },
                 {
-                  variable: editOpponent,
+                  variable: editData,
                   html: (
                     <div>
                       <label htmlFor=''>Data:</label>
                       <input
-                        type='text'
-                        className='w-full outline-none border-none border-collapse focus:ring-0 rounded-lg font-semibold'
-                        value={format(
-                          new Date(modalFocusedGame?.date ?? 0),
-                          "dd/MM/yyyy 'às' HH:mm"
-                        )}
+                        type='datetime-local'
+                        className='w-full outline outline-1 outline-green-500 border-none border-collapse rounded-lg font-semibold'
+                        value={editData}
+                        onChange={(e) => {
+                          setEditData(e.target.value);
+                        }}
                       />
                     </div>
                   ),
                 },
                 {
-                  variable: editOpponent,
-                  html: (
-                    <div className='flex flex-col pb-2'>
-                      <label htmlFor=''>Descrição:</label>
-                      <textarea />
-                    </div>
-                  ),
-                },
-                {
+                  // TODO deixar adicionar outros convocados
                   variable: editOpponent,
                   html: (
                     <div>
                       <label htmlFor=''>Convocados:</label>
                       <DataGrid
-                        checkboxSelection={true}
-                        rowSelection={true}
-                        editMode='row'
-                        rows={[]}
-                        initialState={{
-                          pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
+                        sx={{
+                          '& .MuiDataGrid-row:': {
+                            backgroundColor: 'red',
                           },
                         }}
-                        onRowSelectionModelChange={(e: any) => {}}
-                        columns={[]}
+                        rows={
+                          modalFocusedGame?.gameCall?.map((playerId) => {
+                            const player = players?.filter((player) => {
+                              return player?.id === playerId;
+                            });
+                            return {
+                              id: player?.[0]?.id,
+                              firstname: player?.[0]?.firstname,
+                              lastname: player?.[0]?.lastname,
+                            };
+                          }) ?? []
+                        }
+                        className='w-full'
+                        columns={columns}
+                        onRowSelectionModelChange={(e: any) => {
+                          setEditPlayersToRemove(e);
+                        }}
+                        checkboxSelection={true}
+                        getRowClassName={(params) =>
+                          newGameSelectedPlayers.includes(params.row.id)
+                            ? 'selected-row'
+                            : ''
+                        }
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  // TODO deixar adicionar outros convocados
+                  variable: editOpponent,
+                  html: (
+                    <div>
+                      <label htmlFor=''>Não convocados:</label>
+                      <DataGrid
+                        rows={
+                          modalFocusedGame?.gameCall
+                            ?.map((playerId) => {
+                              const player = players?.filter((player) => {
+                                return player?.id === playerId;
+                              });
+                              if (player?.[0] === undefined) return playerId;
+                              return {
+                                id: player?.[0]?.id,
+                                firstname: player?.[0]?.firstname,
+                                lastname: player?.[0]?.lastname,
+                              };
+                            })
+                            .filter((player: any) => {
+                              // ver se o jogador ainda n foi selecionado
+                              const alreadySelected =
+                                modalFocusedGame.gameCall?.includes(
+                                  player?.id ?? 0
+                                );
+                              return !alreadySelected;
+                            }) ?? []
+                        }
+                        className='w-full'
+                        columns={columns}
+                        onRowSelectionModelChange={(e: any) => {
+                          setEditPlayersToAdd(e);
+                        }}
+                        checkboxSelection={true}
+                        getRowClassName={(params) =>
+                          newGameSelectedPlayers.includes(params.row.id)
+                            ? 'selected-row'
+                            : ''
+                        }
                       />
                     </div>
                   ),
@@ -427,7 +524,7 @@ export default function GameView() {
               ],
             }}
             onSubmit={() => {
-              throw new Error('Function not implemented.');
+              editGameft();
             }}
             children={undefined}
           ></ModalInfo>
