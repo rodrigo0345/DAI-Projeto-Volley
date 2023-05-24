@@ -21,6 +21,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": false,
     "baseUrl": "frontend",
     "paths": {
