@@ -322,11 +322,29 @@ function TeamComponent({
   }
 
   async function saveEditTeam() {
+    const result = await editTeam(
+      currUser,
+      team?.id,
+      newManager,
+      team?.players,
+      newTeamName
+    );
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    window.location.reload();
+  }
+
+  async function removePlayersFromTeam() {
     const newTeam = [...(newPlayersID ?? [])];
     players?.map((player) => {
       if (selectedTeamPlayersID?.includes(player?.id ?? 0)) return;
       newTeam.push(player?.id ?? 0);
     });
+
     const result = await editTeam(
       currUser,
       team?.id,
@@ -341,6 +359,10 @@ function TeamComponent({
     }
 
     window.location.reload();
+  }
+
+  async function addPlayersToTeam() {
+    removePlayersFromTeam(); // fazem a mesma coisa
   }
 
   useEffect(() => {
@@ -554,7 +576,7 @@ function TeamComponent({
                 <motion.button
                   layout
                   onClick={() => {
-                    saveEditTeam();
+                    removePlayersFromTeam();
                   }}
                   className='bg-red-100 hover:bg-red-200 p-2 radius-md mt-2 text-red-500'
                 >
@@ -578,7 +600,7 @@ function TeamComponent({
                 <button
                   className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
                   onClick={() => {
-                    saveEditTeam();
+                    addPlayersToTeam();
                   }}
                 >
                   Salvar
