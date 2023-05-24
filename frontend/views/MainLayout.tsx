@@ -39,7 +39,7 @@ export default function MainLayout() {
     <Context>
       <ThemeProvider>
         <AppLayout
-          className='max-w-screen scrollbar-hide min-h-screen'
+          className='max-w-screen scrollbar-hide min-h-screen overflow-hidden'
           primarySection='drawer'
         >
           <MainHeader></MainHeader>

@@ -1,4 +1,4 @@
-package com.example.application.model;
+package com.example.application.model.Appointments;
 
 import java.time.LocalDateTime;
 
@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "appointments")
-public class Appointment {
+@Table(name = "psychological_appointments")
+public class PsychologicalAppointment {
     
     @Id
     @GeneratedValue
@@ -27,5 +27,10 @@ public class Appointment {
     private Integer doctor;
     private Integer patient;
     private LocalDateTime date;
-
+    private String selfConfidence;
+    private String positiveThoughts;
+    private String attention;
+    private String competitiveAttitude;
+    private String motivation;
+    private String cognitiveOrientation;
 }

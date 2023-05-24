@@ -6,37 +6,34 @@ import com.example.application.model.Team.Team;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.Roles;
 import com.example.application.model.User.User;
-import com.example.application.repository.CalendarRepository;
 import com.example.application.repository.NewsRepository;
 import com.example.application.repository.RideRepository;
 import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import com.example.application.service.AuthenticationService;
 import com.example.application.service.TeamService;
-import java.util.List;
+
+import java.util.*;
 
 import com.example.application.service.TokenService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 import dev.hilla.Endpoint;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.ResponseEntity;
 
 @Endpoint
 @AnonymousAllowed
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class TeamController {
 
     private final RideRepository ridesRepository;
     private final NewsRepository newsRepository;
     private final UserRepository usersRepository;
-    private final CalendarRepository calendarRepository;
     private final TeamRepository teamRepository;
     private final AuthenticationService service;
     private final TeamService teamService;
@@ -54,7 +51,13 @@ public class TeamController {
         List<Team> teams = teamRepository.findAll();
 
         for (Team t : teams) {
-            players.removeAll(t.getPlayers());
+            Iterable<User> users = usersRepository.findAllById(t.getPlayers());
+            List<User> usersList = new ArrayList<User>();
+            for (User user : users) {
+                usersList.add(user);
+            }
+
+            players.removeAll(usersList);
         }
 
         var response = new ResponseType<List<LoginUser>>();
@@ -66,13 +69,22 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
+    public List<Team> findAll() {
+        try {
+            return teamRepository.findAll();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public ResponseEntity<ResponseType<Team>> createTeamWithManager(LoginUser loginUser,
             List<Integer> jogadores,
             String escalaoI,
             String name) {
+
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
-        User user = usersRepository.findById(loginUser.getId()).get();
-        if (!(user.getRole().equals((Roles.MANAGER)))) {
+
+        if (!(loginUser.getRole().equals("MANAGER"))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");
             return ResponseEntity.badRequest().body(response);
@@ -98,7 +110,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Team createdTeam = teamService.criarEquipa(teamRepository, user, jogadores, escalao, name).success;
+        Team createdTeam = teamService.criarEquipa(teamRepository, loginUser.getId(), jogadores, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -106,35 +118,25 @@ public class TeamController {
     }
 
     public ResponseEntity<ResponseType<Team>> createTeamWithAdmin(LoginUser loginUser,
-                                                                  List<Integer> equipa,
-                                                                  String escalaoI,
-                                                                  String name) {
-        //Integer managerId
+            List<Integer> equipa,
+            String escalaoI,
+            String name,
+            Integer managerId) {
         Escalao escalao = Escalao.valueOf(escalaoI.toUpperCase());
 
-        User user = usersRepository.findById(loginUser.getId()).get();
-        //User manager = usersRepository.findById(managerId).get();
-
-        if (!(user.getRole().equals((Roles.ADMIN)))) {
+        if (!(loginUser.getRole().equals("ADMIN"))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissões para criar equipas");
-            // return ResponseEntity.badRequest().body(response);
-            return null;
-        }
-        if (equipa == null) {
-            var response = new ResponseType<Team>();
-            response.error("A equipa esta vazia");
-            // return ResponseEntity.badRequest().body(response);
-            return null;
-        }
-        if (escalao == null) {
-            var response = new ResponseType<Team>();
-            response.error("O escalão não existe");
-            // return ResponseEntity.badRequest().body(response);
-            return null;
+            return ResponseEntity.badRequest().body(response);
         }
 
-        Team createdTeam = teamService.criarEquipa(teamRepository, user, equipa, escalao, name).success;
+        if (equipa == null) {
+            var response = new ResponseType<Team>();
+            response.error("A equipa está vazia");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Team createdTeam = teamService.criarEquipa(teamRepository, managerId, equipa, escalao, name).success;
 
         var response = new ResponseType<Team>();
         response.success(createdTeam);
@@ -154,21 +156,22 @@ public class TeamController {
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
-
-        Team team = teamRepository.findById(teamId).get();
-        // verificar se currentUser é admin ou treinador da equipa
-        if (!currentUser.getRole().toString().equals("ADMIN")
-                && !currentUser.getId().equals(team.getManager().getId())) {
-            var response = new ResponseType<Team>();
-            response.error("Você não tem permissão para editar a equipa");
-            return ResponseEntity.badRequest().body(response);
-        }
-        // verificar se a equipa é válida (nao nula)
-        if (team == null) {
+        Team team = null;
+        try {
+            team = teamRepository.findById(teamId.longValue());
+        } catch (Exception e) {
             var response = new ResponseType<Team>();
             response.error("A equipa não existe");
             return ResponseEntity.badRequest().body(response);
         }
+
+        // verificar se currentUser é admin
+        if (!currentUser.getRole().equals("ADMIN")) {
+            var response = new ResponseType<Team>();
+            response.error("Você não tem permissão para editar a equipa");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         // verificar se o nome da equipa é válido (nao vazio)
         if (name.trim().isEmpty()) {
             var response = new ResponseType<Team>();
@@ -176,16 +179,40 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se o nome da equipa editada já existe (overlap)
-        if (teamRepository.findByName(name) != null) {
+        Team existingTeam = teamRepository.findByName(name);
+        if (existingTeam != null && !existingTeam.getId().equals(teamId.longValue())) {
             var response = new ResponseType<Team>();
             response.error("O nome da equipa já existe");
             return ResponseEntity.badRequest().body(response);
         }
-        // verificar se o nome do treinador é válido (nao vazio) MESMA CENA DE CIMA IDK
+        // verificar se o manager existe
         if (usersRepository.findById(managerId).isEmpty()) {
             var response = new ResponseType<Team>();
             response.error("O treinador não existe");
             return ResponseEntity.badRequest().body(response);
+        }
+
+        // verificar se o jogador já pertence a outra equipa
+        Set<Integer> jogadoresEmEquipas = new HashSet<>();
+        List<Team> todasEquipas = teamRepository.findAll();
+
+        for (Team t : todasEquipas) {
+            jogadoresEmEquipas.addAll(t.getPlayers());
+        }
+
+        User atleta = new User();
+
+        List<Integer> jogadoresNovos = new ArrayList<>();
+        jogadoresNovos.addAll(equipa);
+        jogadoresNovos.removeAll(team.getPlayers());
+
+        for (Integer user : jogadoresNovos) {
+            if (jogadoresEmEquipas.contains(user)) {
+                atleta = usersRepository.findById(user).get();
+                var response = new ResponseType<Team>();
+                response.error(atleta.getFirstname() + " " + atleta.getLastname() + " já pertence a outra equipa");
+                return ResponseEntity.badRequest().body(response);
+            }
         }
 
         Team editedTeam = teamService.editarEquipa(teamRepository, teamId, managerId, equipa, name).success;
@@ -195,21 +222,37 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Team>> removeTeam(LoginUser loginUser,
+    public ResponseEntity<ResponseType<Boolean>> removeTeam(LoginUser loginUser,
             Integer teamId) {
-        User user = usersRepository.findById(loginUser.getId()).get();
 
-        if (!(user.getId().equals(teamRepository.findById(teamId).get().getManager().getId())
-                || user.getRole().equals(Roles.ADMIN))) {
-            var response = new ResponseType<Team>();
-            response.error = ("Não tem permissoes para remover equipas");
+        User user;
+        Team team;
+        try {
+            team = teamRepository.findById(teamId.longValue());
+            user = usersRepository.findById(loginUser.getId()).get();
+        } catch (Exception e) {
+            var response = new ResponseType<Boolean>();
+            response.error("A equipa não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (team == null) {
+            var response = new ResponseType<Boolean>();
+            response.error("Equipa não encontrada");
+            return ResponseEntity.ok().body(response);
+        }
+
+        if ((!user.getId().equals(team.getManagerID()) || !user.getRole().equals(Roles.ADMIN))
+                && team.getManagerID() == null) {
+            var response = new ResponseType<Boolean>();
+            response.error("Não tem permissões para remover equipas");
             return ResponseEntity.ok().body(response);
         }
 
         Team deletedTeam = teamService.removerEquipa(teamRepository, teamId).success;
 
-        var response = new ResponseType<Team>();
-        response.success(deletedTeam);
+        var response = new ResponseType<Boolean>();
+        response.success(true);
         return ResponseEntity.ok().body(response);
     }
 
@@ -223,9 +266,18 @@ public class TeamController {
             response.error("Token inválida");
             return ResponseEntity.badRequest().body(response);
         }
+
         // verificar se currentUser é admin ou treinador da equipa
-        if (!((currentUser.getRole().equals("MANAGER"))
-                || currentUser.getRole().equals("ADMIN"))) {
+        Team team;
+        try {
+            team = teamRepository.findById(teamId.longValue());
+        } catch (Exception e) {
+            var response = new ResponseType<Team>();
+            response.error("A equipa não existe");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        if (!currentUser.getRole().equals("ADMIN") || !currentUser.getId().equals(team.getManagerID())) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissoes para remover jogadores");
             return ResponseEntity.badRequest().body(response);
@@ -238,29 +290,28 @@ public class TeamController {
         }
 
         // verificar se o jogador já pertence a outra equipa
-        Set<User> jogadoresEmEquipas = new HashSet<>();
+        Set<Integer> jogadoresEmEquipas = new HashSet<>();
         List<Team> todasEquipas = teamRepository.findAll();
 
         for (Team t : todasEquipas) {
             jogadoresEmEquipas.addAll(t.getPlayers());
         }
 
-        List<User> atletas = null;
+        User atleta = new User();
 
-        for (Integer elemento : equipa) {
-            User atleta = usersRepository.findById(elemento).get();
-            atletas.add(atleta);
-        }
+        List<Integer> jogadoresNovos = equipa;
+        jogadoresNovos.removeAll(team.getPlayers());
 
-        for (User user : atletas) {
+        for (Integer user : jogadoresNovos) {
             if (jogadoresEmEquipas.contains(user)) {
+                atleta = usersRepository.findById(user).get();
                 var response = new ResponseType<Team>();
-                response.error(user.getFirstname() + " " + user.getLastname() + " já pertence a outra equipa");
+                response.error(atleta.getFirstname() + " " + atleta.getLastname() + " já pertence a outra equipa");
                 return ResponseEntity.badRequest().body(response);
             }
         }
 
-        Team addedPlayerTeam = teamService.adicionarJogador(teamRepository, teamId, atletas).success;
+        Team addedPlayerTeam = teamService.adicionarJogador(teamRepository, teamId, equipa).success;
 
         var response = new ResponseType<Team>();
         response.success(addedPlayerTeam);
@@ -280,6 +331,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se currentUser é admin ou treinador da equipa
+
         if (!(user.getRole().toString().equals("MANAGER") || user.getRole().toString().equals("ADMIN"))) {
             var response = new ResponseType<Team>();
             response.error("Não tem permissoes para remover jogadores");
@@ -298,7 +350,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
         // verificar se os jogadores pertencem à equipa
-        if (teamRepository.findById(teamId).get().getPlayers().contains(jogadoresRemovidos)) {
+        if (teamRepository.findById(teamId.longValue()).getPlayers().contains(jogadoresRemovidos)) {
             var response = new ResponseType<Team>();
             response.error("Os atletas nao pertecem a esta equipa");
             return ResponseEntity.badRequest().body(response);
@@ -314,7 +366,7 @@ public class TeamController {
     public ResponseEntity<ResponseType<Team>> switchManager(LoginUser currentUser,
             Integer teamId,
             Integer managerId) {
-        Team team = teamRepository.findById(teamId).get();
+        Team team = teamRepository.findById(teamId.longValue());
 
         // verificar se o token é válido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
@@ -344,30 +396,23 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(List<Long> atletas) {
+    public ResponseEntity<ResponseType<Boolean>> isPlayerInTeam(List<Integer> atletas) {
 
-        List<User> atleta = null;
-
-        for (Long elemento : atletas) {
-            User jogador = usersRepository.findById(elemento).get();
-            atleta.add(jogador);
-        }
-
-        Set<User> jogadoresEmEquipas = new HashSet<User>();
+        Set<Integer> jogadoresEmEquipas = new HashSet<Integer>();
         List<Team> todasEquipas = teamRepository.findAll();
 
         for (Team t : todasEquipas) {
             jogadoresEmEquipas.addAll(t.getPlayers());
         }
 
-        if (!(jogadoresEmEquipas.contains(atleta))) {
+        if (!(jogadoresEmEquipas.contains(atletas))) {
             var response = new ResponseType<Boolean>();
-            response.success(true);
+            response.success(false);
             return ResponseEntity.badRequest().body(response);
         }
 
         var response = new ResponseType<Boolean>();
-        response.success(false);
+        response.success(true);
         return ResponseEntity.ok().body(response);
     }
 

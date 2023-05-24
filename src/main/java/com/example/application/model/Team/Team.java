@@ -1,13 +1,14 @@
 package com.example.application.model.Team;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -32,9 +33,8 @@ public class Team {
     private Escalao escalao;
     private String name;
 
-    @ManyToOne
-    private User manager;
+    private Integer managerID;
 
     @ElementCollection
-    private List<User> players;
+    private List<Integer> players;
 }

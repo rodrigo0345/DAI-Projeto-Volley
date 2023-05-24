@@ -23,6 +23,11 @@ const ForumView = lazy(() => import('./views/ForumView'));
 const PostView = lazy(() => import('./views/PostView'));
 const TeamView = lazy(() => import('./views/TeamView'));
 const NotFound = lazy(() => import('./views/404'));
+const TrainingView = lazy(() => import('./views/PracticeView'));
+const ReportView = lazy(() => import('./views/ReportView'));
+const HealthView = lazy(() => import('./views/HealthView'));
+const GameView = lazy(() => import('./views/GameView'));
+const LivesView = lazy(() => import('./views/LivesView'));
 
 const router = createBrowserRouter([
   {
@@ -54,6 +59,11 @@ const router = createBrowserRouter([
           { path: '/forum', element: <ForumView /> },
           { path: '/post/:type/:id', element: <PostView /> },
           { path: '/team', element: <TeamView /> },
+          { path: '/training', element: <TrainingView /> },
+          { path: '/report', element: <ReportView /> },
+          { path: '/health', element: <HealthView /> },
+          { path: '/game', element: <GameView /> },
+          { path: '/lives', element: <LivesView /> },
         ],
       },
       {

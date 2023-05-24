@@ -85,6 +85,18 @@ export default function DashboardView() {
     <main className='min-h-screen flex flex-col md:!flex-row relative z-10 bg-white shadow-lg'>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
       <div className='relative flex-1'>
+        <div
+          className='fixed inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-50'
+          aria-hidden='true'
+        >
+          <div
+            className='relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-yellow-400 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]'
+            style={{
+              clipPath:
+                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+            }}
+          ></div>
+        </div>
         <img
           src='../assets/svgs/sport.svg'
           alt=''
@@ -115,7 +127,12 @@ export default function DashboardView() {
                 </Box>
               )}
               {user?.role?.toUpperCase() === Roles.MANAGER && (
-                <Box className='bg-gradient-to-tl from-purple-500/100 to-purple-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-tl from-purple-500/100 to-purple-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/lives';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Lives
                   </h2>
@@ -159,8 +176,16 @@ export default function DashboardView() {
                   className='icon absolute -right-10 -bottom-10 '
                 ></CgProfile>
               </Box>
-              {!(user?.role?.toUpperCase() === Roles.ADMIN) && (
-                <Box className='bg-gradient-to-tl from-green-500/100 to-green-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+              {!(
+                user?.role?.toUpperCase() === Roles.ADMIN ||
+                user?.role?.toLocaleUpperCase() === Roles.MANAGER
+              ) && (
+                <Box
+                  className='bg-gradient-to-tl from-green-500/100 to-green-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/health';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Saúde
                   </h2>
@@ -190,7 +215,12 @@ export default function DashboardView() {
                 ></MdOutlineForum>
               </Box>
               {!(user?.role?.toUpperCase() === Roles.SECCTIONIST) && (
-                <Box className='bg-gradient-to-tr from-red-600/100 to-red-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-tr from-red-600/100 to-red-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/game';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Jogos{' '}
                   </h2>
@@ -204,7 +234,12 @@ export default function DashboardView() {
               )}
               {(user?.role?.toUpperCase() === Roles.ADMIN ||
                 user?.role?.toUpperCase() === Roles.MANAGER) && (
-                <Box className='bg-gradient-to-tr from-pink-600/100 to-pink-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+                <Box
+                  className='bg-gradient-to-tr from-pink-600/100 to-pink-500/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/report';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Relatórios{' '}
                   </h2>
@@ -215,8 +250,16 @@ export default function DashboardView() {
                   ></HiOutlineDocumentText>
                 </Box>
               )}
-              {!(user?.role?.toUpperCase() === Roles.SECCTIONIST) && (
-                <Box className='bg-gradient-to-tr from-teal-400/100 to-teal-700/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'>
+              {!(
+                user?.role?.toUpperCase() === Roles.SECCTIONIST ||
+                user?.role?.toUpperCase() === Roles.ADMIN
+              ) && (
+                <Box
+                  className='bg-gradient-to-tr from-teal-400/100 to-teal-700/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
+                  onClick={() => {
+                    window.location.href = '/training';
+                  }}
+                >
                   <h2 className='text-gray-50 font-semibold text-2xl z-20'>
                     Treinos
                   </h2>
@@ -245,7 +288,10 @@ export default function DashboardView() {
                 { label: 'Pessoal', value: 'pessoal' },
               ]}
             />
-            <CalendarView></CalendarView>
+            <CalendarView
+              user={user}
+              calendarType={calendarType}
+            ></CalendarView>
           </div>
         )}
       </div>

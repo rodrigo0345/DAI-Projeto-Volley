@@ -41,7 +41,7 @@ export default function UserCard({
   const { user } = useContext(UserContext);
 
   return (
-    <Card>
+    <Card className='flex-none'>
       {!(userSubject?.id === user?.id) && (
         <button
           className='delete bg-red-400 font-bold absolute z-10 right-0 p-2 rounded-md overflow-hidden hover:bg-red-500'
@@ -50,9 +50,9 @@ export default function UserCard({
             (async () => {
               const result = await deleteUser(userSubject?.id, user);
               if (!result) {
-                toast.error('Error deleting user');
+                toast.error('Erro ao eliminar jogador');
               }
-              toast.success('User deleted');
+              toast.success('Utilizador eliminado com sucesso');
               // reload window
               window.location.reload();
             })();

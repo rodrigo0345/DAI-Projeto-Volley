@@ -3,12 +3,12 @@ package com.example.application.repository;
 import dev.hilla.mappedtypes.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Table;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.example.application.model.Convocatorias;
 import com.example.application.model.Team.Team;
 import com.example.application.model.User.User;
 

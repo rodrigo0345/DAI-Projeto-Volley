@@ -40,7 +40,6 @@ import {
   fetchPostsByOldest,
   loadMore,
 } from 'Frontend/services/posts/fetchPosts';
-import { criarNoticia } from 'Frontend/services/posts/createPost';
 import FilterContent from 'Frontend/components/filterContent/FilterContent';
 import CreatePost from 'Frontend/components/posts/CreatePost';
 import { CgProfile } from 'react-icons/cg';
@@ -262,7 +261,19 @@ export default function ForumView() {
   }, []);
 
   return (
-    <div className='min-h-screen flex relative z-10 bg-white shadow-lg'>
+    <div className='min-h-screen flex relative z-10 bg-white shadow-lg w-full'>
+      <div
+        className='fixed inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-60rem)]'
+        aria-hidden='true'
+      >
+        <div
+          className='relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-yellow-400 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]'
+          style={{
+            clipPath:
+              'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+          }}
+        ></div>
+      </div>
       <CreatePost
         openModal={openModal}
         setOpenModal={setOpenModal}
@@ -280,7 +291,7 @@ export default function ForumView() {
         }
       ></CreatePost>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
-      <main className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10'>
+      <main className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10 w-screen'>
         <header className='flex lg:!flex-row lg:!items-start flex-col justify-between items-start gap-4 max-w-[60em] m-auto'>
           <h1 className='text-3xl font-bold m-0'>Forum</h1>
           <FilterContent setOrder={setOrder} order={Order}></FilterContent>

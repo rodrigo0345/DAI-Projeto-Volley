@@ -33,7 +33,6 @@ public class Practice {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    @ManyToOne
-    private Team team;
+    private Long team;
 
 }

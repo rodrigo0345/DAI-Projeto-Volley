@@ -47,7 +47,7 @@ public class AuthenticationController {
             @RequestBody LoginUser currentUser,
             @RequestBody RegisterRequest request) throws Exception {
 
-        // verificar se currentUser é admin
+        // verificar se token é valido
         var isValidToken = TokenService.validateToken(currentUser, currentUser.getStringToken(), service);
         if (!isValidToken) {
             var response = new ResponseType<LoginUser>();
@@ -104,8 +104,8 @@ public class AuthenticationController {
 
         user.setFirstname(request.getFirstName());
         user.setLastname(request.getLastName());
-
-        if (request.getAge() < 3 || request.getAge() > 120) {
+        
+        if (request.getAge() < 0 || request.getAge() > 120) {
             var response = new ResponseType<LoginUser>();
             response.error("Idade inválida");
             return ResponseEntity.badRequest().body(response);

@@ -1,4 +1,5 @@
 import { Modal } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 
@@ -13,18 +14,20 @@ export default function ModalBox({
   children: React.ReactNode;
   title?: string;
 }) {
+  const isMobile = useMediaQuery('(max-width: 30em)');
   return (
     <AnimatePresence>
       <Modal
+        style={{ minWidth: 'none' }}
         opened={openModal}
         onClose={() => {
           setOpenModal(false);
         }}
         title={title ?? ''}
-        centered
-        className=''
+        fullScreen={isMobile}
+        className='max-w-screen overflow-hidden'
       >
-        {children}
+        <div className='w-full'>{children}</div>
       </Modal>
     </AnimatePresence>
   );

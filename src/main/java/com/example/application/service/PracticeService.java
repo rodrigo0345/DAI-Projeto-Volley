@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class PracticeService {
 
 
-    public static ResponseType<Practice> createPractice(PracticeRepository practiceRepository, Team team,
+    public static ResponseType<Practice> createPractice(PracticeRepository practiceRepository, Long team,
                                                         String local, LocalDateTime startDate, LocalDateTime endDate){
 
         Practice practice = new Practice();

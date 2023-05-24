@@ -2,16 +2,24 @@ import { useEffect, useState } from 'react';
 import { Group, Indicator } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
 import dayjs from 'dayjs';
-import { getAllEvents } from 'Frontend/generated/CalendarController';
-import CalendarEvent from 'Frontend/generated/com/example/application/model/CalendarEvent';
+import {
+  getAllEvents,
+  getEventsByPerson,
+} from 'Frontend/generated/CalendarController';
 import { format } from 'date-fns';
 import { motion } from 'framer-motion';
+import Event from 'Frontend/generated/com/example/application/service/CalendarService/Event';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 
-export default function CalendarView() {
-  const [events, setEvents] = useState<
-    (CalendarEvent | undefined)[] | undefined
-  >([]);
-  const [showEvent, setShowEvent] = useState<CalendarEvent[] | undefined>(
+export default function CalendarView({
+  calendarType,
+  user,
+}: {
+  calendarType: string;
+  user: LoginUser | undefined;
+}) {
+  const [events, setEvents] = useState<(Event | undefined)[] | undefined>([]);
+  const [showEvent, setShowEvent] = useState<(Event | undefined)[] | undefined>(
     undefined
   );
   const [selected, setSelected] = useState<Date[]>([]);
@@ -29,14 +37,12 @@ export default function CalendarView() {
     if (selected.length === 1) {
       const selectedDate = selected[0];
       const selectedEvents = events?.filter((event) => {
-        if (
-          dayjs(selectedDate).isSame(new Date(event?.startDate ?? ''), 'date')
-        ) {
+        if (dayjs(selectedDate).isSame(new Date(event?.date ?? ''), 'date')) {
           return true;
         }
         return false;
       });
-      setShowEvent(selectedEvents as CalendarEvent[]);
+      setShowEvent(selectedEvents as Event[]);
     } else {
       setShowEvent(undefined);
     }
@@ -44,10 +50,15 @@ export default function CalendarView() {
 
   useEffect(() => {
     (async () => {
+      if (calendarType === 'pessoal') {
+        const events = await getEventsByPerson(user?.id ?? 0);
+        setEvents(events);
+        return;
+      }
       const events = await getAllEvents();
       setEvents(events);
     })();
-  }, []);
+  }, [calendarType]);
 
   return (
     <motion.div className='flex flex-col justify-between flex-wrap gap-8 pb-8'>
@@ -60,9 +71,8 @@ export default function CalendarView() {
         }}
         renderDay={(date) => {
           const day = date.getDate();
-          console.log({ events });
           const isInEvents = events?.find((event) => {
-            if (dayjs(date).isSame(new Date(event?.startDate ?? ''), 'date')) {
+            if (dayjs(date).isSame(new Date(event?.date ?? ''), 'date')) {
               return true;
             }
             return false;
@@ -91,7 +101,7 @@ export default function CalendarView() {
                   layout
                   className='flex py-4'
                   onClick={() => {
-                    window.location.href = event.linkToPost ?? '#';
+                    window.location.href = event?.url ?? '#';
                   }}
                 >
                   <div className='mr-4 flex-1'>
@@ -99,12 +109,10 @@ export default function CalendarView() {
                       {event?.title}
                     </h4>
                     <div className='mt-1 text-sm text-gray-400'>
-                      <span>{event?.description}</span> •{' '}
+                      <span>No description</span> •{' '}
                       <time>
-                        {format(
-                          new Date(event?.startDate ?? ''),
-                          'dd/mm/yyyy'
-                        ) ?? ''}
+                        {format(new Date(event?.date ?? ''), 'dd/mm/yyyy') ??
+                          ''}
                       </time>
                     </div>
                   </div>
