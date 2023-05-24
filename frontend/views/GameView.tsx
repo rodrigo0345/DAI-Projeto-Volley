@@ -1,28 +1,42 @@
 import { Accordion } from '@mantine/core';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Ata from 'Frontend/components/cards/Ata';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
+import { createGame, getAllGames } from 'Frontend/generated/GameController';
 import { createPractice } from 'Frontend/generated/PracticeController';
 import { findAll } from 'Frontend/generated/TeamController';
 import Game from 'Frontend/generated/com/example/application/model/Game';
 import Practice from 'Frontend/generated/com/example/application/model/Practice';
 import Team from 'Frontend/generated/com/example/application/model/Team/Team';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
-import { format, set } from 'date-fns';
+import { format, isBefore, set } from 'date-fns';
 import { motion } from 'framer-motion';
 import React, { useContext, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import { RiUserSettingsFill } from 'react-icons/ri';
 import { toast } from 'react-toastify';
+import { findAll as findAllUsers } from 'Frontend/generated/UserController';
+import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
 
 enum Training {
   Main,
   Report,
 }
+
+const columns: GridColDef[] = [
+  { field: 'firstname', headerName: 'Primeiro nome', width: 130 },
+  { field: 'lastname', headerName: 'Último nome', width: 130 },
+  {
+    field: 'age',
+    headerName: 'Idade',
+    type: 'number',
+    width: 90,
+  },
+];
 
 export default function GameView() {
   const { user, logout } = useContext(UserContext);
@@ -40,6 +54,9 @@ export default function GameView() {
   const [teams, setTeams] = React.useState<(Team | undefined)[] | undefined>(
     undefined
   );
+  const [players, setPlayers] = React.useState<
+    (LoginUser | undefined)[] | undefined
+  >(undefined);
   const [games, setGames] = React.useState<(Game | undefined)[] | undefined>(
     undefined
   );
@@ -53,72 +70,56 @@ export default function GameView() {
   const [editData, setEditData] = React.useState<string>('');
   const [editLocal, setEditLocal] = React.useState<string>('');
 
+  const [newGameTeam, setNewGameTeam] = React.useState<string>('');
+  const [newGameOpponent, setNewGameOpponent] = React.useState<string>('');
+  const [newGameLocal, setNewGameLocal] = React.useState<string>('');
+  const [newGameDate, setNewGameDate] = React.useState<string>('');
+  const [newGameSelectedPlayers, setNewGameSelectedPlayers] = React.useState<
+    (number | undefined)[]
+  >([]);
   useEffect(() => {
     (async () => {
       const result = await findAll();
 
       const team = result;
       setTeams(team);
+      setNewGameTeam(team?.[0]?.id?.toString() ?? '');
     })();
 
-    /* 
-    id?: number;
-    date?: string;
-    team?: string;
-    gameCall?: Array<number | undefined>;
-    opponent?: string;
-    local?: string; 
-*/
+    (async () => {
+      // TODO get all games n funfa
+      const result = await getAllGames();
+      console.log({ result });
 
-    setGames([
-      {
-        id: 1,
-        date: '2021-06-01',
-        team: 'Benjamins',
-        gameCall: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        opponent: 'FC Porto',
-        local: 'Estádio do Dragão',
-      },
-      {
-        id: 2,
-        date: '2021-06-01',
-        team: 'Benjamins',
-        gameCall: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-        opponent: 'FC Porto',
-        local: 'Estádio do Dragão',
-      },
-    ]);
+      const games = result?.filter((game) =>
+        isBefore(new Date(game?.date ?? '0'), Date.now())
+      );
+
+      setGames(games);
+    })();
+
+    (async () => {
+      const result = await findAllUsers();
+
+      const players = result.body.success?.filter(
+        (player: any) => player?.role === Roles.USER
+      );
+
+      console.log(players);
+
+      setPlayers(players);
+    })();
   }, [user]);
 
-  async function createTraining() {
-    const local = localRef.current?.value;
-    const startDate = startDateRef.current?.value;
-    const endDate = endDateRef.current?.value;
-    const team = teamIDRef.current?.value;
-    // parse to number
-    const teamID = Number(team ?? '');
-    const startDateParsed = startDate?.toString();
-    const endDateParsed = endDate?.toString();
-
-    if (!local) {
-      toast.error('Local não pode estar vazio');
-      localRef.current?.focus();
-      return;
-    } else if (!startDate) {
-      toast.error('Data de inicio não pode estar vazio');
-      startDateRef.current?.focus();
-      return;
-    } else if (!endDate) {
-      toast.error('Data de fim não pode estar vazio');
-      endDateRef.current?.focus();
-      return;
-    }
-
-    const result = await createPractice(
-      teamID,
-      local,
-      startDateParsed,
-      endDateParsed
+  async function createGameft() {
+    // TODO erro da equipa inválida
+    const result = await createGame(
+      newGameDate,
+      newGameTeam,
+      newGameSelectedPlayers,
+      newGameOpponent,
+      newGameLocal,
+      user
     );
 
     if (result?.body.error) {
@@ -176,8 +177,12 @@ export default function GameView() {
                 Equipa
               </label>
               <select
-                ref={teamIDRef}
                 className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+                value={newGameTeam}
+                onChange={(e) => {
+                  console.log('value - ', e);
+                  setNewGameTeam(e.target.value);
+                }}
               >
                 {teams?.map((team) => (
                   <option value={team?.id}>{team?.name}</option>
@@ -191,7 +196,10 @@ export default function GameView() {
               <input
                 type='datetime-local'
                 name='hora de começo'
-                ref={startDateRef}
+                value={newGameDate}
+                onChange={(e) => {
+                  setNewGameDate(e.target.value);
+                }}
               />
             </div>
 
@@ -199,19 +207,57 @@ export default function GameView() {
               <label htmlFor='' className='text-sm text-gray-500'>
                 Oponente
               </label>
-              <input type='text' name='local' ref={localRef} />
+              <input
+                type='text'
+                name='local'
+                value={newGameOpponent}
+                onChange={(e) => {
+                  setNewGameOpponent(e.target.value);
+                }}
+              />
             </div>
 
             <div className='mb-4 flex flex-col'>
               <label htmlFor='' className='text-sm text-gray-500'>
                 Local
               </label>
-              <input type='text' name='local' ref={localRef} />
+              <input
+                type='text'
+                name='local'
+                value={newGameLocal}
+                onChange={(e) => {
+                  setNewGameLocal(e.target.value);
+                }}
+              />
             </div>
+
+            <div className='mb-4 flex flex-col'>
+              <label htmlFor='' className='text-sm text-gray-500'>
+                Convocados
+              </label>
+              <DataGrid
+                rows={
+                  players?.filter((player) => {
+                    const currTeam = teams?.filter(
+                      (team) => team?.id === Number(newGameTeam)
+                    );
+                    return currTeam?.[0]?.players?.includes(player?.id);
+                  }) ?? []
+                }
+                className='w-full'
+                rowSelection={true}
+                columns={columns}
+                onRowSelectionModelChange={(e: any) => {
+                  setNewGameSelectedPlayers(e);
+                }}
+                checkboxSelection
+              />
+            </div>
+
             <button
               className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
               onClick={() => {
-                createTraining();
+                createGameft();
               }}
             >
               Criar

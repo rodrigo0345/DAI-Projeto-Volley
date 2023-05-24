@@ -33,6 +33,10 @@ public class GameController {
     private final UserRepository userRepository;
     private final TeamController teamController;
 
+    public Iterable<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
+
     public ResponseEntity<ResponseType<Game>> createGame(LocalDateTime date,
             String team, List<Integer> gameCall,
             String opponent, String local, LoginUser user) {
