@@ -115,8 +115,6 @@ export default function GameView() {
         (player: any) => player?.role === Roles.USER
       );
 
-      console.log(players);
-
       setPlayers(players);
     })();
   }, [user]);
@@ -165,13 +163,9 @@ export default function GameView() {
   async function editGameft() {
     let result;
 
-    const playersToAdd = editPlayersToAdd.filter(
-      (player) => !editPlayersToRemove.includes(player)
-    );
-
     try {
       result = await editGame(
-        playersToAdd,
+        editPlayersToAdd,
         modalFocusedGame?.team,
         editOpponent,
         editData,
@@ -485,25 +479,23 @@ export default function GameView() {
                       <label htmlFor=''>Não convocados:</label>
                       <DataGrid
                         rows={
-                          modalFocusedGame?.gameCall
-                            ?.map((playerId) => {
-                              const player = players?.filter((player) => {
-                                return player?.id === playerId;
-                              });
-                              if (player?.[0] === undefined) return playerId;
-                              return {
-                                id: player?.[0]?.id,
-                                firstname: player?.[0]?.firstname,
-                                lastname: player?.[0]?.lastname,
-                              };
+                          teams
+                            ?.filter((team) => {
+                              return team?.name === modalFocusedGame?.team;
+                            })?.[0]
+                            ?.players?.filter((p) => {
+                              return !modalFocusedGame?.gameCall?.includes(p);
                             })
-                            .filter((player: any) => {
-                              // ver se o jogador ainda n foi selecionado
-                              const alreadySelected =
-                                modalFocusedGame.gameCall?.includes(
-                                  player?.id ?? 0
-                                );
-                              return !alreadySelected;
+                            .map((p) => {
+                              return {
+                                id: p,
+                                firstname: players?.filter((player) => {
+                                  return player?.id === p;
+                                })?.[0]?.firstname,
+                                lastname: players?.filter((player) => {
+                                  return player?.id === p;
+                                })?.[0]?.lastname,
+                              };
                             }) ?? []
                         }
                         className='w-full'
@@ -512,11 +504,6 @@ export default function GameView() {
                           setEditPlayersToAdd(e);
                         }}
                         checkboxSelection={true}
-                        getRowClassName={(params) =>
-                          newGameSelectedPlayers.includes(params.row.id)
-                            ? 'selected-row'
-                            : ''
-                        }
                       />
                     </div>
                   ),
