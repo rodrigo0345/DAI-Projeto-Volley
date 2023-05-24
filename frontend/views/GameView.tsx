@@ -218,7 +218,7 @@ export default function GameView() {
             </button>
           </ModalBox>
         </div>
-        <div className='flex w-screen justify-center'>
+        <div className='flex w-screen md:w-[30em] justify-center'>
           <motion.main layout className='md:w-[30em] w-full'>
             <Accordion
               variant='separated'
@@ -229,7 +229,7 @@ export default function GameView() {
                 <Accordion.Item value={String(team?.id) ?? ''}>
                   <Accordion.Control>{team?.name}</Accordion.Control>
                   <Accordion.Panel>
-                    <div className='overflow-hidden relative w-full'>
+                    <div className='overflow-hidden relative w-full md:!w-[30em]'>
                       <h1 className='text-xl m-4'>Próximos Jogos</h1>
                       <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
                         {games?.map((game) => (

@@ -360,7 +360,7 @@ export default function PracticeView() {
                                     new Date(
                                       training?.startDate ?? '24/4/2023'
                                     ),
-                                    'dd/MMMM/YYYY HH:mm'
+                                    'dd/MMMM/yyyy HH:mm'
                                   )}{' '}
                                   -{' '}
                                   {format(
