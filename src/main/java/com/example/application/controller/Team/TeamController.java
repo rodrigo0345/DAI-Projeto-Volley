@@ -407,12 +407,12 @@ public class TeamController {
 
         if (!(jogadoresEmEquipas.contains(atletas))) {
             var response = new ResponseType<Boolean>();
-            response.success(true);
+            response.success(false);
             return ResponseEntity.badRequest().body(response);
         }
 
         var response = new ResponseType<Boolean>();
-        response.success(false);
+        response.success(true);
         return ResponseEntity.ok().body(response);
     }
 

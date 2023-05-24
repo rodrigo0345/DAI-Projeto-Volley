@@ -41,7 +41,7 @@ public class GameController {
     }
 
     public ResponseEntity<ResponseType<Game>> createGame(LocalDateTime date,
-            String team, List<Integer> gameCall,
+            String teamID, List<Integer> gameCall,
             String opponent, String local, LoginUser user) {
 
         if (!user.getRole().equals("ADMIN")) {
@@ -51,7 +51,6 @@ public class GameController {
         }
 
         if (gameCall.isEmpty()
-                || team.trim().isEmpty()
                 || opponent.trim().isEmpty()
                 || local.trim().isEmpty()) {
             var response = new ResponseType<Game>();
@@ -59,7 +58,7 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if ((teamRepository.findByName(team)) == null) {
+        if ((teamRepository.findById(Long.parseLong(teamID))) == null) {
             var response = new ResponseType<Game>();
             response.error("Nome de equipa inválido");
             return ResponseEntity.badRequest().body(response);
@@ -71,8 +70,8 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Game createdGame = GameService.createGame(gameRepository,
-                gameCall, team, opponent,
+        Game createdGame = GameService.createGame(gameRepository, teamRepository,
+                gameCall, teamID, opponent,
                 date, local).success;
         var response = new ResponseType<Game>();
         response.success(createdGame);
@@ -80,7 +79,7 @@ public class GameController {
     }
 
     public ResponseEntity<ResponseType<Game>> editGame(List<Integer> gameCall,
-            String team,
+            String teamID,
             String opponent,
             String date,
             String local,
@@ -115,14 +114,13 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        if (gameCall.isEmpty() || team.trim().isEmpty() ||
-                opponent.trim().isEmpty() || local.trim().isEmpty()) {
+        if (gameCall.isEmpty() || opponent.trim().isEmpty() || local.trim().isEmpty()) {
             var response = new ResponseType<Game>();
             response.error("Campos em branco");
             return ResponseEntity.badRequest().body(response);
         }
 
-        if ((teamRepository.findByName(team)) == null) {
+        if ((teamRepository.findById(Long.parseLong(teamID))) == null) {
             var response = new ResponseType<Game>();
             response.error("Nome de equipa inválido");
             return ResponseEntity.badRequest().body(response);
@@ -134,8 +132,11 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        Game editedGame = GameService.editGame(gameRepository,
-                gameId, team, opponent,  startDateTime,
+
+
+
+        Game editedGame = GameService.editGame(gameRepository, teamRepository,
+                gameId, teamID, opponent, startDateTime,
                 local, gameCall).success;
 
         var response = new ResponseType<Game>();

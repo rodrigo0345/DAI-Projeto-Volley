@@ -1,9 +1,11 @@
 package com.example.application.service;
 
+import com.example.application.controller.Team.TeamController;
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Game;
 import com.example.application.model.User.User;
 import com.example.application.repository.GameRepository;
+import com.example.application.repository.TeamRepository;
 import com.example.application.repository.UserRepository;
 import io.swagger.models.auth.In;
 import org.springframework.stereotype.Service;
@@ -15,18 +17,18 @@ import java.util.List;
 @Service
 public class GameService {
 
-    private static UserRepository usersRepository;
 
     public static ResponseType<Game> createGame(GameRepository gameRepository,
+            TeamRepository teamRepository,
             List<Integer> gamecall,
-            String team,
+            String teamID,
             String opponent,
             LocalDateTime date,
             String local) {
 
         Game game = new Game();
         game.setDate(date);
-        game.setTeam(team);
+        game.setTeam((teamRepository.findById(Long.parseLong(teamID))).getName());
         game.setGameCall(gamecall);
         game.setOpponent(opponent);
         game.setLocal(local);
@@ -39,8 +41,9 @@ public class GameService {
     }
 
     public static ResponseType<Game> editGame(GameRepository gameRepository,
+            TeamRepository teamRepository,
             Integer gameId,
-            String team,
+            String teamID,
             String opponent,
             LocalDateTime date,
             String local,
@@ -49,7 +52,7 @@ public class GameService {
         Game game = gameRepository.findById(gameId).get();
 
         game.setDate(date);
-        game.setTeam(team);
+        game.setTeam((teamRepository.findById(Long.parseLong(teamID))).getName());
         game.setGameCall(gamecall);
         game.setOpponent(opponent);
         game.setLocal(local);
