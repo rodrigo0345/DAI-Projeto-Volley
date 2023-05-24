@@ -29,7 +29,7 @@ export default function HealthView() {
     (AppointmentType | undefined)[] | undefined
   >(undefined);
 
-  
+
   const [createAppointment, setCreateAppointment] = React.useState<
     (Appointment | undefined)[] | undefined
   >(undefined); */
