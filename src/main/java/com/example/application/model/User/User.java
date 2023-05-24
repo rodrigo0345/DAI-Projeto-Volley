@@ -1,30 +1,26 @@
 package com.example.application.model.User;
 
+import com.example.application.model.Token.Token;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 import javax.validation.constraints.*;
-
-import org.checkerframework.common.aliasing.qual.Unique;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import com.example.application.model.Token.Token;
-
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.common.aliasing.qual.Unique;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
 @Builder
@@ -33,31 +29,26 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "_user")
 public class User implements UserDetails {
-  @Id
-  @GeneratedValue
-  public Integer id;
+  @Id @GeneratedValue public Integer id;
 
   public String firstname;
 
   public String lastname;
 
-  @Unique
-  @Email
-  private String email;
+  @Unique @Email private String email;
 
   private String password;
 
   private LocalDate dataNascimento;
 
-  @Builder.Default
-  private Integer age = null;
+  @Builder.Default private Integer age = null;
 
   @Enumerated(EnumType.STRING) private Roles role;
 
   @OneToMany(mappedBy = "user") private List<Token> tokens;
 
   public User(String firstname, String lastname, String email, String password,
-      Roles role) {
+              Roles role) {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
@@ -100,43 +91,23 @@ public class User implements UserDetails {
     return true;
   }
 
-  public Integer getId() {
-    return id;
-  }
+  public Integer getId() { return id; }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+  public void setId(Integer id) { this.id = id; }
 
-  public String getFirstname() {
-    return firstname;
-  }
+  public String getFirstname() { return firstname; }
 
-  public void setFirstname(String firstname) {
-    this.firstname = firstname;
-  }
+  public void setFirstname(String firstname) { this.firstname = firstname; }
 
-  public String getLastname() {
-    return lastname;
-  }
+  public String getLastname() { return lastname; }
 
-  public void setLastname(String lastname) {
-    this.lastname = lastname;
-  }
+  public void setLastname(String lastname) { this.lastname = lastname; }
 
-  public Roles getRole() {
-    return role;
-  }
+  public Roles getRole() { return role; }
 
-  public void setRole(Roles role) {
-    this.role = role;
-  }
+  public void setRole(Roles role) { this.role = role; }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+  public void setEmail(String email) { this.email = email; }
 
-  public String getEmail() {
-    return email;
-  }
+  public String getEmail() { return email; }
 }

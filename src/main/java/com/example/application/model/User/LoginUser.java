@@ -1,7 +1,6 @@
 package com.example.application.model.User;
 
 import javax.persistence.Column;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +14,7 @@ public class LoginUser {
   private String firstname;
   private String lastname;
   private String email;
-  @Builder.Default
-  private Integer age = null;
+  @Builder.Default private Integer age = null;
   private String role;
   private String stringToken;
 
