@@ -50,7 +50,7 @@ const AnimatedTitleGroup = styled.div`
 
 export default function LandPageView() {
   return (
-    <section className='relative z-10 shadow-lg scroll-smooth'>
+    <section className='relative z-10 shadow-lg scroll-smooth overflow-hidden max-w-screen'>
       <div className='bg-white'>
         <div className='relative isolate px-6 pt-14 lg:px-8'>
           <div

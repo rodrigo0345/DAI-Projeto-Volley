@@ -146,35 +146,49 @@ export default function mainHeader() {
               exit={{ x: 500 }}
               transition={{ duration: 0.2 }}
             >
-              <div className='px-4 py-2 flex items-center justify-between'>
-                <h3 className='font-semibold text-xl '>Mobile Menu</h3>
+              <div className='px-4 py-2 flex items-center justify-between pt-4'>
+                <h3 className='font-semibold text-xl m-0'>Mobile Menu</h3>
                 <IoClose
-                  color={theme?.theme === 'light' ? '' : 'white'}
+                  color='black'
                   size={30}
                   onClick={() => {
                     setOpenModal(false);
                   }}
                 ></IoClose>
               </div>
-              <ul className='mt-5 flex flex-col gap-4'>
-                <li className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3'>
-                  <label htmlFor='theme-switch' className='text-zinc-800 '>
-                    Dark mode
-                  </label>
-                  <Switch
-                    checked={enabledDarkMode}
-                    id='theme-switch'
-                    onChange={switchTheme}
-                    color='yellow'
-                  />
-                </li>
-                <li
-                  className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3 '
-                  onClick={() => {
-                    window.location.href = '/login';
-                  }}
-                >
-                  <label className='text-zinc-800 '>Login</label>
+              <ul className='mt-5 flex flex-col gap-4 h-full justify-between'>
+                <div>
+                  {!user && (
+                    <li
+                      className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3 '
+                      onClick={() => {
+                        window.location.href = '/login';
+                      }}
+                    >
+                      <label className='text-zinc-800 '>Começa já</label>
+                    </li>
+                  )}
+                  {user && (
+                    <li
+                      className='flex justify-between items-center gap-3 outline outline-1 outline-yellow-500 rounded-md p-3 '
+                      onClick={() => {
+                        logout();
+                      }}
+                    >
+                      <label className='text-zinc-800 '>Logout</label>
+                    </li>
+                  )}
+                </div>
+                <li className='w-full self-end py-20'>
+                  <h2 className='text-base text-center'>Sobre nós 😁</h2>
+                  <p className='text-center'>
+                    Aplicação desenvolvida no âmbito da unidade curricular de
+                    <span className='text-yellow-500'>
+                      {' '}
+                      Desenvolvimento de Aplicações Informáticas
+                    </span>{' '}
+                    curso de LEGSI da UMinho.
+                  </p>
                 </li>
               </ul>
             </motion.div>

@@ -134,7 +134,7 @@ export default function GameView() {
   async function deleteTraining(id: number) {}
 
   return (
-    <motion.div className='min-h-screen flex justify-start z-10 bg-white relative shadow-lg w-full pt-44'>
+    <motion.div className='min-h-screen flex justify-start z-10 bg-white relative shadow-lg max-w-screen pt-44'>
       <div
         className='fixed inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-60rem)]'
         aria-hidden='true'
@@ -147,9 +147,9 @@ export default function GameView() {
           }}
         ></div>
       </div>
-      <div className='flex flex-col items-center flex-1'>
-        <div className='flex justify-around items-center w-full mb-10'>
-          <h1 className='pl-10 m-0'>Jogos</h1>
+      <div className='flex flex-col items-center w-full max-w-screen'>
+        <div className='flex justify-around items-center mb-10 w-full'>
+          <h1 className='m-0'>Jogos</h1>
           {user?.role === Roles.ADMIN && (
             <button
               onClick={() => {
@@ -159,7 +159,7 @@ export default function GameView() {
                 }
                 setOpen(true);
               }}
-              className='mr-10
+              className='
              bg-zinc-200 p-2 rounded-md hover:bg-zinc-300 h-10 shadow-md
             '
             >
@@ -218,8 +218,8 @@ export default function GameView() {
             </button>
           </ModalBox>
         </div>
-        <div className='flex'>
-          <motion.main layout className='w-[30em]'>
+        <div className='flex w-screen justify-center'>
+          <motion.main layout className='md:w-[30em] w-full'>
             <Accordion
               variant='separated'
               radius='md'

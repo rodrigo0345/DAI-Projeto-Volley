@@ -152,14 +152,14 @@ export default function TeamView() {
   return (
     <div className='min-h-screen flex pt-44 justify-center z-10 bg-white relative shadow-lg'>
       <ModalBox title='Criar equipa' openModal={opened} setOpenModal={setOpen}>
-        <div className='mb-4 flex flex-col'>
+        <div className='mb-4 flex flex-col w-full'>
           <label htmlFor='' className='text-sm text-gray-500'>
             Nome da equipa*
           </label>
           <input
             type='text'
             ref={teamNameRef}
-            className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+            className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg w-full'
           />
         </div>
 
@@ -177,7 +177,7 @@ export default function TeamView() {
           />
         </div>
 
-        <div className='mb-4 flex flex-col'>
+        <div className='mb-4 flex flex-col max-w-screen'>
           <label htmlFor='' className='text-sm text-gray-500'>
             Treinador
           </label>
@@ -193,7 +193,7 @@ export default function TeamView() {
                 ' id:' +
                 manager?.id
             )}
-            className='rounded-md'
+            className='rounded-md max-w-screen'
           />
         </div>
 
@@ -206,7 +206,7 @@ export default function TeamView() {
             onChange={(e) => {
               setFilterByName(e.target.value);
             }}
-            className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+            className='max-w-screen ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
           />
         </div>
 
@@ -221,6 +221,7 @@ export default function TeamView() {
               );
             }) ?? []
           }
+          className='w-full'
           rowSelection={true}
           columns={columns}
           onRowSelectionModelChange={(e: any) => {

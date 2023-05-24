@@ -511,7 +511,7 @@ export default function PracticeView() {
               <button
                 className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
                 onClick={() => {
-                  createTraining();
+                  createAta();
                 }}
               >
                 Criar
