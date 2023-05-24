@@ -234,9 +234,26 @@ export default function GameView() {
                       <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
                         {games?.map((game) => (
                           <article className='flex-none odd:bg-yellow-200/50 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
-                            <h2 className='text-lg mt-2'>
-                              Jogo em {game?.local}
-                            </h2>
+                            <div className='flex w-full gap-2 justify-end'>
+                              {
+                                <button
+                                  className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
+                                  onClick={(e) => {}}
+                                >
+                                  <AiOutlineDelete size={20}></AiOutlineDelete>
+                                </button>
+                              }
+                              <button
+                                className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
+                                onClick={() => {
+                                  setOpenGameModal(true);
+                                  setModalFocusedGame(game);
+                                }}
+                              >
+                                <AiOutlineEdit size={20}></AiOutlineEdit>
+                              </button>
+                            </div>
+                            <h2 className='text-lg mt-2'>{game?.local}</h2>
                             <p className='text-sm'>
                               Dia{' '}
                               {format(
@@ -249,23 +266,6 @@ export default function GameView() {
                                 'HH:mm'
                               )}
                             </p>
-                            {
-                              <button
-                                className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
-                                onClick={(e) => {}}
-                              >
-                                <AiOutlineDelete></AiOutlineDelete>
-                              </button>
-                            }
-                            <button
-                              className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
-                              onClick={() => {
-                                setOpenGameModal(true);
-                                setModalFocusedGame(game);
-                              }}
-                            >
-                              <AiOutlineEdit></AiOutlineEdit>
-                            </button>
                           </article>
                         ))}
                       </div>

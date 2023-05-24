@@ -226,7 +226,7 @@ export default function AdminPanelView() {
   }, []);
 
   return (
-    <main className='min-h-screen max-w-screen relative flex z-10 bg-white shadow-lg'>
+    <main className='min-h-screen max-w-screen relative flex z-10 bg-white shadow-lg overflow-hidden'>
       <SidePanel
         key={user?.id}
         user={user}
@@ -252,8 +252,8 @@ export default function AdminPanelView() {
       <div id='content' className='flex flex-1 pr-28 '>
         {menu === Menu.USERS && (
           <div className='flex-1  m-auto relative !max-w-[45em] lg:max-w-[50em] overflow-x-hidden'>
-            <div className='flex flex-col gap-4 relative w-full'>
-              <header className='flex justify-between items-center pt-28'>
+            <div className='flex flex-col gap-4 relative w-screen md:w-full'>
+              <header className='flex justify-between items-center pt-28 w-full'>
                 <h1 className='text-4xl font-bold'>Utilizadores</h1>
                 <button
                   className='flex items-center gap-2 bg-zinc-100 text-zinc-700  px-4 py-2 rounded-md shadow-md hover:shadow-lg transition duration-200'
@@ -266,9 +266,10 @@ export default function AdminPanelView() {
                 </button>
               </header>
               <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
-                <div className='flex justify-between items-center'>
-                  <h2 className='text-1xl font-bold'>Administradores</h2>
+                <div className='flex justify-between items-center w-full'>
+                  <h2 className='text-1xl font-bold m-0'>Administradores</h2>
                   <button
+                    className=' pr-2'
                     onClick={(e) => {
                       setAdminModal(true);
                     }}
@@ -315,7 +316,7 @@ export default function AdminPanelView() {
                     }}
                   ></FilterModalBox>
                 </div>
-                <CustomScrollbar className='flex flex-row gap-4 max-w-full h-72 overflow-x-auto'>
+                <CustomScrollbar className='px-2 flex gap-4 w-screen max-w-full h-72 overflow-x-auto'>
                   {displayUsersBy('ADMIN')}
                 </CustomScrollbar>
               </div>
@@ -369,7 +370,7 @@ export default function AdminPanelView() {
                     }}
                   ></FilterModalBox>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
+                <div className='flex gap-4  w-screen h-72 overflow-x-auto'>
                   {displayUsersBy('MANAGER')}
                 </div>
               </div>
@@ -423,7 +424,7 @@ export default function AdminPanelView() {
                     }}
                   ></FilterModalBox>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
+                <div className='flex gap-4  max-w-screen h-72 overflow-x-auto'>
                   {displayUsersBy('USER')}
                 </div>
               </div>
