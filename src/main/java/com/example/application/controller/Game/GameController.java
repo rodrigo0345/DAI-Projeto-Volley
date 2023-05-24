@@ -3,6 +3,7 @@ package com.example.application.controller.Game;
 import com.example.application.controller.Team.TeamController;
 import com.example.application.controller.Wrapper.ResponseType;
 import com.example.application.model.Game;
+import com.example.application.model.Practice;
 import com.example.application.model.Team.Team;
 import com.example.application.model.User.LoginUser;
 import com.example.application.model.User.Roles;
@@ -19,6 +20,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -79,9 +82,24 @@ public class GameController {
     public ResponseEntity<ResponseType<Game>> editGame(List<Integer> gameCall,
             String team,
             String opponent,
-            LocalDateTime date,
+            String date,
             String local,
             Integer gameId, LoginUser user) {
+
+        String day = date.split("T")[0];
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+        try {
+            startDateTime = LocalDateTime.parse(date, formatter);
+
+        } catch (DateTimeParseException e) {
+            var response = new ResponseType<Game>();
+            response.error("Invalid date format");
+            return ResponseEntity.badRequest().body(response);
+        }
+
 
         Game game = gameRepository.findById(gameId).get();
 
@@ -117,7 +135,7 @@ public class GameController {
         }
 
         Game editedGame = GameService.editGame(gameRepository,
-                gameId, team, opponent, date,
+                gameId, team, opponent,  startDateTime,
                 local, gameCall).success;
 
         var response = new ResponseType<Game>();
