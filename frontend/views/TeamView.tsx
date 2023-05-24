@@ -97,8 +97,6 @@ export default function TeamView() {
       return;
     }
 
-    console.log(result);
-
     if (result?.body.error) {
       toast.error(result?.body.error);
       return;
@@ -307,6 +305,10 @@ function TeamComponent({
   const [newTeamName, setNewTeamName] = useState<string | undefined>(
     team?.name
   );
+  const [newManager, setNewManager] = useState<number | undefined>(
+    team?.managerID
+  );
+  const [managers, setManagers] = useState<LoginUser[] | undefined>(undefined);
 
   async function deleteTeam() {
     const result = await removeTeam(currUser, team?.id);
@@ -328,7 +330,7 @@ function TeamComponent({
     const result = await editTeam(
       currUser,
       team?.id,
-      manager?.id,
+      newManager,
       newTeam,
       newTeamName
     );
@@ -359,13 +361,27 @@ function TeamComponent({
         if (result?.body.error) {
           return;
         }
-        console.log(result?.body.success);
         const p = result?.body.success as LoginUser;
         setPlayers((pList) => [...(pList ?? []), p]);
       });
     };
 
     loadPlayers();
+
+    const loadManagers = async () => {
+      const result = await findAll();
+      if (result?.body.error) {
+        return;
+      }
+
+      setManagers(
+        result.body.success.filter(
+          (user: any) => user.role === Roles.MANAGER
+        ) as LoginUser[]
+      );
+    };
+
+    loadManagers();
 
     return () => {
       setPlayers(undefined);
@@ -413,6 +429,26 @@ function TeamComponent({
                 </a>
               ) : (
                 <span className='text-red-600'>Sem treinador!</span>
+              )}
+              {enabledEditMode && user?.role === Roles.ADMIN && (
+                <motion.div layout className='flex'>
+                  <p>Novo Treinador:</p>
+                  <select
+                    className='rounded-md border-none border-gray-100 disabled:border-0 bg-transparent outline-none ring-0 focus:ring-0'
+                    value={newManager ?? 0}
+                    onChange={(e) => {
+                      setNewManager(parseInt(e.target.value));
+                    }}
+                  >
+                    {managers?.map((manager) => {
+                      return (
+                        <option value={manager?.id ?? 0}>
+                          {manager?.firstname + ' ' + manager?.lastname}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </motion.div>
               )}
             </p>
           </div>

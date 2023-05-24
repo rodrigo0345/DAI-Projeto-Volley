@@ -165,8 +165,8 @@ public class TeamController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        // verificar se currentUser é admin ou treinador da equipa
-        if ( !currentUser.getRole().equals("ADMIN") || currentUser.getId().equals(team.getManagerID())) {
+        // verificar se currentUser é admin
+        if (!currentUser.getRole().equals("ADMIN")) {
             var response = new ResponseType<Team>();
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
@@ -180,7 +180,7 @@ public class TeamController {
         }
         // verificar se o nome da equipa editada já existe (overlap)
         Team existingTeam = teamRepository.findByName(name);
-        if(existingTeam != null && !existingTeam.getId().equals(teamId.longValue())) {
+        if (existingTeam != null && !existingTeam.getId().equals(teamId.longValue())) {
             var response = new ResponseType<Team>();
             response.error("O nome da equipa já existe");
             return ResponseEntity.badRequest().body(response);
@@ -299,7 +299,7 @@ public class TeamController {
 
         User atleta = new User();
 
-        List <Integer> jogadoresNovos = equipa;
+        List<Integer> jogadoresNovos = equipa;
         jogadoresNovos.removeAll(team.getPlayers());
 
         for (Integer user : jogadoresNovos) {

@@ -455,7 +455,7 @@ export default function GameView() {
                   variable: editOpponent,
                   html: (
                     <div>
-                      <label htmlFor=''>Convocados:</label>
+                      <label htmlFor=''>Convocados a eliminar:</label>
                       <DataGrid
                         sx={{
                           '& .MuiDataGrid-row:': {
@@ -494,7 +494,7 @@ export default function GameView() {
                   variable: editOpponent,
                   html: (
                     <div>
-                      <label htmlFor=''>Não convocados:</label>
+                      <label htmlFor=''>Jogadores a ser selecionado:</label>
                       <DataGrid
                         rows={
                           teams
