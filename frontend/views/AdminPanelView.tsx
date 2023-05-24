@@ -277,6 +277,7 @@ export default function AdminPanelView() {
                     Ver mais
                   </button>
                   <FilterModalBox<LoginUser>
+                    hideBtn
                     data={(() => {
                       const list: LoginUser[] = [];
                       admins?.forEach((el) => {
@@ -368,6 +369,7 @@ export default function AdminPanelView() {
                     filter={(search: string) => {
                       setSearchFilter(search);
                     }}
+                    hideBtn
                   ></FilterModalBox>
                 </div>
                 <div className='flex gap-4  w-screen h-72 overflow-x-auto'>
@@ -422,6 +424,7 @@ export default function AdminPanelView() {
                     filter={(search: string) => {
                       setSearchFilter(search);
                     }}
+                    hideBtn
                   ></FilterModalBox>
                 </div>
                 <div className='flex gap-4  max-w-screen h-72 overflow-x-auto'>
@@ -476,6 +479,7 @@ export default function AdminPanelView() {
                     filter={(search: string) => {
                       setSearchFilter(search);
                     }}
+                    hideBtn
                   ></FilterModalBox>
                 </div>
                 <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
