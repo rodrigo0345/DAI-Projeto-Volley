@@ -261,7 +261,7 @@ export default function ForumView() {
   }, []);
 
   return (
-    <div className='min-h-screen flex relative z-10 bg-white shadow-lg'>
+    <div className='min-h-screen flex relative z-10 bg-white shadow-lg w-full'>
       <div
         className='fixed inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-60rem)]'
         aria-hidden='true'
@@ -291,7 +291,7 @@ export default function ForumView() {
         }
       ></CreatePost>
       <SidePanel user={user} logout={logout} content={content}></SidePanel>
-      <main className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10'>
+      <main className='flex-1 relative pt-36 px-10 text-gray-300 space-y-10 w-screen'>
         <header className='flex lg:!flex-row lg:!items-start flex-col justify-between items-start gap-4 max-w-[60em] m-auto'>
           <h1 className='text-3xl font-bold m-0'>Forum</h1>
           <FilterContent setOrder={setOrder} order={Order}></FilterContent>

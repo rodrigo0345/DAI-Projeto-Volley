@@ -93,7 +93,7 @@ export default function RidePost({
       animate={{ opacity: 1 }}
       className='w-full flex justify-center'
     >
-      <div className='flex flex-col p-6 space-y-6 overflow-hidden rounded-lg shadow-xl bg-zinc-100 text-zinc-100 max-w-[30em] min-w-[30em]'>
+      <div className='flex flex-col p-6 space-y-6 overflow-hidden rounded-lg shadow-xl bg-zinc-100 text-zinc-100 max-w-[30em] md:min-w-[30em] w-full'>
         <div className='flex space-x-4'>
           <div className='flex flex-col space-y-1'>
             <a
