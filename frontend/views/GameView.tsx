@@ -119,6 +119,15 @@ export default function GameView() {
     })();
   }, [user]);
 
+  useEffect(() => {
+    if (openGameModal) return;
+    setModalFocusedGame(undefined);
+    setEditOpponent('');
+    setEditLocal('');
+    setEditData('');
+    setEditPlayersToRemove([]);
+  }, [openGameModal]);
+
   async function createGameft() {
     // TODO erro da equipa inválida
 
@@ -163,10 +172,19 @@ export default function GameView() {
   async function editGameft() {
     let result;
 
+    const teamId = teams?.filter(() => {
+      return modalFocusedGame?.team === modalFocusedGame?.team;
+    })[0]?.id;
+
+    const listOfPlayers = [
+      ...editPlayersToAdd,
+      ...(modalFocusedGame?.gameCall ?? []),
+    ];
+
     try {
       result = await editGame(
-        editPlayersToAdd,
-        modalFocusedGame?.team,
+        listOfPlayers,
+        String(teamId),
         editOpponent,
         editData,
         editLocal,
