@@ -5,14 +5,18 @@ import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
-import { createGame, getAllGames } from 'Frontend/generated/GameController';
+import {
+  createGame,
+  getAllGames,
+  removeGame,
+} from 'Frontend/generated/GameController';
 import { createPractice } from 'Frontend/generated/PracticeController';
 import { findAll } from 'Frontend/generated/TeamController';
 import Game from 'Frontend/generated/com/example/application/model/Game';
 import Practice from 'Frontend/generated/com/example/application/model/Practice';
 import Team from 'Frontend/generated/com/example/application/model/Team/Team';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
-import { format, isBefore, set } from 'date-fns';
+import { format, isAfter, isBefore, set } from 'date-fns';
 import { motion } from 'framer-motion';
 import React, { useContext, useEffect } from 'react';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
@@ -89,10 +93,9 @@ export default function GameView() {
     (async () => {
       // TODO get all games n funfa
       const result = await getAllGames();
-      console.log({ result });
 
       const games = result?.filter((game) =>
-        isBefore(new Date(game?.date ?? '0'), Date.now())
+        isAfter(new Date(game?.date ?? '0'), Date.now())
       );
 
       setGames(games);
@@ -113,6 +116,7 @@ export default function GameView() {
 
   async function createGameft() {
     // TODO erro da equipa inválida
+
     const result = await createGame(
       newGameDate,
       newGameTeam,
@@ -132,7 +136,24 @@ export default function GameView() {
     window.location.reload();
   }
 
-  async function deleteTraining(id: number) {}
+  async function deleteGame(id: number) {
+    let result;
+
+    try {
+      result = await removeGame(id, user);
+    } catch (e) {
+      toast.error('Não foi possível eliminar o treino');
+      return;
+    }
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    toast.success('Treino eliminado com sucesso');
+    window.location.reload();
+  }
 
   return (
     <motion.div className='min-h-screen flex justify-start z-10 bg-white relative shadow-lg max-w-screen pt-44'>
@@ -180,7 +201,6 @@ export default function GameView() {
                 className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
                 value={newGameTeam}
                 onChange={(e) => {
-                  console.log('value - ', e);
                   setNewGameTeam(e.target.value);
                 }}
               >
@@ -284,7 +304,9 @@ export default function GameView() {
                               {
                                 <button
                                   className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
-                                  onClick={(e) => {}}
+                                  onClick={(e) => {
+                                    deleteGame(game?.id ?? 0);
+                                  }}
                                 >
                                   <AiOutlineDelete size={20}></AiOutlineDelete>
                                 </button>

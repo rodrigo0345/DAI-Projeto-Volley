@@ -28,7 +28,6 @@ import java.util.Set;
 
 @Endpoint
 @AnonymousAllowed
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class PracticeController {
 
@@ -97,7 +96,8 @@ public class PracticeController {
         }
         String teamName = teamRepository.findById(teamID.longValue()).getName();
 
-        Practice newPractice = PracticeService.createPractice(practiceRepository, teamID.longValue(), local, startDateTime,
+        Practice newPractice = PracticeService.createPractice(practiceRepository, teamID.longValue(), local,
+                startDateTime,
                 endDateTime).success;
 
         var response = new ResponseType<Practice>();
@@ -105,8 +105,9 @@ public class PracticeController {
         return ResponseEntity.ok().body(response);
     }
 
+    @AnonymousAllowed
     public ResponseEntity<ResponseType<Practice>> editPractice(LoginUser loginUser,
-            String local, LocalDateTime startDate, LocalDateTime endDate, Long practiceID) {
+            String local, String startDate, String endDate, Long practiceID) {
 
         Practice practice = practiceRepository.findById(practiceID);
         User user = userRepository.findById(loginUser.getId()).get();

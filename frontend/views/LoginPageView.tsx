@@ -66,7 +66,6 @@ export default function LoginPageView(): JSX.Element {
     }
 
     if (response?.body.error) {
-      // TODO add error message
       notify(response?.body.error);
       email.current.value = '';
       password.current.value = '';
