@@ -21,6 +21,7 @@ import { HiOutlineDocumentText } from 'react-icons/hi';
 import Ata from 'Frontend/components/cards/Ata';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
+import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 
 enum Training {
   Main,
@@ -58,6 +59,10 @@ export default function PracticeView() {
   const [trainingFocus, setTrainingFocus] = React.useState<
     Practice | undefined
   >(undefined);
+
+  const [ataTitle, setAtaTitle] = React.useState<string>('');
+  const [ataDescription, setAtaDescription] = React.useState<string>('');
+  const [ataTreinoId, setAtaTreinoId] = React.useState<string>('');
 
   useEffect(() => {
     (async () => {
@@ -125,7 +130,6 @@ export default function PracticeView() {
   }
 
   async function editTraining() {
-    console.log('editTraining');
     let result;
     try {
       result = await editPractice(
@@ -147,6 +151,29 @@ export default function PracticeView() {
 
     toast.success('Treino editado com sucesso');
     setOpenEditTraining(false);
+    window.location.reload();
+  }
+
+  async function createAta() {
+    let result;
+
+    /* result = await createAta(
+      Number(ataTreinoId),
+      ataTitle,
+      ataDescription,
+      ataDescription
+    ); */
+
+    toast.error('Não implementado');
+    return;
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    toast.success('Ata criada com sucesso');
+    setOpenAtaModal(false);
     window.location.reload();
   }
 
@@ -283,22 +310,57 @@ export default function PracticeView() {
                       <div className='overflow-hidden relative w-full'>
                         <h1 className='text-xl m-4'>Próximos Treinos</h1>
                         <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
+                          {trainings?.length === 0 && (
+                            <h1 className='text-xl m-4'>
+                              Não há treinos agendados
+                            </h1>
+                          )}
                           {trainings
                             ?.filter((training) => {
                               return training?.team === team?.id;
                             })
                             .map((training) => (
                               <article className='flex-none odd:bg-yellow-200/50 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                                <div className='flex w-full justify-end'>
+                                  {user?.role === Roles.MANAGER && (
+                                    <button
+                                      className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
+                                      onClick={(e) => {
+                                        deleteTraining(training?.id ?? 0);
+                                      }}
+                                    >
+                                      <AiOutlineDelete></AiOutlineDelete>
+                                    </button>
+                                  )}
+                                  {user?.role === Roles.MANAGER && (
+                                    <button
+                                      className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
+                                      onClick={() => {
+                                        setOpenEditTraining(true);
+                                        setEditLocal(training?.local ?? '');
+                                        setEditStartDate(
+                                          training?.startDate ?? ''
+                                        );
+                                        setEditEndDate(
+                                          training?.endDate?.split('T')[1] ?? ''
+                                        );
+                                        setTrainingFocus(training);
+                                      }}
+                                    >
+                                      <AiOutlineEdit></AiOutlineEdit>
+                                    </button>
+                                  )}
+                                </div>
                                 <h2 className='text-lg mt-2'>
-                                  Treino em {training?.local}
+                                  {training?.local}
                                 </h2>
-                                <p className='text-sm'>
+                                <p className='text-sm font-semibold'>
                                   Dia{' '}
                                   {format(
                                     new Date(
                                       training?.startDate ?? '24/4/2023'
                                     ),
-                                    'dd/MM/yyyy HH:mm'
+                                    'dd/MMMM/YYYY HH:mm'
                                   )}{' '}
                                   -{' '}
                                   {format(
@@ -306,30 +368,6 @@ export default function PracticeView() {
                                     'HH:mm'
                                   )}
                                 </p>
-                                {
-                                  <button
-                                    className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
-                                    onClick={(e) => {
-                                      deleteTraining(training?.id ?? 0);
-                                    }}
-                                  >
-                                    <AiOutlineDelete></AiOutlineDelete>
-                                  </button>
-                                }
-                                <button
-                                  className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
-                                  onClick={() => {
-                                    setOpenEditTraining(true);
-                                    setEditLocal(training?.local ?? '');
-                                    setEditStartDate(training?.startDate ?? '');
-                                    setEditEndDate(
-                                      training?.endDate?.split('T')[1] ?? ''
-                                    );
-                                    setTrainingFocus(training);
-                                  }}
-                                >
-                                  <AiOutlineEdit></AiOutlineEdit>
-                                </button>
                               </article>
                             ))}
                         </div>
@@ -415,10 +453,6 @@ export default function PracticeView() {
             <h1 className='pl-10 m-0'>Atas</h1>
             <button
               onClick={() => {
-                if (teams?.length === 0) {
-                  toast.error('Não tem equipas para criar treinos');
-                  return;
-                }
                 setOpenAtaModal(true);
               }}
               className='mr-10
@@ -436,19 +470,35 @@ export default function PracticeView() {
                 <label htmlFor='' className='text-sm text-gray-500'>
                   Título
                 </label>
-                <input type='text' placeholder='Título' />
+                <input
+                  type='text'
+                  value={ataTitle}
+                  onChange={(e) => {
+                    setAtaTitle(e.target.value);
+                  }}
+                  placeholder='Título'
+                />
               </div>
               <div className='mb-4 flex flex-col'>
                 <label htmlFor='' className='text-sm text-gray-500'>
                   Resumo
                 </label>
-                <textarea />
+                <textarea
+                  value={ataDescription}
+                  onChange={(e) => {
+                    setAtaDescription(e.target.value);
+                  }}
+                />
               </div>
               <div className='mb-4 flex flex-col'>
                 <label htmlFor='' className='text-sm text-gray-500'>
                   Treino a associar
                 </label>
                 <select
+                  value={ataTreinoId}
+                  onChange={(e) => {
+                    setAtaTreinoId(e.target.value);
+                  }}
                   ref={teamIDRef}
                   className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
                 >
