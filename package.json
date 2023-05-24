@@ -19,7 +19,9 @@
     "@mantine/core": "^6.0.0",
     "@mantine/dates": "^6.0.5",
     "@mantine/hooks": "^6.0.0",
+    "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.1",
+    "@mui/styles": "^5.13.2",
     "@mui/x-data-grid": "^6.2.1",
     "@polymer/iron-icon": "3.0.1",
     "@polymer/polymer": "3.5.1",
@@ -157,7 +159,9 @@
     "@emotion/styled": "$@emotion/styled",
     "@mui/material": "$@mui/material",
     "@mui/x-data-grid": "$@mui/x-data-grid",
-    "validator": "$validator"
+    "validator": "$validator",
+    "@mui/icons-material": "$@mui/icons-material",
+    "@mui/styles": "$@mui/styles"
   },
   "vaadin": {
     "dependencies": {
@@ -205,6 +209,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "1ee2dfab9d1c16d55b8970da06ae9b58694e287670070f4087b6e74ec44cf8bb"
+    "hash": "6d36fe95628c886b0128819b83cecb6a7d80925432b767fb4e806bb5b670c2b7"
   }
 }

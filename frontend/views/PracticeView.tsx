@@ -28,7 +28,6 @@ enum Training {
   Report,
 }
 
-// TODO associar ao backend
 export default function PracticeView() {
   const { user, logout } = useContext(UserContext);
 
@@ -154,6 +153,7 @@ export default function PracticeView() {
     window.location.reload();
   }
 
+  // TODO associar ao backend
   async function createAta() {
     let result;
 
@@ -176,6 +176,8 @@ export default function PracticeView() {
     setOpenAtaModal(false);
     window.location.reload();
   }
+
+  async function deleteAta(id: number) {}
 
   return (
     <div className='min-h-screen flex justify-start z-10 bg-white relative shadow-lg items-center w-full'>

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import React, { useContext, useEffect, useRef } from 'react';
 import { CustomScrollbar } from './AdminPanelView';
 import { set } from 'date-fns';
+import { toast } from 'react-toastify';
 
 export enum ReportType {
   Jogo,
@@ -31,6 +32,7 @@ export default function ReportView() {
       .map((mappedReport) => {
         return (
           <ReportCard
+            onDelete={deleteReport}
             user={user}
             reportSubject={mappedReport}
             key={mappedReport?.id}
@@ -71,6 +73,52 @@ export default function ReportView() {
 
   async function createReport() {
     const imagem = report.imagem.current?.value;
+    const type = reportTypeRef.current?.value;
+
+    if (!imagem || !type) {
+      toast.error('Preencha todos os campos');
+      return;
+    }
+
+    // create report
+    let result: ResponseType | undefined = undefined;
+
+    try {
+      //result = await createReport(imagem, type);
+    } catch (e) {
+      toast.error('Erro ao criar relatório');
+      return;
+    }
+
+    /* if (result?.body.error) {
+      toast.error('Erro ao criar relatório');
+      return;
+    } */
+
+    toast.success('Relatório criado com sucesso');
+    setNewReport(false);
+    window.location.reload();
+  }
+
+  // TODO: delete report (backend)
+  async function deleteReport(id: number) {
+    // delete report
+    let result: ResponseType | undefined = undefined;
+
+    try {
+      //result = await deleteReport(id);
+    } catch (e) {
+      toast.error('Erro ao eliminar relatório');
+      return;
+    }
+
+    /* if (result?.body.error) {
+      toast.error('Erro ao eliminar relatório');
+      return;
+    } */
+
+    toast.success('Relatório eliminado com sucesso');
+    window.location.reload();
   }
 
   return (
@@ -107,9 +155,11 @@ export default function ReportView() {
                 ref={reportTypeRef}
                 className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
               >
-                {Object.keys(ReportType)?.map((type) => (
-                  <option value={type}>{type.toString()}</option>
-                ))}
+                {Object.keys(ReportType)
+                  .filter((k) => isNaN(Number(k)))
+                  ?.map((type) => (
+                    <option value={type}>{type.toString()}</option>
+                  ))}
               </select>
             </div>
             <fieldset className='mb-[15px] w-full flex flex-col justify-start'>

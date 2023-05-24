@@ -7,9 +7,11 @@ import { BsDownload } from 'react-icons/bs';
 export default function ReportCard({
   user,
   reportSubject,
+  onDelete,
 }: {
   reportSubject: any;
   user: LoginUser | undefined;
+  onDelete?: (id: number) => void;
 }) {
   return (
     <div className='cursor-pointer w-60 h-60 overflow-hidden rounded-lg p-2 flex-none py-6 px-3 first:pl-6 last:pr-6 bg-yellow-100 mb-2 mt-2'>
@@ -24,7 +26,13 @@ export default function ReportCard({
               className='hover:text-yellow-400'
             ></BsDownload>
           </button>
-          <button className='pl-2 pt-2' title='Apagar'>
+          <button
+            className='pl-2 pt-2'
+            title='Apagar'
+            onClick={() => {
+              onDelete && onDelete(reportSubject.id);
+            }}
+          >
             <AiOutlineDelete
               size={20}
               className='hover:text-red-500'

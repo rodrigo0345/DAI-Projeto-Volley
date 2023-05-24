@@ -97,7 +97,8 @@ public class PracticeController {
         }
         String teamName = teamRepository.findById(teamID.longValue()).getName();
 
-        Practice newPractice = PracticeService.createPractice(practiceRepository, teamID.longValue(), local, startDateTime,
+        Practice newPractice = PracticeService.createPractice(practiceRepository, teamID.longValue(), local,
+                startDateTime,
                 endDateTime).success;
 
         var response = new ResponseType<Practice>();
@@ -105,8 +106,10 @@ public class PracticeController {
         return ResponseEntity.ok().body(response);
     }
 
+    @AnonymousAllowed
     public ResponseEntity<ResponseType<Practice>> editPractice(LoginUser loginUser,
             String local, String startDate, String endDate, Long practiceID) {
+
 
         String day = startDate.split("T")[0];
         endDate = day + "T" + endDate;
@@ -121,7 +124,6 @@ public class PracticeController {
             response.error("Invalid date format");
             return ResponseEntity.badRequest().body(response);
         }
-
 
         Practice practice = practiceRepository.findById(practiceID);
         User user = userRepository.findById(loginUser.getId()).get();

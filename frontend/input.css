@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.selected-row {
+    background-color: rgba(255, 0, 0, 0.479) !important;
+  }
