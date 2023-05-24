@@ -4,6 +4,7 @@ import { UserContext } from 'Frontend/contexts/UserContext';
 import { motion } from 'framer-motion';
 import React, { useContext, useEffect, useRef } from 'react';
 import { CustomScrollbar } from './AdminPanelView';
+import { set } from 'date-fns';
 
 export enum ReportType {
   Jogo,
@@ -45,24 +46,28 @@ export default function ReportView() {
   const reportTypeRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
-    (async () => {})();
+    (async () => {
+      // get reports
+    })();
 
-    reports.push({
-      id: 1,
-      report: 'Relatório de treino',
-      type: ReportType.Treino.toString(),
-    });
-    reports.push({
-      id: 1,
-      report: 'Relatório de treino',
-      type: ReportType.Treino.toString(),
-    });
-    reports.push({
-      id: 1,
-      report: 'Relatório de treino',
-      type: ReportType.Treino.toString(),
-    });
-  }, []);
+    setReports([
+      {
+        id: 1,
+        report: 'Relatório de treino',
+        type: ReportType.Jogo.toString(),
+      },
+      {
+        id: 1,
+        report: 'Relatório de treino',
+        type: ReportType.Treino.toString(),
+      },
+      {
+        id: 1,
+        report: 'Relatório de treino',
+        type: ReportType.Treino.toString(),
+      },
+    ]);
+  }, [user]);
 
   async function createReport() {
     const imagem = report.imagem.current?.value;
@@ -96,13 +101,13 @@ export default function ReportView() {
                 htmlFor=''
                 className='text-[13px] leading-none mb-2.5 text-gray-800 font-semibold block'
               >
-                Equipa
+                Tipo de relatório
               </label>
               <select
                 ref={reportTypeRef}
                 className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
               >
-                {Object.values(ReportType)?.map((type) => (
+                {Object.keys(ReportType)?.map((type) => (
                   <option value={type}>{type.toString()}</option>
                 ))}
               </select>
@@ -140,7 +145,7 @@ export default function ReportView() {
         <div className='w-2/3 mx-auto flex flex-col justify-start'>
           <div className='w-full flex flex-col justify-start h-96'>
             <h1 className='text-xl'>Relatórios de jogos</h1>
-            <CustomScrollbar>
+            <CustomScrollbar className='flex overflow-x-auto gap-4'>
               {displayReportBy(ReportType.Jogo.toString())}
             </CustomScrollbar>
           </div>
