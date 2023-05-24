@@ -176,7 +176,10 @@ export default function DashboardView() {
                   className='icon absolute -right-10 -bottom-10 '
                 ></CgProfile>
               </Box>
-              {!(user?.role?.toUpperCase() === Roles.ADMIN) && (
+              {!(
+                user?.role?.toUpperCase() === Roles.ADMIN ||
+                user?.role?.toLocaleUpperCase() === Roles.MANAGER
+              ) && (
                 <Box
                   className='bg-gradient-to-tl from-green-500/100 to-green-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
                   onClick={() => {

@@ -159,7 +159,7 @@ export default function RidePost({
               }}
             >
               {userJoined ? (
-                <AiFillCar color='yellow' size={20}></AiFillCar>
+                <AiFillCar color='facc15' size={20}></AiFillCar>
               ) : (
                 <AiOutlineCar aria-label='save' size={20}></AiOutlineCar>
               )}

@@ -358,7 +358,7 @@ export default function GameView() {
                 },
               ],
             }}
-            onSubmit={function ({ args }: { args: string[] }): void {
+            onSubmit={() => {
               throw new Error('Function not implemented.');
             }}
             children={undefined}

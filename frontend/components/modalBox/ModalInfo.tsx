@@ -17,7 +17,7 @@ export default function ModalInfo({
     }>;
   };
   children: React.ReactNode;
-  onSubmit: (args: any) => void;
+  onSubmit: () => void;
 }): JSX.Element {
   return (
     <ModalBox
@@ -32,10 +32,7 @@ export default function ModalInfo({
       <button
         className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
         onClick={() => {
-          let args = content.children.map((child) => {
-            return child.variable;
-          });
-          onSubmit({ ...args });
+          onSubmit();
         }}
       >
         {content.buttonMsg}

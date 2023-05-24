@@ -4,6 +4,7 @@ import SidePanel from 'Frontend/components/sidePanel/SidePanel';
 import { UserContext } from 'Frontend/contexts/UserContext';
 import {
   createPractice,
+  editPractice,
   removePractice,
 } from 'Frontend/generated/PracticeController';
 import { findAll } from 'Frontend/generated/TeamController';
@@ -18,6 +19,8 @@ import { RiUserSettingsFill } from 'react-icons/ri';
 import { GrDocumentText } from 'react-icons/gr';
 import { HiOutlineDocumentText } from 'react-icons/hi';
 import Ata from 'Frontend/components/cards/Ata';
+import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
+import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 
 enum Training {
   Main,
@@ -25,7 +28,7 @@ enum Training {
 }
 
 // TODO associar ao backend
-export default function TrainingView() {
+export default function PracticeView() {
   const { user, logout } = useContext(UserContext);
 
   // String local
@@ -38,6 +41,7 @@ export default function TrainingView() {
   const teamIDRef = React.useRef<HTMLSelectElement>(null);
 
   const [opened, setOpen] = React.useState(false);
+
   const [teams, setTeams] = React.useState<(Team | undefined)[] | undefined>(
     undefined
   );
@@ -46,6 +50,14 @@ export default function TrainingView() {
   >(undefined);
   const [menu, setMenu] = React.useState<Training>(Training.Main);
   const [openAtaModal, setOpenAtaModal] = React.useState(false);
+
+  const [openEditTraining, setOpenEditTraining] = React.useState(false);
+  const [editLocal, setEditLocal] = React.useState<string>('');
+  const [editStartDate, setEditStartDate] = React.useState<string>('');
+  const [editEndDate, setEditEndDate] = React.useState<string>('');
+  const [trainingFocus, setTrainingFocus] = React.useState<
+    Practice | undefined
+  >(undefined);
 
   useEffect(() => {
     (async () => {
@@ -83,7 +95,6 @@ export default function TrainingView() {
       return;
     }
 
-    console.log(teamID, local, startDateParsed, endDateParsed);
     const result = await createPractice(
       teamID,
       local,
@@ -110,6 +121,32 @@ export default function TrainingView() {
     }
 
     toast.success('Treino eliminado com sucesso');
+    window.location.reload();
+  }
+
+  async function editTraining() {
+    console.log('editTraining');
+    let result;
+    try {
+      result = await editPractice(
+        user,
+        editLocal,
+        editStartDate,
+        editEndDate,
+        trainingFocus?.id
+      );
+    } catch (error: any) {
+      toast.error(error);
+      return;
+    }
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    }
+
+    toast.success('Treino editado com sucesso');
+    setOpenEditTraining(false);
     window.location.reload();
   }
 
@@ -251,7 +288,7 @@ export default function TrainingView() {
                               return training?.team === team?.id;
                             })
                             .map((training) => (
-                              <article className='flex-none odd:bg-yellow-100 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                              <article className='flex-none odd:bg-yellow-200/50 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
                                 <h2 className='text-lg mt-2'>
                                   Treino em {training?.local}
                                 </h2>
@@ -269,13 +306,29 @@ export default function TrainingView() {
                                     'HH:mm'
                                   )}
                                 </p>
+                                {
+                                  <button
+                                    className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
+                                    onClick={(e) => {
+                                      deleteTraining(training?.id ?? 0);
+                                    }}
+                                  >
+                                    <AiOutlineDelete></AiOutlineDelete>
+                                  </button>
+                                }
                                 <button
-                                  className='bg-red-300 p-1 rounded-md hover:bg-red-400 text-red-700'
-                                  onClick={(e) => {
-                                    deleteTraining(training?.id ?? 0);
+                                  className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
+                                  onClick={() => {
+                                    setOpenEditTraining(true);
+                                    setEditLocal(training?.local ?? '');
+                                    setEditStartDate(training?.startDate ?? '');
+                                    setEditEndDate(
+                                      training?.endDate?.split('T')[1] ?? ''
+                                    );
+                                    setTrainingFocus(training);
                                   }}
                                 >
-                                  Delete
+                                  <AiOutlineEdit></AiOutlineEdit>
                                 </button>
                               </article>
                             ))}
@@ -287,6 +340,73 @@ export default function TrainingView() {
               </Accordion>
             </motion.main>
           </div>
+          <ModalInfo
+            activator={{
+              openModal: openEditTraining,
+              setOpenModal: setOpenEditTraining,
+            }}
+            content={{
+              title: 'Treino',
+              buttonMsg: 'Guardar',
+              children: [
+                {
+                  variable: editLocal,
+                  html: (
+                    <div className='flex w-full flex-col gap-2'>
+                      <label htmlFor='local'>Local</label>
+                      <input
+                        name='local'
+                        type='text'
+                        className='flex-none font-semibold'
+                        value={editLocal ?? ''}
+                        onChange={(e) => {
+                          setEditLocal(e.target.value);
+                        }}
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  variable: editStartDate,
+                  html: (
+                    <div className='flex w-full flex-col gap-2 mt-2'>
+                      <label htmlFor='local'>Data começo</label>
+                      <input
+                        onChange={(e) => {
+                          setEditStartDate(e.target.value);
+                        }}
+                        name='local'
+                        type='datetime-local'
+                        className='flex-none font-semibold'
+                        value={editStartDate ?? ''}
+                      />
+                    </div>
+                  ),
+                },
+                {
+                  variable: editEndDate,
+                  html: (
+                    <div className='flex w-full flex-col gap-2 mt-2'>
+                      <label htmlFor='local'>Data de fim</label>
+                      <input
+                        onChange={(e) => {
+                          setEditEndDate(e.target.value);
+                        }}
+                        name='local'
+                        type='time'
+                        className='flex-none font-semibold'
+                        value={editEndDate ?? ''}
+                      />
+                    </div>
+                  ),
+                },
+              ],
+            }}
+            onSubmit={() => {
+              editTraining();
+            }}
+            children={undefined}
+          ></ModalInfo>
         </div>
       )}
       {menu === Training.Report && (
