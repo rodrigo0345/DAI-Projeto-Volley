@@ -372,9 +372,9 @@ export default function AdminPanelView() {
                     hideBtn
                   ></FilterModalBox>
                 </div>
-                <div className='flex gap-4  w-screen h-72 overflow-x-auto'>
+                <CustomScrollbar className='px-2 flex gap-4 w-screen max-w-full h-72 overflow-x-auto'>
                   {displayUsersBy('MANAGER')}
-                </div>
+                </CustomScrollbar>
               </div>
               <div className='flex flex-col gap-4  max-w-[100%] pb-6'>
                 <div className='flex justify-between items-center'>
@@ -482,9 +482,9 @@ export default function AdminPanelView() {
                     hideBtn
                   ></FilterModalBox>
                 </div>
-                <div className='flex flex-row gap-4  w-full h-72 overflow-x-auto'>
+                <CustomScrollbar className='px-2 flex gap-4 w-screen max-w-full h-72 overflow-x-auto'>
                   {displayUsersBy('SECCTIONIST')}
-                </div>
+                </CustomScrollbar>
               </div>
             </div>
           </div>

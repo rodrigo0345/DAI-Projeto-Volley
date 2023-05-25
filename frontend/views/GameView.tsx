@@ -101,9 +101,14 @@ export default function GameView() {
       // TODO get all games n funfa
       const result = await getAllGames();
 
-      const games = result?.filter((game) =>
-        isAfter(new Date(game?.date ?? '0'), Date.now())
-      );
+      const games = result
+        ?.filter((game) => isAfter(new Date(game?.date ?? '0'), Date.now()))
+        .sort((a, b) => {
+          return (
+            new Date(a?.date ?? '0').getTime() -
+            new Date(b?.date ?? '0').getTime()
+          );
+        });
 
       setGames(games);
     })();
@@ -131,6 +136,12 @@ export default function GameView() {
   async function createGameft() {
     // TODO erro da equipa inválida
 
+    const dataInvalida = isBefore(new Date(newGameDate), Date.now());
+    if (dataInvalida) {
+      toast.error('A data selecionada é uma data passada');
+      return;
+    }
+
     const result = await createGame(
       newGameDate,
       newGameTeam,
@@ -145,7 +156,7 @@ export default function GameView() {
       return;
     }
 
-    toast.success('Treino criado com sucesso');
+    toast.success('Jogo criado com sucesso');
     setOpen(false);
     window.location.reload();
   }
@@ -156,7 +167,7 @@ export default function GameView() {
     try {
       result = await removeGame(id, user);
     } catch (e) {
-      toast.error('Não foi possível eliminar o treino');
+      toast.error('Não foi possível eliminar o jogo');
       return;
     }
 

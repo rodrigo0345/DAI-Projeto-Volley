@@ -99,7 +99,6 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-
         Game game = gameRepository.findById(gameId).get();
 
         if (game == null) {
@@ -131,9 +130,6 @@ public class GameController {
             response.error("Algum jogador não pertece a nenhuma equipa");
             return ResponseEntity.badRequest().body(response);
         }
-
-
-
 
         Game editedGame = GameService.editGame(gameRepository, teamRepository,
                 gameId, teamID, opponent, startDateTime,
