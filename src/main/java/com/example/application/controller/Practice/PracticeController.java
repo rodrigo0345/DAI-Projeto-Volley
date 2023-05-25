@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -59,6 +60,14 @@ public class PracticeController {
         } catch (DateTimeParseException e) {
             var response = new ResponseType<Practice>();
             response.error("Invalid date format");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        LocalDateTime dataAtual = LocalDateTime.now();
+
+        if(startDateTime.isBefore(dataAtual) ){
+            var response = new ResponseType<Practice>();
+            response.error("Data invalida");
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -124,6 +133,15 @@ public class PracticeController {
             response.error("Invalid date format");
             return ResponseEntity.badRequest().body(response);
         }
+
+        LocalDateTime dataAtual = LocalDateTime.now();
+
+        if(startDateTime.isBefore(dataAtual) ){
+            var response = new ResponseType<Practice>();
+            response.error("Data invalida");
+            return ResponseEntity.badRequest().body(response);
+        }
+
 
         Practice practice = practiceRepository.findById(practiceID);
         User user = userRepository.findById(loginUser.getId()).get();

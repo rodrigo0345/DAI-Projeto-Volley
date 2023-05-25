@@ -18,6 +18,7 @@ import java.util.List;
 public class GameService {
 
 
+
     public static ResponseType<Game> createGame(GameRepository gameRepository,
             TeamRepository teamRepository,
             List<Integer> gamecall,
@@ -34,6 +35,8 @@ public class GameService {
         game.setLocal(local);
 
         gameRepository.save(game);
+
+
 
         var response = new ResponseType<Game>();
         response.success(game);
