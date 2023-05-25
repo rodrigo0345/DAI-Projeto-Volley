@@ -44,7 +44,7 @@ public class CalendarController {
     public List<Event> getAllEvents() {
         var events = CalendarService.getAllEvents(ridesRepository, newsRepository, calendarRepository,
                 practiceRepository,
-                appointmentRepository);
+                appointmentRepository, teamRepository);
         return events;
     }
 
