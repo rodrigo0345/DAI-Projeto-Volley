@@ -10,6 +10,7 @@ export default function FilterModalBox<T extends GridValidRowModel>({
   setDataSelected,
   header,
   hideBtn,
+  hideCheckboxSelection,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,6 +19,7 @@ export default function FilterModalBox<T extends GridValidRowModel>({
   setDataSelected: React.Dispatch<React.SetStateAction<T[]>>;
   header: GridColDef<T>[];
   hideBtn?: boolean;
+  hideCheckboxSelection?: boolean;
 }) {
   return (
     <ModalBox title='' openModal={open} setOpenModal={setOpen}>
@@ -41,7 +43,7 @@ export default function FilterModalBox<T extends GridValidRowModel>({
         onRowSelectionModelChange={(e: any) => {
           setDataSelected(e);
         }}
-        checkboxSelection
+        checkboxSelection={!hideCheckboxSelection}
       />
 
       {hideBtn === undefined && (

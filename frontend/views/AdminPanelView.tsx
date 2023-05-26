@@ -278,6 +278,7 @@ export default function AdminPanelView() {
                   </button>
                   <FilterModalBox<LoginUser>
                     hideBtn
+                    hideCheckboxSelection
                     data={(() => {
                       const list: LoginUser[] = [];
                       admins?.forEach((el) => {
@@ -332,6 +333,7 @@ export default function AdminPanelView() {
                     Ver mais
                   </button>
                   <FilterModalBox<LoginUser>
+                    hideCheckboxSelection
                     data={(() => {
                       const list: LoginUser[] = [];
                       managers?.forEach((el) => {
@@ -387,6 +389,7 @@ export default function AdminPanelView() {
                     Ver mais
                   </button>
                   <FilterModalBox<LoginUser>
+                    hideCheckboxSelection
                     data={(() => {
                       const list: LoginUser[] = [];
                       athlets?.forEach((el) => {
@@ -442,6 +445,7 @@ export default function AdminPanelView() {
                     Ver mais
                   </button>
                   <FilterModalBox<LoginUser>
+                    hideCheckboxSelection
                     data={(() => {
                       const list: LoginUser[] = [];
                       seccionists?.forEach((el) => {
