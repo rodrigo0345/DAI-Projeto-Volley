@@ -67,7 +67,7 @@ public class GameController {
         if (teamController.isPlayerInTeam(gameCall).getBody().success) {
             var response = new ResponseType<Game>();
             response.error("Algum jogador não pertece a nenhuma equipa");
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body(response); 
         }
 
         Game createdGame = GameService.createGame(gameRepository, teamRepository,
