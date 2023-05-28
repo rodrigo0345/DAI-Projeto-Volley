@@ -163,7 +163,9 @@
     "@mui/x-data-grid": "$@mui/x-data-grid",
     "validator": "$validator",
     "@mui/icons-material": "$@mui/icons-material",
-    "@mui/styles": "$@mui/styles"
+    "@mui/styles": "$@mui/styles",
+    "@react-pdf/renderer": "$@react-pdf/renderer",
+    "react-pdf": "$react-pdf"
   },
   "vaadin": {
     "dependencies": {
@@ -211,6 +213,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "6d36fe95628c886b0128819b83cecb6a7d80925432b767fb4e806bb5b670c2b7"
+    "hash": "da44aa477151f2677849d1eff3fcd648c85134fd601a7f2eba743a8be7f67d7a"
   }
 }

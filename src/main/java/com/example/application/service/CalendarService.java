@@ -54,11 +54,10 @@ public class CalendarService {
                     event.date = ride.getStartDate();
                     break;
                 case GAME:
-                    // TODO ACABAR ISTO
                     Game game = el.returnType();
-                    event.title = "Matosinhos contra Odivelas";
-                    event.url = "post/game/" + 0;
-                    event.date = null;
+                    event.title = game.getTeam() + " vs " + game.getOpponent();
+                    event.url = "post/game/" + game.getId();
+                    event.date = game.getDate();
                     break;
                 case PRACTICE:
                     // TODO ACABAR ISTO
@@ -135,8 +134,8 @@ public class CalendarService {
                         break;
 
                     event.title = "Jogo contra" + game.getOpponent();
-                    event.url = "post/game/" + 0;
-                    event.date = null;
+                    event.url = "post/game/" + game.getId();
+                    event.date = game.getDate();
                     break;
                 case PRACTICE:
                     Practice practice = el.returnType();
