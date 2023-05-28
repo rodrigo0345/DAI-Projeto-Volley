@@ -5,12 +5,7 @@ import { BsDownload } from 'react-icons/bs';
 import Report from 'Frontend/generated/com/example/application/model/Report';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import {
-  PDFDownloadLink,
-  Document,
-  Page,
-  BlobProvider,
-} from '@react-pdf/renderer';
+import { Document, Page } from 'react-pdf';
 
 export default function ReportCard({
   user,
@@ -22,6 +17,7 @@ export default function ReportCard({
   onDelete?: (id: number) => void;
 }) {
   const [image, setImage] = useState<string | undefined>(undefined);
+  const [pdfString, setPdfString] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const loadImage = async () => {
@@ -29,6 +25,14 @@ export default function ReportCard({
       const blob = new Blob([new Uint8Array(reportSubject?.image)]);
       const url = URL.createObjectURL(blob);
       setImage(url);
+
+      let base64String: any;
+      let reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        base64String = reader.result;
+        setPdfString(base64String?.substr(base64String.indexOf(',') + 1));
+      };
     };
 
     loadImage();
@@ -42,7 +46,12 @@ export default function ReportCard({
           <a
             className='pt-4'
             title='Transferir'
-            download={'ooo.pdf'}
+            download={
+              (reportSubject.type as string) +
+              ' ' +
+              reportSubject.createdAt +
+              '.pdf'
+            }
             href={image}
           >
             <BsDownload
@@ -68,6 +77,9 @@ export default function ReportCard({
       <p className='m-0'>
         {format(new Date(reportSubject?.createdAt ?? 0), 'dd/MM/yyyy')}
       </p>
+      <Document file={`data:application/pdf;base64,${pdfString}`}>
+        <Page pageNumber={4} />
+      </Document>
     </div>
   );
 }
