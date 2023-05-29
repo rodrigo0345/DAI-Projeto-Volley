@@ -145,7 +145,12 @@ export default function TeamView() {
         teams = teams?.filter((team) => team?.managerID === user?.id);
       }
 
-      console.log({ teams });
+      if (user?.role === Roles.USER) {
+        teams = teams?.filter((team) =>
+          team?.players?.some((player) => player === user?.id)
+        );
+      }
+
       setTeams(teams);
     };
     loadTeams();
