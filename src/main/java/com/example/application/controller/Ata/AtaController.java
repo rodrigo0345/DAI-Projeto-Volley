@@ -57,7 +57,7 @@ public class AtaController {
         ata.setCreatedAt(date);
         ata.setTitle(title);
         ata.setSummary(summary);
-        ata.setPracticeId(pratice.getTeam());
+        ata.setTeamId(pratice.getTeam());
         ataRepository.save(ata);
 
         var response = new ResponseType<Ata>();
