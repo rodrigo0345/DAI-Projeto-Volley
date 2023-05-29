@@ -23,6 +23,7 @@ import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 import ReportType from 'Frontend/generated/com/example/application/controller/Reports/ReportType';
+import { createAta } from 'Frontend/generated/AtaController';
 
 enum Training {
   Main,
@@ -160,18 +161,15 @@ export default function PracticeView() {
   }
 
   // TODO associar ao backend
-  async function createAta() {
+  async function create() {
     let result;
 
-    /* result = await createAta(
-      Number(ataTreinoId),
-      ataTitle,
-      ataDescription,
-      ataDescription
-    ); */
-
-    toast.error('Não implementado');
-    return;
+    try {
+      result = await createAta(ataTitle, Number(ataTreinoId), ataDescription);
+    } catch (e: any) {
+      toast.error(e.getMessage());
+      return;
+    }
 
     if (result?.body.error) {
       toast.error(result?.body.error);
@@ -521,8 +519,14 @@ export default function PracticeView() {
                   ref={teamIDRef}
                   className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
                 >
-                  {teams?.map((team) => (
-                    <option value={team?.id}>{team?.name}</option>
+                  {trainings?.map((team) => (
+                    <option value={team?.id} className='overflow-hidden'>
+                      Treino -{' '}
+                      {format(
+                        new Date(team?.startDate ?? 0),
+                        "dd/MM/yyyy 'às' HH:mm"
+                      )}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -530,7 +534,7 @@ export default function PracticeView() {
               <button
                 className='bg-green-400 hover:bg-green-500 p-2 px-4 font-semibold text-white mt-4 rounded-md'
                 onClick={() => {
-                  createAta();
+                  create();
                 }}
               >
                 Criar

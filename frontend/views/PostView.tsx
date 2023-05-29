@@ -92,6 +92,7 @@ export default function PostView() {
   }
 
   useEffect(() => {
+    if (!user) return;
     (async () => {
       let post: PostType | undefined;
       try {
@@ -147,7 +148,7 @@ export default function PostView() {
 
       addClick(post); // [2]
     })();
-  }, []);
+  }, [user]);
   //
   return (
     <div className='h-screen z-10 bg-white relative shadow-lg'>

@@ -89,6 +89,7 @@ export default function GameView() {
     (number | undefined)[]
   >([]);
   useEffect(() => {
+    if (!user) return;
     (async () => {
       const result = await findAll();
 

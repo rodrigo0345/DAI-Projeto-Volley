@@ -6,7 +6,11 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { CustomScrollbar } from './AdminPanelView';
 import { set } from 'date-fns';
 import { toast } from 'react-toastify';
-import { createReport, findAll } from 'Frontend/generated/ReportController';
+import {
+  createReport,
+  findAll,
+  removeReport,
+} from 'Frontend/generated/ReportController';
 import Report from 'Frontend/generated/com/example/application/model/Report';
 import ReportType from 'Frontend/generated/com/example/application/controller/Reports/ReportType';
 import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
@@ -52,6 +56,7 @@ export default function ReportView() {
   const reportTypeRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
+    if (!user) return;
     const getReports = async () => {
       let result;
 
@@ -127,19 +132,19 @@ export default function ReportView() {
   // TODO: delete report (backend)
   async function deleteReport(id: number) {
     // delete report
-    let result: ResponseType | undefined = undefined;
+    let result;
 
     try {
-      //result = await deleteReport(id);
+      result = await removeReport(id);
     } catch (e) {
       toast.error('Erro ao eliminar relatório');
       return;
     }
 
-    /* if (result?.body.error) {
+    if (result?.body.error) {
       toast.error('Erro ao eliminar relatório');
       return;
-    } */
+    }
 
     toast.success('Relatório eliminado com sucesso');
     window.location.reload();
