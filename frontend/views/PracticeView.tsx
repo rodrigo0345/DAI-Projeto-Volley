@@ -23,7 +23,7 @@ import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 import ReportType from 'Frontend/generated/com/example/application/controller/Reports/ReportType';
-import { createAta } from 'Frontend/generated/AtaController';
+import { createAta, removeAta } from 'Frontend/generated/AtaController';
 import Ata from 'Frontend/generated/com/example/application/model/Ata';
 import { findAll as findAllAtas } from 'Frontend/generated/AtaController';
 
@@ -68,6 +68,9 @@ export default function PracticeView() {
   const [ataTreinoId, setAtaTreinoId] = React.useState<string>('');
 
   const [atas, setAtas] = React.useState<(Ata | undefined)[] | undefined>([]);
+  const [ataTeamID, setAtaTeamID] = React.useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     if (!user) return;
@@ -201,12 +204,12 @@ export default function PracticeView() {
   }
 
   async function deleteAta(id: number) {
-    /* const result = await removeAta(id);
+    const result = await removeAta(id);
 
     if (result?.body.error) {
       toast.error(result?.body.error);
       return;
-    } */
+    }
 
     toast.success('Ata eliminada com sucesso');
     window.location.reload();
@@ -494,9 +497,9 @@ export default function PracticeView() {
         </div>
       )}
       {menu === Training.Report && (
-        <div className='flex flex-col items-center flex-1'>
-          <div className='flex justify-around items-center w-full mb-10'>
-            <h1 className='pl-10 m-0'>Atas</h1>
+        <div className='flex flex-col items-center flex-1 pt-44'>
+          <div className='flex justify-around items-center w-full mb-10  '>
+            <h1 className='pl-10 m-0 '>Atas</h1>
             <button
               onClick={() => {
                 setOpenAtaModal(true);
@@ -548,15 +551,19 @@ export default function PracticeView() {
                   ref={teamIDRef}
                   className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
                 >
-                  {trainings?.map((team) => (
-                    <option value={team?.id} className='overflow-hidden'>
-                      Treino -{' '}
-                      {format(
-                        new Date(team?.startDate ?? 0),
-                        "dd/MM/yyyy 'às' HH:mm"
-                      )}
-                    </option>
-                  ))}
+                  {trainings
+                    ?.filter((training) =>
+                      teams?.some((team) => team?.id === training?.team)
+                    )
+                    .map((team) => (
+                      <option value={team?.id} className='overflow-hidden'>
+                        Treino -{' '}
+                        {format(
+                          new Date(team?.startDate ?? 0),
+                          "dd/MM/yyyy 'às' HH:mm"
+                        )}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -573,16 +580,20 @@ export default function PracticeView() {
 
           <div>
             {(atas?.length ?? 0) > 0 ? (
-              atas?.map((ata) => {
-                return (
-                  <AtaCard
-                    onDelete={deleteAta}
-                    user={user}
-                    ataSubject={ata}
-                    key={ata?.id}
-                  />
-                );
-              })
+              atas
+                ?.filter((ata) => {
+                  return teams?.some((team) => team?.id === ata?.teamId);
+                })
+                .map((ata) => {
+                  return (
+                    <AtaCard
+                      onDelete={deleteAta}
+                      user={user}
+                      ataSubject={ata}
+                      key={ata?.id}
+                    />
+                  );
+                })
             ) : (
               <p className='text-gray-400 text-xl'>Ainda não tem atas!</p>
             )}
