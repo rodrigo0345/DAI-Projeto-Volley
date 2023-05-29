@@ -29,7 +29,13 @@ export default function AtaCard({
       <div className='flex justify-between'>
         <h1 className='text-xl m-1'>{ataSubject?.title}</h1>
         <span className='h-full flex items-center justify-center'>
-          <button className='pl-2 pt-2' title='Apagar'>
+          <button
+            className='pl-2 pt-2'
+            title='Apagar'
+            onClick={() => {
+              if (onDelete) onDelete(ataSubject?.id ?? 0);
+            }}
+          >
             <AiOutlineDelete
               size={20}
               className='hover:text-red-500'
@@ -45,10 +51,13 @@ export default function AtaCard({
         title={ataSubject?.title}
       >
         <div className='flex flex-col'>
-          <h3 className='text-lg text-gray-400'>
-            Ata criada a
-            {' ' + format(new Date(ataSubject?.createdAt ?? 0), 'dd/MM/yyyy')}
-          </h3>
+          <div className='flex items-center justify-between'>
+            <label className='font-semibold'>Sumário:</label>
+            <h3 className='text-sm text-gray-400 font-normal m-0'>
+              Ata criada a
+              {' ' + format(new Date(ataSubject?.createdAt ?? 0), 'dd/MM/yyyy')}
+            </h3>
+          </div>
           <p>{ataSubject?.summary}</p>
         </div>
       </ModalBox>
