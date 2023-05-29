@@ -363,7 +363,7 @@ export default function GameView() {
                         {games?.map((game) => (
                           <article className='flex-none odd:bg-yellow-200/50 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
                             <div className='flex w-full gap-2 justify-end'>
-                              {
+                              {user?.role === Roles.ADMIN && (
                                 <button
                                   className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
                                   onClick={(e) => {
@@ -372,20 +372,24 @@ export default function GameView() {
                                 >
                                   <AiOutlineDelete size={20}></AiOutlineDelete>
                                 </button>
-                              }
-                              <button
-                                className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
-                                onClick={() => {
-                                  setOpenGameModal(true);
-                                  setModalFocusedGame(game);
-                                  setEditOpponent(game?.opponent ?? '');
-                                  setEditLocal(game?.local ?? '');
-                                  setEditData(game?.date ?? '');
-                                  setEditPlayersToRemove(game?.gameCall ?? []);
-                                }}
-                              >
-                                <AiOutlineEdit size={20}></AiOutlineEdit>
-                              </button>
+                              )}
+                              {user?.role === Roles.ADMIN && (
+                                <button
+                                  className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
+                                  onClick={() => {
+                                    setOpenGameModal(true);
+                                    setModalFocusedGame(game);
+                                    setEditOpponent(game?.opponent ?? '');
+                                    setEditLocal(game?.local ?? '');
+                                    setEditData(game?.date ?? '');
+                                    setEditPlayersToRemove(
+                                      game?.gameCall ?? []
+                                    );
+                                  }}
+                                >
+                                  <AiOutlineEdit size={20}></AiOutlineEdit>
+                                </button>
+                              )}
                             </div>
                             <h2 className='text-lg mt-2'>{game?.local}</h2>
                             <p className='text-sm'>

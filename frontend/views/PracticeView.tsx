@@ -68,7 +68,11 @@ export default function PracticeView() {
     (async () => {
       const result = await findAll();
 
-      const team = result?.filter((team) => team?.managerID === user?.id);
+      const team = result?.filter(
+        (team) =>
+          team?.managerID === user?.id ||
+          team?.players?.some((player) => player === user?.id)
+      );
       setTeams(team);
 
       const trainings = await findAllPractices();
@@ -235,20 +239,22 @@ export default function PracticeView() {
         <div className='flex flex-col items-center flex-1'>
           <div className='flex justify-around items-center w-full mb-10'>
             <h1 className='pl-10 m-0'>Treinos</h1>
-            <button
-              onClick={() => {
-                if (teams?.length === 0) {
-                  toast.error('Não tem equipas para criar treinos');
-                  return;
-                }
-                setOpen(true);
-              }}
-              className='mr-10
+            {user?.role === Roles.MANAGER && (
+              <button
+                onClick={() => {
+                  if (teams?.length === 0) {
+                    toast.error('Não tem equipas para criar treinos');
+                    return;
+                  }
+                  setOpen(true);
+                }}
+                className='mr-10
            bg-zinc-200 p-2 rounded-md hover:bg-zinc-300 h-10 shadow-md
           '
-            >
-              Agendar treino
-            </button>
+              >
+                Agendar treino
+              </button>
+            )}
             <ModalBox
               title='Criar treino'
               openModal={opened}
@@ -306,78 +312,87 @@ export default function PracticeView() {
                 radius='md'
                 defaultValue='customization'
               >
-                {teams?.map((team) => (
-                  <Accordion.Item value={String(team?.id) ?? ''}>
-                    <Accordion.Control>{team?.name}</Accordion.Control>
-                    <Accordion.Panel>
-                      <div className='overflow-hidden relative w-full'>
-                        <h1 className='text-xl m-4'>Próximos Treinos</h1>
-                        <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
-                          {trainings?.length === 0 && (
-                            <h1 className='text-xl m-4'>
-                              Não há treinos agendados
-                            </h1>
-                          )}
-                          {trainings
-                            ?.filter((training) => {
-                              return training?.team === team?.id;
-                            })
-                            .map((training) => (
-                              <article className='flex-none odd:bg-yellow-200/50 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
-                                <div className='flex w-full justify-end'>
-                                  {user?.role === Roles.MANAGER && (
-                                    <button
-                                      className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
-                                      onClick={(e) => {
-                                        deleteTraining(training?.id ?? 0);
-                                      }}
-                                    >
-                                      <AiOutlineDelete></AiOutlineDelete>
-                                    </button>
-                                  )}
-                                  {user?.role === Roles.MANAGER && (
-                                    <button
-                                      className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
-                                      onClick={() => {
-                                        setOpenEditTraining(true);
-                                        setEditLocal(training?.local ?? '');
-                                        setEditStartDate(
-                                          training?.startDate ?? ''
-                                        );
-                                        setEditEndDate(
-                                          training?.endDate?.split('T')[1] ?? ''
-                                        );
-                                        setTrainingFocus(training);
-                                      }}
-                                    >
-                                      <AiOutlineEdit></AiOutlineEdit>
-                                    </button>
-                                  )}
-                                </div>
-                                <h2 className='text-lg mt-2'>
-                                  {training?.local}
-                                </h2>
-                                <p className='text-sm font-semibold'>
-                                  Dia{' '}
-                                  {format(
-                                    new Date(
-                                      training?.startDate ?? '24/4/2023'
-                                    ),
-                                    'dd/MMMM/yyyy HH:mm'
-                                  )}{' '}
-                                  -{' '}
-                                  {format(
-                                    new Date(training?.endDate ?? '24/4/2023'),
-                                    'HH:mm'
-                                  )}
-                                </p>
-                              </article>
-                            ))}
+                {(teams?.length ?? 0) > 0 ? (
+                  teams?.map((team) => (
+                    <Accordion.Item value={String(team?.id) ?? ''}>
+                      <Accordion.Control>{team?.name}</Accordion.Control>
+                      <Accordion.Panel>
+                        <div className='overflow-hidden relative w-full'>
+                          <h1 className='text-xl m-4'>Próximos Treinos</h1>
+                          <div className='overflow-auto scroll-auto flex gap-4 w-full p-2'>
+                            {trainings?.length === 0 && (
+                              <h1 className='text-xl m-4'>
+                                Não há treinos agendados
+                              </h1>
+                            )}
+                            {trainings
+                              ?.filter((training) => {
+                                return training?.team === team?.id;
+                              })
+                              .map((training) => (
+                                <article className='flex-none odd:bg-yellow-200/50 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
+                                  <div className='flex w-full justify-end'>
+                                    {user?.role === Roles.MANAGER && (
+                                      <button
+                                        className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
+                                        onClick={(e) => {
+                                          deleteTraining(training?.id ?? 0);
+                                        }}
+                                      >
+                                        <AiOutlineDelete></AiOutlineDelete>
+                                      </button>
+                                    )}
+                                    {user?.role === Roles.MANAGER && (
+                                      <button
+                                        className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
+                                        onClick={() => {
+                                          setOpenEditTraining(true);
+                                          setEditLocal(training?.local ?? '');
+                                          setEditStartDate(
+                                            training?.startDate ?? ''
+                                          );
+                                          setEditEndDate(
+                                            training?.endDate?.split('T')[1] ??
+                                              ''
+                                          );
+                                          setTrainingFocus(training);
+                                        }}
+                                      >
+                                        <AiOutlineEdit></AiOutlineEdit>
+                                      </button>
+                                    )}
+                                  </div>
+                                  <h2 className='text-lg mt-2'>
+                                    {training?.local}
+                                  </h2>
+                                  <p className='text-sm font-semibold'>
+                                    Dia{' '}
+                                    {format(
+                                      new Date(
+                                        training?.startDate ?? '24/4/2023'
+                                      ),
+                                      'dd/MMMM/yyyy HH:mm'
+                                    )}{' '}
+                                    -{' '}
+                                    {format(
+                                      new Date(
+                                        training?.endDate ?? '24/4/2023'
+                                      ),
+                                      'HH:mm'
+                                    )}
+                                  </p>
+                                </article>
+                              ))}
+                          </div>
                         </div>
-                      </div>
-                    </Accordion.Panel>
-                  </Accordion.Item>
-                ))}
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  ))
+                ) : (
+                  <p className='w-full text-center text-xl m-0 pl-10 text-gray-400'>
+                    Ainda não tem equipa atribuida!
+                  </p>
+                )}
               </Accordion>
             </motion.main>
           </div>

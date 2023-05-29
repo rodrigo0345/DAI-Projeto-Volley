@@ -77,9 +77,6 @@ export default function ReportCard({
       <p className='m-0'>
         {format(new Date(reportSubject?.createdAt ?? 0), 'dd/MM/yyyy')}
       </p>
-      <Document file={`data:application/pdf;base64,${pdfString}`}>
-        <Page pageNumber={4} />
-      </Document>
     </div>
   );
 }
