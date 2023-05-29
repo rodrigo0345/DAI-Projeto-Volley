@@ -32,7 +32,7 @@ public class CalendarService {
     public static class Event {
         public String title;
         public String url;
-        public LocalDateTime date;
+        public String date;
     }
 
     public static List<Event> getAllEvents(RideRepository rideRepo, NewsRepository newsRepo,
@@ -51,13 +51,14 @@ public class CalendarService {
                     Ride ride = el.returnType();
                     event.title = ride.getOrigin() + " -> " + ride.getDestination();
                     event.url = "post/ride/" + ride.getId();
-                    event.date = ride.getStartDate();
+                    event.date = ride.getStartDate().toString();
                     break;
                 case GAME:
                     Game game = el.returnType();
                     event.title = game.getTeam() + " vs " + game.getOpponent();
                     event.url = "post/game/" + game.getId();
-                    event.date = game.getDate();
+                    event.date = game.getDate().toString();
+
                     break;
                 case PRACTICE:
                     // TODO ACABAR ISTO
@@ -69,7 +70,7 @@ public class CalendarService {
 
                     event.title = "Treino " + team.getName();
                     event.url = "post/practice/" + practice.getId();
-                    event.date = practice.getStartDate();
+                    event.date = practice.getStartDate().toString();
                     break;
                 default:
                     break;
@@ -96,7 +97,7 @@ public class CalendarService {
                 // TODO CHECK IF USER IS IN THE PRACTICE
                 event.title = "Treino " + practice.getTeam();
                 event.url = "post/practice/" + practice.getId();
-                event.date = practice.getStartDate();
+                event.date = practice.getStartDate().toString();
                 events.add(event);
             }
 
@@ -125,7 +126,7 @@ public class CalendarService {
                     }
                     event.title = ride.getOrigin() + " -> " + ride.getDestination();
                     event.url = "/post/ride/" + ride.getId();
-                    event.date = ride.getStartDate();
+                    event.date = ride.getStartDate().toString();
                     break;
                 case GAME:
                     Game game = el.returnType();
@@ -135,7 +136,7 @@ public class CalendarService {
 
                     event.title = "Jogo contra" + game.getOpponent();
                     event.url = "post/game/" + game.getId();
-                    event.date = game.getDate();
+                    event.date = game.getDate().toString();
                     break;
                 case PRACTICE:
                     Practice practice = el.returnType();
@@ -149,7 +150,7 @@ public class CalendarService {
 
                     event.title = "Treino " + team.getName();
                     event.url = "post/practice/" + practice.getId();
-                    event.date = practice.getStartDate();
+                    event.date = practice.getStartDate().toString();
                     break;
                 /*
                  * case APPOINTMENT:
