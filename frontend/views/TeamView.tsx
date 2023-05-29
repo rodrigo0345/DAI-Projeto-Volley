@@ -109,6 +109,7 @@ export default function TeamView() {
   }
 
   useEffect(() => {
+    if (user === undefined) return;
     if (user?.role === Roles.ADMIN || user?.role === 'ADMIN') setIsAdmin(true);
     const loadPlayers = async () => {
       const players = await getPlayersWithoutTeam();
@@ -150,6 +151,8 @@ export default function TeamView() {
           team?.players?.some((player) => player === user?.id)
         );
       }
+
+      console.log(teams);
 
       setTeams(teams);
     };
