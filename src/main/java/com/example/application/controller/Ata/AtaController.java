@@ -2,6 +2,7 @@ package com.example.application.controller.Ata;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import com.example.application.model.Ata;
 import com.example.application.repository.AtaRepository;
@@ -63,6 +64,16 @@ public class AtaController {
         var response = new ResponseType<Iterable<Ata>>();
         response.success(ata);
         return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity<ResponseType<Ata>> removeAta(Long idAta){
+
+       ataRepository.deleteById(idAta);
+
+       var response = new ResponseType<Ata>();
+       response.success(null);
+       return ResponseEntity.ok().body(response);
+
     }
 
     // do not touch, it is
