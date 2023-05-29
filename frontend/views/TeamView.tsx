@@ -109,7 +109,7 @@ export default function TeamView() {
   }
 
   useEffect(() => {
-    if (user?.role === 'admin' || user?.role === 'ADMIN') setIsAdmin(true);
+    if (user?.role === Roles.ADMIN || user?.role === 'ADMIN') setIsAdmin(true);
     const loadPlayers = async () => {
       const players = await getPlayersWithoutTeam();
       setRows(
@@ -145,10 +145,11 @@ export default function TeamView() {
         teams = teams?.filter((team) => team?.managerID === user?.id);
       }
 
+      console.log({ teams });
       setTeams(teams);
     };
     loadTeams();
-  }, []);
+  }, [user]);
 
   return (
     <div className='min-h-screen flex pt-44 justify-center z-10 bg-white relative shadow-lg'>
