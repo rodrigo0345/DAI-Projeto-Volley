@@ -36,7 +36,8 @@ public class CalendarService {
     }
 
     public static List<Event> getAllEvents(RideRepository rideRepo, NewsRepository newsRepo,
-            GameRepository gameRepo, PracticeRepository practiceRepo, PhysicalAppointmentRepository appointmentRepo) {
+            GameRepository gameRepo, PracticeRepository practiceRepo, PhysicalAppointmentRepository appointmentRepo,
+            TeamRepository teamRepo) {
 
         List<PostType> posts = fetchPosts(rideRepo, newsRepo, gameRepo, practiceRepo, appointmentRepo);
         List<Event> events = new ArrayList<>();
@@ -62,7 +63,12 @@ public class CalendarService {
                 case PRACTICE:
                     // TODO ACABAR ISTO
                     Practice practice = el.returnType();
-                    event.title = "Treino " + practice.getTeam();
+                    Team team = teamRepo.findById(practice.getTeam());
+
+                    if (team == null)
+                        break;
+
+                    event.title = "Treino " + team.getName();
                     event.url = "post/practice/" + practice.getId();
                     event.date = practice.getStartDate();
                     break;
@@ -124,9 +130,10 @@ public class CalendarService {
                     break;
                 case GAME:
                     Game game = el.returnType();
-                    
-                    if( !(game.getGameCall().contains(id)) ) break;
-                    
+
+                    if (!(game.getGameCall().contains(id)))
+                        break;
+
                     event.title = "Jogo contra" + game.getOpponent();
                     event.url = "post/game/" + 0;
                     event.date = null;
@@ -134,22 +141,28 @@ public class CalendarService {
                 case PRACTICE:
                     Practice practice = el.returnType();
                     Team team = teamRepo.findById(practice.getTeam());
-                    
-                    if( !(team.getPlayers().contains(id)) ) break;
 
-                    event.title = "Treino " + practice.getTeam();
+                    if (team == null)
+                        break;
+
+                    if (!(team.getPlayers().contains(id) || team.getManagerID().equals(id)))
+                        break;
+
+                    event.title = "Treino " + team.getName();
                     event.url = "post/practice/" + practice.getId();
                     event.date = practice.getStartDate();
                     break;
-                /*case APPOINTMENT:
-                    Appointment appointment = el.returnType();
-                    
-                    if( !(appointment.getPatient().equals(id)) ) break;
-
-                    event.title = "Consulta " + "Dr. " + "Joao";
-                    event.url = "post/appointment/" + 0;
-                    event.date = null;
-                    break; */
+                /*
+                 * case APPOINTMENT:
+                 * Appointment appointment = el.returnType();
+                 * 
+                 * if( !(appointment.getPatient().equals(id)) ) break;
+                 * 
+                 * event.title = "Consulta " + "Dr. " + "Joao";
+                 * event.url = "post/appointment/" + 0;
+                 * event.date = null;
+                 * break;
+                 */
                 default:
                     break;
             }
@@ -176,8 +189,10 @@ public class CalendarService {
         RetrievePractices practices = new RetrievePractices();
         practices.run(practiceRepo);
 
-        /*RetrieveAppointments appointments = new RetrieveAppointments();
-        appointments.run(appointmentRepo); */
+        /*
+         * RetrieveAppointments appointments = new RetrieveAppointments();
+         * appointments.run(appointmentRepo);
+         */
 
         List<PostType> posts = new ArrayList<>();
 
@@ -186,7 +201,7 @@ public class CalendarService {
             rides.join();
             games.join();
             practices.join();
-           //appointments.join();
+            // appointments.join();
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -196,7 +211,7 @@ public class CalendarService {
         posts.addAll(rides.getResult());
         posts.addAll(games.getResult());
         posts.addAll(practices.getResult());
-        //posts.addAll(appointments.getResult());
+        // posts.addAll(appointments.getResult());
 
         return posts;
     }
@@ -265,20 +280,22 @@ public class CalendarService {
         }
     }
 
-    /*public static class RetrieveAppointments extends Thread {
-        List<PostType> result = new ArrayList<>();
-
-        public void run(AppointmentRepository appointmentRepository) {
-            appointmentRepository.findAll().forEach(el -> {
-                var post = new PostType();
-                post.appointment = el;
-                result.add(post);
-            });
-        }
-
-        public List<PostType> getResult() {
-            return this.result;
-        }
-    } */
+    /*
+     * public static class RetrieveAppointments extends Thread {
+     * List<PostType> result = new ArrayList<>();
+     * 
+     * public void run(AppointmentRepository appointmentRepository) {
+     * appointmentRepository.findAll().forEach(el -> {
+     * var post = new PostType();
+     * post.appointment = el;
+     * result.add(post);
+     * });
+     * }
+     * 
+     * public List<PostType> getResult() {
+     * return this.result;
+     * }
+     * }
+     */
 
 }

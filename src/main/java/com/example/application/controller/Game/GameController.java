@@ -67,7 +67,7 @@ public class GameController {
         if (teamController.isPlayerInTeam(gameCall).getBody().success) {
             var response = new ResponseType<Game>();
             response.error("Algum jogador não pertece a nenhuma equipa");
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body(response); 
         }
 
         Game createdGame = GameService.createGame(gameRepository, teamRepository,
@@ -98,7 +98,6 @@ public class GameController {
             response.error("Invalid date format");
             return ResponseEntity.badRequest().body(response);
         }
-
 
         Game game = gameRepository.findById(gameId).get();
 
@@ -131,9 +130,6 @@ public class GameController {
             response.error("Algum jogador não pertece a nenhuma equipa");
             return ResponseEntity.badRequest().body(response);
         }
-
-
-
 
         Game editedGame = GameService.editGame(gameRepository, teamRepository,
                 gameId, teamID, opponent, startDateTime,

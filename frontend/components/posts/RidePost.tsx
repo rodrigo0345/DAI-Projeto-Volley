@@ -64,11 +64,11 @@ export default function RidePost({
         },
         user
       );
-      if (result) {
+      if (result?.body) {
         toast.success('Entrou na boleia');
         setUserJoined(true);
         setFreeSeats(freeSeats - 1);
-      } else if (!result) {
+      } else if (!result?.body) {
         toast.error('Já estava na boleia');
         setUserJoined(false);
       }

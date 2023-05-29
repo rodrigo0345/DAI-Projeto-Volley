@@ -9,6 +9,9 @@ public class RideService {
     public static boolean verifyPassengerInRide(Ride ride, LoginUser passenger) {
         if (Ride.containsPassenger(ride.getPassengers(), passenger))
             return true;
+        if (ride.getDriverID().equals(passenger.getId()))
+            return false;
+
         return false;
     }
 

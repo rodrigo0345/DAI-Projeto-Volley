@@ -22,6 +22,7 @@ import Ata from 'Frontend/components/cards/Ata';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
+import ReportType from 'Frontend/generated/com/example/application/controller/Reports/ReportType';
 
 enum Training {
   Main,
@@ -522,7 +523,11 @@ export default function PracticeView() {
           </div>
 
           <div>
-            <Ata user={user} reportSubject={{ type: 'Treino' }} key={0}></Ata>
+            <Ata
+              user={user}
+              reportSubject={{ type: ReportType.TREINO }}
+              key={0}
+            ></Ata>
           </div>
         </div>
       )}

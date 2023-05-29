@@ -1,22 +1,22 @@
+import ReportType from 'Frontend/generated/com/example/application/controller/Reports/ReportType';
 import LoginUser from 'Frontend/generated/com/example/application/model/User/LoginUser';
-import { ReportType } from 'Frontend/views/ReportView';
+
 import React from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { BsDownload } from 'react-icons/bs';
+import Report from 'Frontend/generated/com/example/application/model/Report';
 
 export default function ReportCard({
   user,
   reportSubject,
 }: {
-  reportSubject: any;
+  reportSubject: Report;
   user: LoginUser | undefined;
 }) {
   return (
     <div className='cursor-pointer w-60 h-60 overflow-hidden rounded-lg p-2 flex-none py-6 px-3 first:pl-6 last:pr-6 bg-yellow-100 mb-2 mt-2'>
       <div className='flex justify-between'>
-        <h1 className='text-xl m-1'>
-          Relatório {' ' + ReportType[reportSubject.type]}
-        </h1>
+        <h1 className='text-xl m-1'>Relatório {' ' + reportSubject?.type}</h1>
         <span className='h-full flex items-center justify-center'>
           <button className='pt-2' title='Transferir'>
             <BsDownload

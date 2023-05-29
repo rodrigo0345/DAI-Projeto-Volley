@@ -111,9 +111,11 @@ public class RideController {
 
         PostSavedType type = post.getType();
 
-         if (post == null || type.equals(PostSavedType.NEWS))
+        if (post == null || type.equals(PostSavedType.NEWS))
+
             return ResponseEntity.badRequest().body(false);
         Ride ride = post.ride;
+
         if (RideService.verifyPassengerInRide(ride, user) || RideService.verifyRideIsFull(ride)
                 || RideService.verifyIfUserIsDriver(ride, user))
             return ResponseEntity.badRequest().body(false);

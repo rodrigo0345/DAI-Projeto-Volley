@@ -166,7 +166,7 @@ public class TeamController {
         }
 
         // verificar se currentUser é admin
-        if (!currentUser.getRole().equals("ADMIN")) {
+        if (!currentUser.getRole().equals("ADMIN") && !currentUser.getRole().equals("MANAGER")) {
             var response = new ResponseType<Team>();
             response.error("Você não tem permissão para editar a equipa");
             return ResponseEntity.badRequest().body(response);
