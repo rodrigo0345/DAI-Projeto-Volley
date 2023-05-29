@@ -61,6 +61,15 @@ public class ReportController {
         return ResponseEntity.ok().body(response);
     }
 
+
+    public  ResponseEntity<ResponseType<Report>> removeReport(Long idReport) {
+
+        reportRepository.deleteById(idReport);
+
+        var response = new ResponseType<Report>();
+        response.success(null);
+        return ResponseEntity.ok().body(response);
+    }
     // do not touch, it is
     // used so hilla identifies
     // this class type
