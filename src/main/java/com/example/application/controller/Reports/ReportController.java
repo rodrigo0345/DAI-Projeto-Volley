@@ -64,6 +64,12 @@ public class ReportController {
 
     public  ResponseEntity<ResponseType<Report>> removeReport(Long idReport) {
 
+        if(idReport == null){
+            var response = new ResponseType<Report>();
+            response.error("Id do relatorio vazio");
+            return ResponseEntity.badRequest().body(response);
+        }
+
         reportRepository.deleteById(idReport);
 
         var response = new ResponseType<Report>();

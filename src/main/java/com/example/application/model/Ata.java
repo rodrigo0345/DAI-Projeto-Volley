@@ -30,6 +30,7 @@ public class Ata {
     @GeneratedValue
     private Long id;
     private String title;
+    private Long teamId;
     @Lob
     private String summary;
     private Long practiceId;

@@ -66,7 +66,7 @@
     "react-pdf": "^7.0.1",
     "react-router-dom": "^6.8.2",
     "react-toastify": "^9.1.1",
-    "sort-by": "^1.2.0",
+    "sort-by": "^0.0.2",
     "styled-components": "^5.3.8",
     "tailwind-scrollbar-hide": "^1.1.7",
     "validator": "^13.9.0",
@@ -213,6 +213,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "da44aa477151f2677849d1eff3fcd648c85134fd601a7f2eba743a8be7f67d7a"
+    "hash": "832347844a6b017c1ffece9cc9a993ac0e9b04ec7820909a7137a35b04047b56"
   }
 }

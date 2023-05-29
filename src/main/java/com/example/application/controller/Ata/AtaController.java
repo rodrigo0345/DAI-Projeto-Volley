@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.application.model.Ata;
+import com.example.application.model.Practice;
 import com.example.application.repository.AtaRepository;
 import com.example.application.repository.PracticeRepository;
 import org.checkerframework.checker.units.qual.A;
@@ -28,8 +29,13 @@ public class AtaController {
     private final PracticeRepository practiceRepository;
     private final AtaRepository ataRepository;
 
+
     public ResponseEntity<ResponseType<Ata>> createAta(String title, Long practiceId, String summary) {
         // validate that team id is valid
+
+        Practice pratice = practiceRepository.findById(practiceId);
+
+
         try {
             var team = practiceRepository.findById(practiceId);
         } catch (Exception e) {
@@ -51,6 +57,7 @@ public class AtaController {
         ata.setCreatedAt(date);
         ata.setTitle(title);
         ata.setSummary(summary);
+        ata.setPracticeId(pratice.getTeam());
         ataRepository.save(ata);
 
         var response = new ResponseType<Ata>();
