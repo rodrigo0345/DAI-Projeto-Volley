@@ -184,6 +184,7 @@ export default function PracticeView() {
 
   // TODO associar ao backend
   async function create() {
+    console.log({ ataTitle, ataTreinoId, ataDescription });
     let result;
 
     try {
@@ -503,6 +504,15 @@ export default function PracticeView() {
             <button
               onClick={() => {
                 setOpenAtaModal(true);
+                setAtaTreinoId(() => {
+                  return (
+                    String(
+                      trainings?.filter((training) =>
+                        teams?.some((team) => team?.id === training?.team)
+                      )?.[0]?.id ?? 0
+                    ) ?? ''
+                  );
+                });
               }}
               className='mr-10
            bg-zinc-200 p-2 rounded-md hover:bg-zinc-300 h-10 shadow-md
@@ -548,18 +558,17 @@ export default function PracticeView() {
                   onChange={(e) => {
                     setAtaTreinoId(e.target.value);
                   }}
-                  ref={teamIDRef}
                   className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
                 >
                   {trainings
                     ?.filter((training) =>
                       teams?.some((team) => team?.id === training?.team)
                     )
-                    .map((team) => (
-                      <option value={team?.id} className='overflow-hidden'>
+                    .map((training) => (
+                      <option value={training?.id} className='overflow-hidden'>
                         Treino -{' '}
                         {format(
-                          new Date(team?.startDate ?? 0),
+                          new Date(training?.startDate ?? 0),
                           "dd/MM/yyyy 'às' HH:mm"
                         )}
                       </option>
