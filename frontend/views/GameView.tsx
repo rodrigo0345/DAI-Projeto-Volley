@@ -1,6 +1,6 @@
 import { Accordion } from '@mantine/core';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import Ata from 'Frontend/components/cards/Ata';
+import Ata from 'Frontend/components/cards/AtaCard';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';

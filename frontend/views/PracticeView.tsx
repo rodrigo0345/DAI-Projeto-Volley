@@ -18,12 +18,14 @@ import { format } from 'date-fns';
 import { RiUserSettingsFill } from 'react-icons/ri';
 import { GrDocumentText } from 'react-icons/gr';
 import { HiOutlineDocumentText } from 'react-icons/hi';
-import Ata from 'Frontend/components/cards/Ata';
+import AtaCard from 'Frontend/components/cards/AtaCard';
 import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import Roles from 'Frontend/generated/com/example/application/model/User/Roles';
 import ReportType from 'Frontend/generated/com/example/application/controller/Reports/ReportType';
 import { createAta } from 'Frontend/generated/AtaController';
+import Ata from 'Frontend/generated/com/example/application/model/Ata';
+import { findAll as findAllAtas } from 'Frontend/generated/AtaController';
 
 enum Training {
   Main,
@@ -65,6 +67,8 @@ export default function PracticeView() {
   const [ataDescription, setAtaDescription] = React.useState<string>('');
   const [ataTreinoId, setAtaTreinoId] = React.useState<string>('');
 
+  const [atas, setAtas] = React.useState<(Ata | undefined)[] | undefined>([]);
+
   useEffect(() => {
     if (!user) return;
     (async () => {
@@ -78,8 +82,23 @@ export default function PracticeView() {
       setTeams(team);
 
       const trainings = await findAllPractices();
+
       setTrainings(trainings);
     })();
+
+    const loadAtas = async () => {
+      let result;
+      try {
+        result = await findAllAtas();
+        console.log({ result });
+      } catch (error: any) {
+        toast.error(error);
+      }
+
+      setAtas(result?.body.success);
+    };
+
+    loadAtas();
   }, [user]);
 
   async function createTraining() {
@@ -181,7 +200,17 @@ export default function PracticeView() {
     window.location.reload();
   }
 
-  async function deleteAta(id: number) {}
+  async function deleteAta(id: number) {
+    /* const result = await removeAta(id);
+
+    if (result?.body.error) {
+      toast.error(result?.body.error);
+      return;
+    } */
+
+    toast.success('Ata eliminada com sucesso');
+    window.location.reload();
+  }
 
   return (
     <div className='min-h-screen flex justify-start z-10 bg-white relative shadow-lg items-center w-full'>
@@ -543,11 +572,20 @@ export default function PracticeView() {
           </div>
 
           <div>
-            <Ata
-              user={user}
-              reportSubject={{ type: ReportType.TREINO }}
-              key={0}
-            ></Ata>
+            {(atas?.length ?? 0) > 0 ? (
+              atas?.map((ata) => {
+                return (
+                  <AtaCard
+                    onDelete={deleteAta}
+                    user={user}
+                    ataSubject={ata}
+                    key={ata?.id}
+                  />
+                );
+              })
+            ) : (
+              <p className='text-gray-400 text-xl'>Ainda não tem atas!</p>
+            )}
           </div>
         </div>
       )}
