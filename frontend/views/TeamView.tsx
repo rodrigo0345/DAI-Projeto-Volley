@@ -141,6 +141,10 @@ export default function TeamView() {
         toast.error(e.message);
       }
 
+      if (user?.role === Roles.MANAGER) {
+        teams = teams?.filter((team) => team?.managerID === user?.id);
+      }
+
       setTeams(teams);
     };
     loadTeams();

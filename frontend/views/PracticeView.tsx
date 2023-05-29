@@ -237,10 +237,10 @@ export default function PracticeView() {
             <h1 className='pl-10 m-0'>Treinos</h1>
             <button
               onClick={() => {
-                /* if (teams?.length === 0) {
+                if (teams?.length === 0) {
                   toast.error('Não tem equipas para criar treinos');
                   return;
-                } */
+                }
                 setOpen(true);
               }}
               className='mr-10
