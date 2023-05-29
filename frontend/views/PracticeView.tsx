@@ -189,7 +189,7 @@ export default function PracticeView() {
     try {
       result = await createAta(ataTitle, Number(ataTreinoId), ataDescription);
     } catch (e: any) {
-      toast.error(e.getMessage());
+      toast.error(e);
       return;
     }
 
