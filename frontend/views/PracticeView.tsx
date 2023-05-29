@@ -65,6 +65,7 @@ export default function PracticeView() {
   const [ataTreinoId, setAtaTreinoId] = React.useState<string>('');
 
   useEffect(() => {
+    if (!user) return;
     (async () => {
       const result = await findAll();
 

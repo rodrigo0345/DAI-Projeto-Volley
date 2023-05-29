@@ -5,7 +5,6 @@ import { BsDownload } from 'react-icons/bs';
 import Report from 'Frontend/generated/com/example/application/model/Report';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
-import { Document, Page } from 'react-pdf';
 
 export default function ReportCard({
   user,
