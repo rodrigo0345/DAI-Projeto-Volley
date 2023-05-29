@@ -65,11 +65,13 @@ public class PracticeController {
 
         LocalDateTime dataAtual = LocalDateTime.now();
 
-        if(startDateTime.isBefore(dataAtual) || endDateTime.isBefore(startDateTime) ){
+
+        if(startDateTime.isBefore(dataAtual) || endDateTime.isBefore(startDateTime)  ){
             var response = new ResponseType<Practice>();
             response.error("Data invalida");
             return ResponseEntity.badRequest().body(response);
         }
+
 
         if (teamID == null || local.trim().isEmpty()) {
             var response = new ResponseType<Practice>();
