@@ -149,6 +149,7 @@ export default function ForumView() {
   ];
 
   useEffect(() => {
+    if (!user) return;
     if (firstLoader) return;
     setOrder(Order.POPULAR);
     setCurrIndex(0);
@@ -171,6 +172,7 @@ export default function ForumView() {
   }, [menu]);
 
   useEffect(() => {
+    if (!user) return;
     if (firstLoader) return;
     setCurrIndex(0);
     (async () => {

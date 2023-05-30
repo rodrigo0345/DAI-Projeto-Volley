@@ -397,7 +397,7 @@ export default function GameView() {
                               Dia{' '}
                               {format(
                                 new Date(game?.date ?? '24/4/2023T14:55'),
-                                'dd/MM/yyyy hh:mm'
+                                'dd/MM/yyyy HH:mm'
                               )}{' '}
                             </p>
                           </article>
