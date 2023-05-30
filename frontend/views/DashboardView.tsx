@@ -106,7 +106,7 @@ export default function DashboardView() {
           <div className='flex flex-col gap-4 pb-24 pt-28 relative px-4 max-w-[60em] m-auto'>
             <h1 className='text-3xl font-bold'>Dashboard</h1>
             <div className='w-full max-w-full grid md:!grid-cols-4 sm:!grid-cols-2 grid-cols-1 grid-rows-4 gap-x-4 gap-y-10 self-center'>
-              {!(user?.role?.toUpperCase() === Roles.SECCTIONIST) && (
+              {
                 <Box
                   className='bg-gradient-to-br from-blue-900/100 to-cyan-600/80 col-span-2 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'
                   onClick={() => {
@@ -125,7 +125,7 @@ export default function DashboardView() {
                     className='icon absolute -right-10 -bottom-10 '
                   ></RiTeamLine>
                 </Box>
-              )}
+              }
               {user?.role?.toUpperCase() === Roles.MANAGER && (
                 <Box
                   className='bg-gradient-to-tl from-purple-500/100 to-purple-800/80 col-span-1 h-48 shadow-xl rounded-lg scale-100 hover:scale-[1.02] transition-all px-6 overflow-hidden'

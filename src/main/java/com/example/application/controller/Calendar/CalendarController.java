@@ -31,8 +31,6 @@ public class CalendarController {
 
     private final UserRepository usersRepository;
 
-    private final GameRepository calendarRepository;
-
     private final PracticeRepository practiceRepository;
 
     private final PhysicalAppointmentRepository appointmentRepository;
@@ -42,9 +40,9 @@ public class CalendarController {
     private final TeamRepository teamRepository;
 
     public List<Event> getAllEvents() {
-        var events = CalendarService.getAllEvents(ridesRepository, newsRepository, calendarRepository,
+        var events = CalendarService.getAllEvents(ridesRepository, newsRepository, gameRepository,
                 practiceRepository,
-                appointmentRepository);
+                appointmentRepository, teamRepository);
         return events;
     }
 

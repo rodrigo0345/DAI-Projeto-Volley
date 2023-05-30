@@ -1,6 +1,6 @@
 import { Accordion } from '@mantine/core';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import Ata from 'Frontend/components/cards/Ata';
+import Ata from 'Frontend/components/cards/AtaCard';
 import ModalBox from 'Frontend/components/modalBox/ModalBox';
 import ModalInfo from 'Frontend/components/modalBox/ModalInfo';
 import SidePanel from 'Frontend/components/sidePanel/SidePanel';
@@ -89,6 +89,7 @@ export default function GameView() {
     (number | undefined)[]
   >([]);
   useEffect(() => {
+    if (!user) return;
     (async () => {
       const result = await findAll();
 
@@ -101,9 +102,14 @@ export default function GameView() {
       // TODO get all games n funfa
       const result = await getAllGames();
 
-      const games = result?.filter((game) =>
-        isAfter(new Date(game?.date ?? '0'), Date.now())
-      );
+      const games = result
+        ?.filter((game) => isAfter(new Date(game?.date ?? '0'), Date.now()))
+        .sort((a, b) => {
+          return (
+            new Date(a?.date ?? '0').getTime() -
+            new Date(b?.date ?? '0').getTime()
+          );
+        });
 
       setGames(games);
     })();
@@ -131,6 +137,12 @@ export default function GameView() {
   async function createGameft() {
     // TODO erro da equipa inválida
 
+    const dataInvalida = isBefore(new Date(newGameDate), Date.now());
+    if (dataInvalida) {
+      toast.error('A data selecionada é uma data passada');
+      return;
+    }
+
     const result = await createGame(
       newGameDate,
       newGameTeam,
@@ -145,7 +157,7 @@ export default function GameView() {
       return;
     }
 
-    toast.success('Treino criado com sucesso');
+    toast.success('Jogo criado com sucesso');
     setOpen(false);
     window.location.reload();
   }
@@ -156,7 +168,7 @@ export default function GameView() {
     try {
       result = await removeGame(id, user);
     } catch (e) {
-      toast.error('Não foi possível eliminar o treino');
+      toast.error('Não foi possível eliminar o jogo');
       return;
     }
 
@@ -352,7 +364,7 @@ export default function GameView() {
                         {games?.map((game) => (
                           <article className='flex-none odd:bg-yellow-200/50 bg-gray-100 w-44 h-44 p-1 rounded-md shadow-md'>
                             <div className='flex w-full gap-2 justify-end'>
-                              {
+                              {user?.role === Roles.ADMIN && (
                                 <button
                                   className='bg-red-300 p-1 rounded-md hover:bg-red-400 '
                                   onClick={(e) => {
@@ -361,27 +373,31 @@ export default function GameView() {
                                 >
                                   <AiOutlineDelete size={20}></AiOutlineDelete>
                                 </button>
-                              }
-                              <button
-                                className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
-                                onClick={() => {
-                                  setOpenGameModal(true);
-                                  setModalFocusedGame(game);
-                                  setEditOpponent(game?.opponent ?? '');
-                                  setEditLocal(game?.local ?? '');
-                                  setEditData(game?.date ?? '');
-                                  setEditPlayersToRemove(game?.gameCall ?? []);
-                                }}
-                              >
-                                <AiOutlineEdit size={20}></AiOutlineEdit>
-                              </button>
+                              )}
+                              {user?.role === Roles.ADMIN && (
+                                <button
+                                  className='bg-transparent hover:text-green-400 p-1 rounded-md hover:bg-transparent '
+                                  onClick={() => {
+                                    setOpenGameModal(true);
+                                    setModalFocusedGame(game);
+                                    setEditOpponent(game?.opponent ?? '');
+                                    setEditLocal(game?.local ?? '');
+                                    setEditData(game?.date ?? '');
+                                    setEditPlayersToRemove(
+                                      game?.gameCall ?? []
+                                    );
+                                  }}
+                                >
+                                  <AiOutlineEdit size={20}></AiOutlineEdit>
+                                </button>
+                              )}
                             </div>
                             <h2 className='text-lg mt-2'>{game?.local}</h2>
                             <p className='text-sm'>
                               Dia{' '}
                               {format(
                                 new Date(game?.date ?? '24/4/2023T14:55'),
-                                'dd/MM/yyyy hh:mm'
+                                'dd/MM/yyyy HH:mm'
                               )}{' '}
                             </p>
                           </article>

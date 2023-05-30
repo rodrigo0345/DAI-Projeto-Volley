@@ -6,18 +6,24 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { CustomScrollbar } from './AdminPanelView';
 import { set } from 'date-fns';
 import { toast } from 'react-toastify';
-
-export enum ReportType {
-  Jogo,
-  Treino,
-}
+import {
+  createReport,
+  findAll,
+  removeReport,
+} from 'Frontend/generated/ReportController';
+import Report from 'Frontend/generated/com/example/application/model/Report';
+import ReportType from 'Frontend/generated/com/example/application/controller/Reports/ReportType';
+import ResponseEntity from 'Frontend/generated/org/springframework/http/ResponseEntity';
+import Team from 'Frontend/generated/com/example/application/model/Team/Team';
+import { findAll as findAllTeams } from 'Frontend/generated/TeamController';
 
 export default function ReportView() {
   const { user, logout } = useContext(UserContext);
   const [newReport, setNewReport] = React.useState(false);
-  const [reports, setReports] = React.useState<
-    { id: number; report: any; type: string }[]
-  >([]);
+  const [reports, setReports] = React.useState<Report[]>([]);
+  const [teams, setTeams] = React.useState<(Team | undefined)[] | undefined>(
+    []
+  );
 
   function displayReportBy(type: string) {
     if (reports.length === 0) {
@@ -43,37 +49,53 @@ export default function ReportView() {
 
   const report = {
     imagem: React.useRef<HTMLInputElement>(null),
+    type: React.useRef<HTMLSelectElement>(null),
+    team: React.useRef<HTMLSelectElement>(null),
   };
 
   const reportTypeRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
-    (async () => {
-      // get reports
-    })();
+    if (!user) return;
+    const getReports = async () => {
+      let result;
 
-    setReports([
-      {
-        id: 1,
-        report: 'Relatório de treino',
-        type: ReportType.Jogo.toString(),
-      },
-      {
-        id: 1,
-        report: 'Relatório de treino',
-        type: ReportType.Treino.toString(),
-      },
-      {
-        id: 1,
-        report: 'Relatório de treino',
-        type: ReportType.Treino.toString(),
-      },
-    ]);
+      try {
+        result = await findAll();
+      } catch (e) {
+        toast.error('Erro ao obter relatórios');
+        return;
+      }
+
+      if (result?.body.error) {
+        toast.error(result?.body.error);
+        return;
+      }
+
+      setReports(result?.body?.success || []);
+    };
+
+    getReports();
+
+    const getTeams = async () => {
+      let result;
+
+      try {
+        result = await findAllTeams();
+      } catch (e) {
+        toast.error('Erro ao obter equipas');
+        return;
+      }
+      setTeams(result || []);
+    };
+
+    getTeams();
   }, [user]);
 
-  async function createReport() {
-    const imagem = report.imagem.current?.value;
-    const type = reportTypeRef.current?.value;
+  async function createNewReport() {
+    const imagem = report.imagem.current?.files?.[0];
+    const type = report.type.current?.value;
+    const teamId = report.team.current?.value;
 
     if (!imagem || !type) {
       toast.error('Preencha todos os campos');
@@ -81,19 +103,26 @@ export default function ReportView() {
     }
 
     // create report
-    let result: ResponseType | undefined = undefined;
+    let result: ResponseEntity | undefined = undefined;
+
+    // Read the file and convert it to a byte array
+    const buffer = await imagem?.arrayBuffer();
 
     try {
-      //result = await createReport(imagem, type);
+      result = await createReport(
+        ReportType[type as keyof typeof ReportType],
+        Number(teamId),
+        [...new Int8Array(buffer ?? new ArrayBuffer(0))]
+      );
     } catch (e) {
       toast.error('Erro ao criar relatório');
       return;
     }
 
-    /* if (result?.body.error) {
-      toast.error('Erro ao criar relatório');
+    if (result?.body.error) {
+      toast.error(result?.body.error);
       return;
-    } */
+    }
 
     toast.success('Relatório criado com sucesso');
     setNewReport(false);
@@ -103,19 +132,19 @@ export default function ReportView() {
   // TODO: delete report (backend)
   async function deleteReport(id: number) {
     // delete report
-    let result: ResponseType | undefined = undefined;
+    let result;
 
     try {
-      //result = await deleteReport(id);
+      result = await removeReport(id);
     } catch (e) {
       toast.error('Erro ao eliminar relatório');
       return;
     }
 
-    /* if (result?.body.error) {
+    if (result?.body.error) {
       toast.error('Erro ao eliminar relatório');
       return;
-    } */
+    }
 
     toast.success('Relatório eliminado com sucesso');
     window.location.reload();
@@ -152,7 +181,7 @@ export default function ReportView() {
                 Tipo de relatório
               </label>
               <select
-                ref={reportTypeRef}
+                ref={report.type}
                 className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
               >
                 {Object.keys(ReportType)
@@ -162,6 +191,23 @@ export default function ReportView() {
                   ))}
               </select>
             </div>
+
+            <fieldset className='mb-4 flex flex-col w-full'>
+              <label
+                htmlFor=''
+                className='text-[13px] leading-none mb-2.5 text-gray-800 font-semibold block'
+              >
+                Equipa
+              </label>
+              <select
+                ref={report.team}
+                className=' ring-0 outline-none border-collapse focus:ring-0 rounded-lg'
+              >
+                {teams?.map((team) => (
+                  <option value={team?.id}>{team?.name?.toString()}</option>
+                ))}
+              </select>
+            </fieldset>
             <fieldset className='mb-[15px] w-full flex flex-col justify-start'>
               <label
                 className='text-[13px] leading-none mb-2.5 text-gray-800 font-semibold block'
@@ -174,7 +220,7 @@ export default function ReportView() {
             <button
               className='mt-4 bg-yellow-200 w-20 rounded-md py-1 px-2 font-semibold hover:bg-yellow-300 shadow-lg'
               onClick={() => {
-                createReport();
+                createNewReport();
               }}
             >
               Guardar
@@ -196,13 +242,13 @@ export default function ReportView() {
           <div className='w-full flex flex-col justify-start h-96'>
             <h1 className='text-xl'>Relatórios de jogos</h1>
             <CustomScrollbar className='flex overflow-x-auto gap-4'>
-              {displayReportBy(ReportType.Jogo.toString())}
+              {displayReportBy(ReportType.JOGO.toString())}
             </CustomScrollbar>
           </div>
           <div className='w-full flex flex-col justify-start h-96'>
             <h1 className='text-xl'>Relatórios de treinos</h1>
             <CustomScrollbar className='flex overflow-x-auto gap-4'>
-              {displayReportBy(ReportType.Treino.toString())}
+              {displayReportBy(ReportType.TREINO.toString())}
             </CustomScrollbar>
           </div>
         </div>

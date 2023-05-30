@@ -33,6 +33,7 @@
     "@radix-ui/react-select": "^1.2.1",
     "@radix-ui/react-tabs": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.5",
+    "@react-pdf/renderer": "^3.1.9",
     "@vaadin-component-factory/vcf-nav": "1.0.6",
     "@vaadin/bundles": "23.3.7",
     "@vaadin/common-frontend": "0.0.17",
@@ -62,9 +63,10 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-icons": "^4.8.0",
+    "react-pdf": "^7.0.1",
     "react-router-dom": "^6.8.2",
     "react-toastify": "^9.1.1",
-    "sort-by": "^1.2.0",
+    "sort-by": "^0.0.2",
     "styled-components": "^5.3.8",
     "tailwind-scrollbar-hide": "^1.1.7",
     "validator": "^13.9.0",
@@ -161,7 +163,9 @@
     "@mui/x-data-grid": "$@mui/x-data-grid",
     "validator": "$validator",
     "@mui/icons-material": "$@mui/icons-material",
-    "@mui/styles": "$@mui/styles"
+    "@mui/styles": "$@mui/styles",
+    "@react-pdf/renderer": "$@react-pdf/renderer",
+    "react-pdf": "$react-pdf"
   },
   "vaadin": {
     "dependencies": {
@@ -209,6 +213,6 @@
       "workbox-core": "6.5.4",
       "workbox-precaching": "6.5.4"
     },
-    "hash": "6d36fe95628c886b0128819b83cecb6a7d80925432b767fb4e806bb5b670c2b7"
+    "hash": "832347844a6b017c1ffece9cc9a993ac0e9b04ec7820909a7137a35b04047b56"
   }
 }

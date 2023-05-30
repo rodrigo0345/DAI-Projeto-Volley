@@ -29,6 +29,7 @@ export default function ProfilesView() {
   const [role, setRole] = useState(userProfile?.role);
 
   useEffect(() => {
+    if (!user) return;
     //if (!userId || user?.id) window.location.href = '/404';
 
     if (user?.id === Number(userId) || user?.role === 'ADMIN')

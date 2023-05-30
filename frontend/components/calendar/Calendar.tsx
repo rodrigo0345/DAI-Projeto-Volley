@@ -111,7 +111,7 @@ export default function CalendarView({
                     <div className='mt-1 text-sm text-gray-400'>
                       <span>No description</span> •{' '}
                       <time>
-                        {format(new Date(event?.date ?? ''), 'dd/mm/yyyy') ??
+                        {format(new Date(event?.date ?? ''), 'dd/MM/yyyy') ??
                           ''}
                       </time>
                     </div>
