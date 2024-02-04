@@ -1,51 +1,40 @@
-# Custom project from Hilla
+# Introduction
 
-This project can be used as a starting point to create your own Hilla application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+Project developed using Hilla along side with React and Java. There is no active online version of the application.
 
-## Running the application
+# Frontend
 
-The project is a standard Maven project. To run it from the command line,
-type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+## Landing Page
 
-You can also import the project to your IDE of choice as you would with any
-Maven project.
+![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/376c955d-97ea-4fbf-b81d-a32ac6c28c19)
 
-## Deploying to Production
+## Login
 
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
+![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/f850e0e5-a615-457a-af21-a733917b9bc8)
 
-Once the JAR file is built, you can run it using
-`java -jar target/myapp-1.0-SNAPSHOT.jar` (NOTE, replace
-`myapp-1.0-SNAPSHOT.jar` with the name of your jar).
+## Dashboard
 
-## Project structure
+![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/71283c4c-be2d-4893-91aa-a133d21e395e)
 
-<table style="width:100%; text-align: left;">
-  <tr><th>Directory</th><th>Description</th></tr>
-  <tr><td><code>frontend/</code></td><td>Client-side source directory</td></tr>
-  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>index.html</code></td><td>HTML template</td></tr>
-  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>index.ts</code></td><td>Frontend 
-entrypoint, bootstraps a React application</td></tr>
-  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>routes.tsx</code></td><td>React Router routes definition</td></tr>
-  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>MainLayout.tsx</code></td><td>Main 
-layout component, contains the navigation menu, uses <a href="https://hilla.dev/docs/react/components/app-layout">
-App Layout</a></td></tr>
-  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>views/</code></td><td>UI view 
-components</td></tr>
-  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>themes/</code></td><td>Custom  
-CSS styles</td></tr>
-  <tr><td><code>src/main/java/&lt;groupId&gt;/</code></td><td>Server-side 
-source directory, contains the server-side Java views</td></tr>
-  <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;<code>Application.java</code></td><td>Server entry-point</td></tr>
-</table>
+## Add User
 
-## Useful links
+![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/0f2d5491-cb05-4f82-a0da-2d1cee499224)
 
-- Read the documentation at [hilla.dev/docs](https://hilla.dev/docs/).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/hilla) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin/hilla).
+## Edit User
+
+![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/7aa892eb-40ad-4f89-982d-4acdc111e664)
+
+## Fórum
+
+![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/7e3e8d09-32f2-4239-a55c-0ab0d7a8bc62)
+
+## Create Ride
+
+![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/a06e3e3c-205d-4640-b806-8e1d7c579d74)
+
+
+
+
+
+
+
