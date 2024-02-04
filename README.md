@@ -31,10 +31,3 @@ Project developed using Hilla along side with React and Java. There is no active
 ## Create Ride
 
 ![image](https://github.com/rodrigo0345/DAI-Projeto-Volley/assets/48099106/a06e3e3c-205d-4640-b806-8e1d7c579d74)
-
-
-
-
-
-
-
